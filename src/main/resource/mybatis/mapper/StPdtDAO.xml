@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.pdt">
+
+	<resultMap id="pdtResult" type="com.jcuesoft.cuebridge.st.vo.StPdtResponseVO">
+		<result property="cdCooperate" column="CD_COOPERATE" />
+        <result property="cdPdt"      column="CD_PDT" />
+        <result property="nmPdt"      column="NM_PDT" />
+        <result property="idPdtUid" column="ID_PDT_UID" />
+        <result property="rtNor"      column="RT_NOR" />
+        <result property="rtDly"       column="RT_DLY" />
+        <result property="cdKndPay" column="CD_KND_PAY" />
+        <result property="noMonthPay" column="NO_MONTH_PAY" />
+        <result property="rtMonthPay" column="RT_MONTH_PAY" />
+        <result property="ynUse"      column="YN_USE" />
+        <result property="dmReg"      column="DM_REG" />
+        <result property="idReg"       column="ID_REG" />
+        <result property="dmUpt"      column="DM_UPT" />
+        <result property="idUpt"        column="ID_UPT" />
+        <result property="cdSales"        column="CD_SALES" />
+	</resultMap>
+
+	<select id="getStPdtList" parameterType="com.jcuesoft.cuebridge.st.vo.StPdtRequestVO"
+		resultMap="pdtResult">
+		SELECT
+		    NO      
+		    , (SELECT GET_NM_CD(CD_COOPERATE) FROM DUAL) AS CD_COOPERATE     
+		    , CD_PDT
+		    , NM_PDT        
+		    , (SELECT GET_NM_CD(CD_SALES) FROM DUAL) AS CD_SALES 		    
+		    , ID_PDT_UID    
+		    , RT_NOR        
+		    , RT_DLY        
+		    , (SELECT GET_NM_CD(CD_KND_PAY) FROM DUAL)  AS CD_KND_PAY    
+		    , NO_MONTH_PAY  
+		    , RT_MONTH_PAY  
+		    , YN_USE        
+		    , DM_REG        
+		    , (SELECT GET_NM_USER(ID_REG) FROM DUAL)  AS ID_REG        
+		    , DM_UPT        
+		    , (SELECT GET_NM_USER(ID_UPT) FROM DUAL)  AS ID_UPT             
+		FROM
+		  ST_PDT
+	    WHERE
+	       1=1 
+	       <if test="searchNmPdt != null and searchNmPdt != ''">
+            AND NM_PDT LIKE  '%'||#{searchNmPdt}||'%' 
+            </if>	  
+		ORDER BY
+			NM_PDT
+	</select>
+
+	<select id="getStPdtOne" parameterType="com.jcuesoft.cuebridge.st.vo.StPdtRequestVO"
+		resultMap="pdtResult">
+		SELECT
+			NO      
+            , CD_COOPERATE  
+            , CD_PDT        
+            , NM_PDT       
+            , CD_SALES             
+            , ID_PDT_UID    
+            , RT_NOR        
+            , RT_DLY        
+            , CD_KND_PAY    
+            , NO_MONTH_PAY  
+            , RT_MONTH_PAY  
+            , YN_USE        
+            , DM_REG        
+            , ID_REG        
+            , DM_UPT        
+            , ID_UPT    
+		FROM
+		ST_PDT
+		WHERE
+		NO = #{no}
+	</select>
+
+	<insert id="insert" parameterType="com.jcuesoft.cuebridge.st.vo.StPdtRequestVO">
+		INSERT INTO ST_PDT (
+			NO      
+            , CD_COOPERATE  
+            , CD_PDT        
+            , NM_PDT       
+            , CD_SALES             
+            , ID_PDT_UID    
+            , RT_NOR        
+            , RT_DLY        
+            , CD_KND_PAY    
+            , NO_MONTH_PAY  
+            , RT_MONTH_PAY  
+            , YN_USE        
+            , DM_REG        
+            , ID_REG        
+		) VALUES (
+		  ST_PDT_SEQ.nextval
+			, #{cdCooperate}
+			, #{cdPdt}
+			, #{nmPdt}
+			, #{cdSales}			
+			, #{idPdtUid}
+			, #{rtNor}
+			, #{rtDly}
+			, #{cdKndPay}
+			, #{noMonthPay}
+			, #{rtMonthPay}
+			, #{ynUse}
+			, sysdate
+			, #{idReg}
+		)
+	</insert>
+
+	<delete id="delete" parameterType="com.jcuesoft.cuebridge.st.vo.StPdtRequestVO">
+		DELETE ST_Pdt WHERE NO =
+		#{no}
+	</delete>
+
+	<update id="update" parameterType="com.jcuesoft.cuebridge.st.vo.StPdtRequestVO">
+		UPDATE ST_Pdt SET
+		      CD_COOPERATE   = #{cdCooperate}
+            , NM_PDT             = #{nmPdt}
+            , CD_SALES             = #{cdSales}
+            , ID_PDT_UID         = #{idPdtUid}
+            , RT_NOR              = #{rtNor}
+            , RT_DLY               = #{rtDly}
+            , CD_KND_PAY        = #{cdKndPay}
+            , NO_MONTH_PAY    = #{noMonthPay}
+            , RT_MONTH_PAY     = #{rtMonthPay}
+            , YN_USE                = #{ynUse}
+		    , DM_UPT = sysdate
+		    , ID_UPT = #{idUpt}
+		where
+		  NO = #{no}
+	</update>
+
+</mapper>
+    

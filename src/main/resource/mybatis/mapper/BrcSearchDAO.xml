@@ -1,0 +1,1886 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.search">
+
+    <resultMap id="brcRelationSearch" type="com.jcuesoft.cuebridge.brc.vo.BrcSearchResponseVO">
+        <result property="noCustomReq" column="NO_CUSTOM_REQ" />
+        <result property="noReq" column="NO_REQ" />
+        <result property="cdDivision" column="CD_DIVISION" />
+        <result property="nmDivision" column="NM_DIVISION" />
+        <result property="filterName" column="FILTER_NAME" />
+        <result property="filterJumin" column="FILTER_JUMIN" />
+        <result property="filterMobile" column="FILTER_MOBILE" />
+        <result property="filterPhone" column="FILTER_PHONE" />
+        <result property="filterIP" column="FILTER_IP" />        
+        <result property="nmCustom" column="NM_CUSTOM" />
+        <result property="nmScreen"  column="NM_SCREEN" />
+        <result property="noCustom"  column="NO_CUSTOM" />
+        <result property="noCustom1" column="NO_CUSTOM1" />
+        <result property="noCustom2" column="NO_CUSTOM2" />
+        <result property="noTel1Mobile" column="NO_TEL1_MOBILE" />
+        <result property="noTel2Mobile" column="NO_TEL2_MOBILE" />
+        <result property="noTel3Mobile" column="NO_TEL3_MOBILE" />
+        <result property="noTel1Etc1" column="NO_TEL1_ETC1" />
+        <result property="noTel2Etc1" column="NO_TEL2_ETC1" />
+        <result property="noTel3Etc1" column="NO_TEL3_ETC1" />
+        <result property="nmStatus" column="NM_STATUS" />
+        <result property="dmReg" column="DM_REG" />
+    </resultMap>
+    
+    <resultMap id="brcRelationHpSearch" type="com.jcuesoft.cuebridge.brc.vo.BrcSearchResponseVO">
+        <result property="cdKind" column="CD_KIND" />
+        <result property="memberListNo" column="MEMBER_LIST_NO" />
+        <result property="contractInfoNo" column="CONTRACT_INFO_NO" />
+        <result property="name"  column="NAME" />
+        <result property="appDate" column="APP_DATE" />
+        <result property="status" column="STATUS" />
+        <result property="rejectCode" column="REJECT_CODE" />
+        <result property="nmScreen"  column="NM_SCREEN" />
+    </resultMap>
+    
+    <resultMap id="brcRelationHashSearch" type="com.jcuesoft.cuebridge.brc.vo.BrcSearchResponseVO">
+    	<result property="cdMan" column="CD_MAN" />
+        <result property="cdKind" column="CD_KIND" />
+        <result property="memberListNo" column="MEMBER_LIST_NO" />
+        <result property="contractInfoNo" column="CONTRACT_INFO_NO" />
+        <result property="name"  column="NAME" />
+        <result property="appDate" column="APP_DATE" />
+        <result property="status" column="STATUS" />
+        <result property="nmManager" column="NM_MANAGER" />
+        <result property="ssnFlag" column="SSN_FLAG" />
+        <result property="hpFlag"  column="HP_FLAG" />
+    </resultMap>    
+    
+    <resultMap id="brcRelationNotice" type="com.jcuesoft.cuebridge.brc.vo.BrcSearchResponseVO">
+        <result property="noTel" column="NO_TEL" />
+        <result property="dsRemk" column="DS_REMK" />
+        <result property="dmReg" column="DM_REG" />
+        <result property="idReg" column="ID_REG" />
+    </resultMap>    
+    
+    <resultMap id="lincusMemeberInfo" type="com.jcuesoft.cuebridge.common.vo.LincusMemberVO">
+	<result property="ph11" column="PH11" />
+	<result property="ph12" column="PH12" />
+	<result property="ph13" column="PH13" />
+	<result property="ph21" column="PH21" />
+	<result property="ph22" column="PH22" />
+	<result property="ph23" column="PH23" />
+	<result property="ph31" column="PH31" />
+	<result property="ph32" column="PH32" />
+	<result property="ph33" column="PH33" />
+	<result property="ph41" column="PH41" />
+	<result property="ph42" column="PH42" />
+	<result property="ph43" column="PH43" />
+	<result property="ph61" column="PH61" />
+    <result property="ph62" column="PH62" />
+    <result property="ph63" column="PH63" />
+	<result property="ph81" column="PH81" />
+    <result property="ph82" column="PH82" />
+    <result property="ph83" column="PH83" />
+	<result property="ssn11" column="SSN11" />
+	<result property="ssn12" column="SSN12" />
+	<result property="appIP" column="APP_IP" />
+	<result property="memberListNo" column="MEMBER_LIST_NO" />
+	<result property="contractinfoNo" column="CONTRACT_INFO_NO" />
+	</resultMap>
+	
+	<select id="getErpCustomInfo" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="lincusMemeberInfo">
+	   SELECT
+	   M.NO AS MEMBER_LIST_NO 
+	    , TRIM(ME.PH11) AS PH11
+	    , TRIM(ME.PH12) AS PH12
+	    , TRIM(ME.PH13) AS PH13
+	    , TRIM(ME.PH21) AS PH21
+	    , TRIM(ME.PH22) AS PH22
+	    , TRIM(ME.PH23) AS PH23
+	    , TRIM(ME.PH31) AS PH31
+	    , TRIM(ME.PH32) AS PH32
+	    , TRIM(ME.PH33) AS PH33
+	    , TRIM(ME.PH41) AS PH41
+	    , TRIM(ME.PH42) AS PH42
+	    , TRIM(ME.PH43) AS PH43
+	    , TRIM(ME.PH61) AS PH61
+        , TRIM(ME.PH62) AS PH62
+        , TRIM(ME.PH63) AS PH63
+	    , TRIM(ME.PH81) AS PH81
+        , TRIM(ME.PH82) AS PH82
+        , TRIM(ME.PH83) AS PH83
+	    , TRIM(M.SSN11) AS SSN11
+	    , TRIM(M.SSN12) AS SSN12
+	FROM 
+	    MEMBER_LIST@ERP M, MEMBER_LIST_EXTRA@ERP ME 
+	WHERE 
+	    M.NO=ME.MEMBER_LIST_NO 
+	    AND M.NO= #{searchLincusKey}
+	</select>	
+	
+	<select id="getErpSuretyInfo" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="lincusMemeberInfo">
+       SELECT 
+        M.MEMBER_LIST_NO 
+        , TRIM(ME.PH11) AS PH11
+        , TRIM(ME.PH12) AS PH12
+        , TRIM(ME.PH13) AS PH13
+        , TRIM(ME.PH21) AS PH21
+        , TRIM(ME.PH22) AS PH22
+        , TRIM(ME.PH23) AS PH23
+        , TRIM(ME.PH31) AS PH31
+        , TRIM(ME.PH32) AS PH32
+        , TRIM(ME.PH33) AS PH33
+        , TRIM(ME.PH41) AS PH41
+        , TRIM(ME.PH42) AS PH42
+        , TRIM(ME.PH43) AS PH43
+        , TRIM(ME.PH61) AS PH61
+        , TRIM(ME.PH62) AS PH62
+        , TRIM(ME.PH63) AS PH63
+        , TRIM(ME.PH81) AS PH81
+        , TRIM(ME.PH82) AS PH82
+        , TRIM(ME.PH83) AS PH83
+        , TRIM(M.SSN11) AS SSN11
+        , TRIM(M.SSN12) AS SSN12
+    FROM 
+        GUARANTOR@ERP M, GUARANTOR_EXTRA@ERP ME 
+    WHERE 
+        M.NO=ME.GUARANTOR_NO 
+        AND M.NO= #{searchLincusKey}
+    </select>   
+    
+	<select id="getUpsCustomInfo" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="lincusMemeberInfo">
+       SELECT
+        M.NO AS MEMBER_LIST_NO 
+        , TRIM(ME.PH11) AS PH11
+        , TRIM(ME.PH12) AS PH12
+        , TRIM(ME.PH13) AS PH13
+        , TRIM(ME.PH21) AS PH21
+        , TRIM(ME.PH22) AS PH22
+        , TRIM(ME.PH23) AS PH23
+        , TRIM(ME.PH31) AS PH31
+        , TRIM(ME.PH32) AS PH32
+        , TRIM(ME.PH33) AS PH33
+        , TRIM(ME.PH41) AS PH41
+        , TRIM(ME.PH42) AS PH42
+        , TRIM(ME.PH43) AS PH43
+        , TRIM(ME.PH61) AS PH61
+        , TRIM(ME.PH62) AS PH62
+        , TRIM(ME.PH63) AS PH63
+        , TRIM(ME.PH81) AS PH81
+        , TRIM(ME.PH82) AS PH82
+        , TRIM(ME.PH83) AS PH83
+        , TRIM(M.SSN11) AS SSN11
+        , TRIM(M.SSN12) AS SSN12
+        , TRIM(M.APP_IP) AS APP_IP        
+    FROM 
+        MEMBER_LIST@UPS M, MEMBER_LIST_EXTRA@UPS ME 
+    WHERE 
+        M.NO=ME.MEMBER_LIST_NO 
+        AND M.NO= #{searchLincusKey}
+    </select>   
+
+    <select id="getUpsSuretyInfo" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="lincusMemeberInfo">
+       SELECT
+        M.MEMBER_LIST_NO 
+        , TRIM(ME.PH11) AS PH11
+        , TRIM(ME.PH12) AS PH12
+        , TRIM(ME.PH13) AS PH13
+        , TRIM(ME.PH21) AS PH21
+        , TRIM(ME.PH22) AS PH22
+        , TRIM(ME.PH23) AS PH23
+        , TRIM(ME.PH31) AS PH31
+        , TRIM(ME.PH32) AS PH32
+        , TRIM(ME.PH33) AS PH33
+        , TRIM(ME.PH41) AS PH41
+        , TRIM(ME.PH42) AS PH42
+        , TRIM(ME.PH43) AS PH43
+        , TRIM(ME.PH61) AS PH61
+        , TRIM(ME.PH62) AS PH62
+        , TRIM(ME.PH63) AS PH63
+        , TRIM(ME.PH81) AS PH81
+        , TRIM(ME.PH82) AS PH82
+        , TRIM(ME.PH83) AS PH83
+        , TRIM(M.SSN11) AS SSN11
+        , TRIM(M.SSN12) AS SSN12
+    FROM 
+        GUARANTOR@UPS M, GUARANTOR_EXTRA@UPS ME 
+    WHERE 
+        M.NO=ME.GUARANTOR_NO 
+        AND M.NO= #{searchLincusKey}
+    </select>   
+
+
+
+    <select id="getRelationSearchAll" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+(   
+    SELECT 
+        'BRIDGE' AS CD_DIVISION
+        , '중개전산' AS NM_DIVISION 
+        , BL.NO_REQ AS  NO_CUSTOM_REQ 
+        ,  BL.NO_REQ
+        ,  BC.NM_CUSTOM
+        ,  SUBSTRB(BC.NO_CUSTOM,1,6) AS NO_CUSTOM1
+        ,  SUBSTRB(BC.NO_CUSTOM,7,7) AS NO_CUSTOM2
+        , (SELECT  GET_NM_USER (BL.ID_SCREEN) FROM DUAL)  NM_SCREEN
+        , (SELECT GET_NM_CD(BL.CD_STATUS) FROM DUAL) AS NM_STATUS
+        , TO_CHAR(BL.DM_RECEIVE, 'YYYY-MM-DD HH24:MI:SS') AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = BC.NM_CUSTOM THEN '본인이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = BC.NO_CUSTOM THEN '본인주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = BC.NO_TEL1_MOBILE AND #{searchNoMobile2} = BC.NO_TEL2_MOBILE  AND #{searchNoMobile3} = BC.NO_TEL3_MOBILE THEN '본인핸드폰'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = BCH.NO_TEL1_HOME AND #{searchNoComTel2} = BCH.NO_TEL2_HOME  AND #{searchNoComTel3} = BCH.NO_TEL3_HOME THEN '집전화'
+            WHEN #{searchNoComTel1} = BCC.NO_TEL1_COMP AND #{searchNoComTel2} = BCC.NO_TEL2_COMP  AND #{searchNoComTel3} = BCC.NO_TEL3_COMP THEN '회사직통'
+            WHEN #{searchNoComTel1} = BC.NO_TEL1_ETC1 AND #{searchNoComTel2} = BC.NO_TEL2_ETC1  AND #{searchNoComTel3} = BC.NO_TEL3_ETC1 THEN '기타전화'
+            WHEN #{searchNoComTel1} = BCC.NO_MAINTEL1_COMP AND #{searchNoComTel2} = BCC.NO_MAINTEL2_COMP  AND #{searchNoComTel3} = BCC.NO_MAINTEL3_COMP THEN '회사대표전화'
+            WHEN #{searchNoTel1} = BCH.NO_TEL1_HOME AND #{searchNoTel2} = BCH.NO_TEL2_HOME  AND #{searchNoTel3} = BCH.NO_TEL3_HOME THEN '집전화'
+            WHEN #{searchNoTel1} = BCC.NO_TEL1_COMP AND #{searchNoTel2} = BCC.NO_TEL2_COMP  AND #{searchNoTel3} = BCC.NO_TEL3_COMP THEN '회사직통'
+            WHEN #{searchNoTel1} = BC.NO_TEL1_ETC1 AND #{searchNoTel2} = BC.NO_TEL2_ETC1  AND #{searchNoTel3} = BC.NO_TEL3_ETC1 THEN '기타전화'
+            WHEN #{searchNoTel1} = BCC.NO_MAINTEL1_COMP AND #{searchNoTel2} = BCC.NO_MAINTEL2_COMP  AND #{searchNoTel3} = BCC.NO_MAINTEL3_COMP THEN '회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , CASE
+            WHEN #{searchIP} = BL.DS_ACCESS_IP THEN '접수IP'
+            ELSE ''
+          END  AS FILTER_IP         
+    FROM
+        BRC_LOAN BL , BRC_CUSTOM BC ,  BRC_CUSTOM_HOME BCH ,  BRC_CUSTOM_COMPANY BCC
+    WHERE
+        BL.NO_REQ = BC.NO_REQ
+        AND BL.NO_REQ = BCH.NO_REQ
+        AND BL.NO_REQ = BCC.NO_REQ
+        AND ROWNUM &lt; 100   
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                BC.NM_CUSTOM =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustom != null and searchNoCustom != ''">
+            OR 
+            (
+                BC.NO_CUSTOM = #{searchNoCustom}
+            )
+            </if>
+            <if test="searchIP != null and searchIP != ''">
+            OR 
+            (
+                BL.DS_ACCESS_IP = #{searchIP}
+            )
+            </if>            
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (BC.NO_TEL1_MOBILE = #{searchNoMobile1} AND  BC.NO_TEL2_MOBILE=  #{searchNoMobile2}  AND  BC.NO_TEL3_MOBILE=  #{searchNoMobile3}) 
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (BCH.NO_TEL1_HOME = #{searchNoTel1} AND  BCH.NO_TEL2_HOME=  #{searchNoTel2}  AND  BCH.NO_TEL3_HOME=  #{searchNoTel3}) 
+                OR
+                (BCC.NO_TEL1_COMP = #{searchNoTel1} AND  BCC.NO_TEL2_COMP=  #{searchNoTel2}  AND  BCC.NO_TEL3_COMP=  #{searchNoTel3}) 
+                OR
+                (BC.NO_TEL1_ETC1 = #{searchNoTel1} AND  BC.NO_TEL2_ETC1=  #{searchNoTel2}  AND  BC.NO_TEL3_ETC1=  #{searchNoTel3}) 
+                OR
+                (BCC.NO_MAINTEL1_COMP = #{searchNoTel1} AND  BCC.NO_MAINTEL2_COMP=  #{searchNoTel2}  AND  BCC.NO_MAINTEL3_COMP=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (BCH.NO_TEL1_HOME = #{searchNoComTel1} AND  BCH.NO_TEL2_HOME=  #{searchNoComTel2}  AND  BCH.NO_TEL3_HOME=  #{searchNoComTel3}) 
+                OR
+                (BCC.NO_TEL1_COMP = #{searchNoComTel1} AND  BCC.NO_TEL2_COMP=  #{searchNoComTel2}  AND  BCC.NO_TEL3_COMP=  #{searchNoComTel3}) 
+                OR
+                (BC.NO_TEL1_ETC1 = #{searchNoComTel1} AND  BC.NO_TEL2_ETC1=  #{searchNoComTel2}  AND  BC.NO_TEL3_ETC1=  #{searchNoComTel3}) 
+                OR
+                (BCC.NO_MAINTEL1_COMP = #{searchNoComTel1} AND  BCC.NO_MAINTEL2_COMP=  #{searchNoComTel2}  AND  BCC.NO_MAINTEL3_COMP=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(   
+    SELECT 
+        'BRIDGE_SURETY' AS CD_DIVISION
+        , '중개전산 보증인' AS NM_DIVISION 
+        ,  BL.NO_REQ
+        , BL.NO_REQ AS  NO_CUSTOM_REQ 
+        ,  BC.NM_CUSTOM
+        ,  SUBSTRB(BC.NO_CUSTOM,1,6) AS NO_CUSTOM1
+        ,  SUBSTRB(BC.NO_CUSTOM,7,7) AS NO_CUSTOM2
+        , (SELECT  GET_NM_USER (BL.ID_SCREEN) FROM DUAL)  NM_SCREEN
+        , (SELECT GET_NM_CD(BL.CD_STATUS) FROM DUAL) AS NM_STATUS
+        , TO_CHAR(BL.DM_RECEIVE, 'YYYY-MM-DD HH24:MI:SS') AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = BS.NM_CUSTOM THEN '보증인 본인이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = BS.NO_CUSTOM THEN '보증인 본인주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = BS.NO_TEL1_MOBILE AND #{searchNoMobile2} = BS.NO_TEL2_MOBILE  AND #{searchNoMobile3} = BS.NO_TEL3_MOBILE THEN '보증인 본인핸드폰'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = BSH.NO_TEL1_HOME AND #{searchNoComTel2} = BSH.NO_TEL2_HOME  AND #{searchNoComTel3} = BSH.NO_TEL3_HOME THEN '보증인 집전화'
+            WHEN #{searchNoComTel1} = BSC.NO_TEL1_COMP AND #{searchNoComTel2} = BSC.NO_TEL2_COMP  AND #{searchNoComTel3} = BSC.NO_TEL3_COMP THEN '보증인 회사직통'
+            WHEN #{searchNoComTel1} = BS.NO_TEL1_ETC1 AND #{searchNoComTel2} = BS.NO_TEL2_ETC1  AND #{searchNoComTel3} = BS.NO_TEL3_ETC1 THEN '보증인 기타전화'
+            WHEN #{searchNoComTel1} = BSC.NO_MAINTEL1_COMP AND #{searchNoComTel2} = BSC.NO_MAINTEL2_COMP  AND #{searchNoComTel3} = BSC.NO_MAINTEL3_COMP THEN '보증인 회사대표전화'
+            WHEN #{searchNoTel1} = BSH.NO_TEL1_HOME AND #{searchNoTel2} = BSH.NO_TEL2_HOME  AND #{searchNoTel3} = BSH.NO_TEL3_HOME THEN '보증인 집전화'
+            WHEN #{searchNoTel1} = BSC.NO_TEL1_COMP AND #{searchNoTel2} = BSC.NO_TEL2_COMP  AND #{searchNoTel3} = BSC.NO_TEL3_COMP THEN '보증인 회사직통'
+            WHEN #{searchNoTel1} = BS.NO_TEL1_ETC1 AND #{searchNoTel2} = BS.NO_TEL2_ETC1  AND #{searchNoTel3} = BS.NO_TEL3_ETC1 THEN '보증인 기타전화'
+            WHEN #{searchNoTel1} = BSC.NO_MAINTEL1_COMP AND #{searchNoTel2} = BSC.NO_MAINTEL2_COMP  AND #{searchNoTel3} = BSC.NO_MAINTEL3_COMP THEN '보증인 회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , '' AS FILTER_IP
+    FROM
+        BRC_LOAN BL , BRC_CUSTOM BC , BRC_SURETY BS ,  BRC_SURETY_HOME BSH ,  BRC_SURETY_COMPANY BSC
+    WHERE
+        BL.NO_REQ = BC.NO_REQ
+        AND BL.NO_REQ = BS.NO_REQ
+        AND BL.NO_REQ = BSH.NO_REQ
+        AND BL.NO_REQ = BSC.NO_REQ
+        AND ROWNUM &lt; 100   
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                BS.NM_CUSTOM =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustom != null and searchNoCustom != ''">
+            OR 
+            (
+                BS.NO_CUSTOM = #{searchNoCustom}
+            )
+            </if>
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (BS.NO_TEL1_MOBILE = #{searchNoMobile1} AND  BS.NO_TEL2_MOBILE=  #{searchNoMobile2}  AND  BS.NO_TEL3_MOBILE=  #{searchNoMobile3}) 
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (BSH.NO_TEL1_HOME = #{searchNoTel1} AND  BSH.NO_TEL2_HOME=  #{searchNoTel2}  AND  BSH.NO_TEL3_HOME=  #{searchNoTel3}) 
+                OR
+                (BSC.NO_TEL1_COMP = #{searchNoTel1} AND  BSC.NO_TEL2_COMP=  #{searchNoTel2}  AND  BSC.NO_TEL3_COMP=  #{searchNoTel3}) 
+                OR
+                (BS.NO_TEL1_ETC1 = #{searchNoTel1} AND  BS.NO_TEL2_ETC1=  #{searchNoTel2}  AND  BS.NO_TEL3_ETC1=  #{searchNoTel3}) 
+                OR
+                (BSC.NO_MAINTEL1_COMP = #{searchNoTel1} AND  BSC.NO_MAINTEL2_COMP=  #{searchNoTel2}  AND  BSC.NO_MAINTEL3_COMP=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (BSH.NO_TEL1_HOME = #{searchNoComTel1} AND  BSH.NO_TEL2_HOME=  #{searchNoComTel2}  AND  BSH.NO_TEL3_HOME=  #{searchNoComTel3}) 
+                OR
+                (BSC.NO_TEL1_COMP = #{searchNoComTel1} AND  BSC.NO_TEL2_COMP=  #{searchNoComTel2}  AND  BSC.NO_TEL3_COMP=  #{searchNoComTel3}) 
+                OR
+                (BS.NO_TEL1_ETC1 = #{searchNoComTel1} AND  BS.NO_TEL2_ETC1=  #{searchNoComTel2}  AND  BS.NO_TEL3_ETC1=  #{searchNoComTel3}) 
+                OR
+                (BSC.NO_MAINTEL1_COMP = #{searchNoComTel1} AND  BSC.NO_MAINTEL2_COMP=  #{searchNoComTel2}  AND  BSC.NO_MAINTEL3_COMP=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(   
+        SELECT 
+        'TIM' AS CD_DIVISION
+        , 'TIM' AS NM_DIVISION 
+        , TO_CHAR(ML.NO) AS  NO_REQ
+        , TO_CHAR(ML.NO) AS  NO_CUSTOM_REQ 
+        , ML.NAME AS NM_CUSTOM
+        , ML.SSN11 AS NO_CUSTOM1
+        , ML.SSN12 AS NO_CUSTOM2
+        , (SELECT NAME FROM MEMBER@UPS WHERE ID =  ML.MG_MANAGER_ID) AS NM_SCREEN
+        , CASE
+             WHEN ML.STATUS = 'D' THEN 'IVR'
+             WHEN ML.STATUS = 'E' THEN '홈페이지'
+             WHEN ML.STATUS = 'Y' THEN '상담완료'
+             WHEN ML.STATUS = 'J' THEN '장난콜'
+             WHEN ML.STATUS = 'X' THEN '거절'
+             WHEN ML.STATUS = 'H' THEN '취소'
+             WHEN ML.STATUS = 'R' THEN '보류'
+             WHEN ML.STATUS = 'S' THEN '보류Ⅱ'
+             WHEN ML.STATUS = 'N' THEN '휴지통'
+            ELSE ML.STATUS
+          END  AS NM_STATUS
+        , TO_CHAR(TO_DATE(ML.APP_DATE||' '||ML.APP_TIME,'YY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS')   AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = ML.NAME THEN '본인이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = ML.SSN11||ML.SSN12 THEN '본인주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = ML.PH21 AND #{searchNoMobile2} = ML.PH22  AND #{searchNoMobile3} = ML.PH23 THEN '본인핸드폰'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = ML.PH11 AND #{searchNoComTel2} = ML.PH12  AND #{searchNoComTel3} = ML.PH13 THEN '집전화'
+            WHEN #{searchNoComTel1} = ML.PH61 AND #{searchNoComTel2} = ML.PH62  AND #{searchNoComTel3} = ML.PH63 THEN '회사대표전화'
+            WHEN #{searchNoTel1} = ML.PH11 AND #{searchNoTel2} = ML.PH12  AND #{searchNoTel3} = ML.PH13 THEN '집전화'
+            WHEN #{searchNoTel1} = ML.PH61 AND #{searchNoTel2} = ML.PH62  AND #{searchNoTel3} = ML.PH63 THEN '회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , '' AS FILTER_IP          
+    FROM
+        LOAN_MONEY_INQUIRE@UPS ML
+    WHERE 
+        ML.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                ML.NAME =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+            OR 
+            (
+                ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond}
+            )
+            </if>
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (ML.PH21 = #{searchNoMobile1} AND  ML.PH22=  #{searchNoMobile2}  AND  ML.PH23=  #{searchNoMobile3}) 
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (ML.PH11 = #{searchNoTel1} AND  ML.PH12=  #{searchNoTel2}  AND  ML.PH13=  #{searchNoTel3}) 
+                OR
+                (ML.PH61 = #{searchNoTel1} AND  ML.PH62=  #{searchNoTel2}  AND  ML.PH63=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (ML.PH11 = #{searchNoComTel1} AND  ML.PH12=  #{searchNoComTel2}  AND  ML.PH13=  #{searchNoComTel3}) 
+                OR
+                (ML.PH61 = #{searchNoComTel1} AND  ML.PH62=  #{searchNoComTel2}  AND  ML.PH63=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(
+         SELECT 
+        'TIM_SURETY' AS CD_DIVISION
+        , 'TIM 보증인' AS NM_DIVISION  
+        , TO_CHAR(ML.NO) AS  NO_REQ
+        , TO_CHAR(ML.NO) AS  NO_CUSTOM_REQ 
+        , ML.NAME AS NM_CUSTOM
+        , ML.SSN11 AS NO_CUSTOM1
+        , ML.SSN12 AS NO_CUSTOM2
+        , (SELECT NAME FROM MEMBER@UPS WHERE ID =  ML.MG_MANAGER_ID) AS NM_SCREEN
+        , CASE
+            WHEN ML.STATUS = 'D' THEN 'IVR'
+             WHEN ML.STATUS = 'E' THEN '홈페이지'
+             WHEN ML.STATUS = 'Y' THEN '상담완료'
+             WHEN ML.STATUS = 'J' THEN '장난콜'
+             WHEN ML.STATUS = 'X' THEN '거절'
+             WHEN ML.STATUS = 'H' THEN '취소'
+             WHEN ML.STATUS = 'R' THEN '보류'
+             WHEN ML.STATUS = 'S' THEN '보류Ⅱ'
+             WHEN ML.STATUS = 'N' THEN '휴지통'
+            ELSE ML.STATUS
+          END  AS NM_STATUS
+        , TO_CHAR(TO_DATE(ML.APP_DATE||' '||ML.APP_TIME,'YY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS')   AS DM_REG
+        , CASE
+            WHEN TRIM(#{searchNmCustom}) = GE.NAME THEN '보증인 이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = GE.SSN11||GE.SSN12 THEN '보증인 주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = GE.PH21 AND #{searchNoMobile2} = GE.PH22  AND #{searchNoMobile3} = GE.PH23 THEN '보증인 핸드폰'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = GE.PH11 AND #{searchNoComTel2} = GE.PH12  AND #{searchNoComTel3} = GE.PH13 THEN '보증인 집전화'
+            WHEN #{searchNoComTel1} = GE.PH61 AND #{searchNoComTel2} = GE.PH62  AND #{searchNoComTel3} = GE.PH63 THEN '보증인 회사대표전화'
+            WHEN #{searchNoTel1} = GE.PH11 AND #{searchNoTel2} = GE.PH12  AND #{searchNoTel3} = GE.PH13 THEN '보증인 집전화'
+            WHEN #{searchNoTel1} = GE.PH61 AND #{searchNoTel2} = GE.PH62  AND #{searchNoTel3} = GE.PH63 THEN '보증인 회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , '' AS FILTER_IP          
+    FROM
+        LOAN_MONEY_INQUIRE@UPS ML,  INQUIRE_GUARANTOR@UPS GE
+    WHERE 
+        ML.NO = GE.INQUIRE_LIST_NO
+        AND ML.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                GE.NAME =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+            OR 
+            (
+                GE.SSN11 = #{searchNoCustomFirst} AND GE.SSN12 = #{searchNoCustomSecond}
+            )
+            </if>
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (GE.PH21 = #{searchNoMobile1} AND  GE.PH22=  #{searchNoMobile2}  AND  GE.PH23=  #{searchNoMobile3}) 
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (GE.PH11 = #{searchNoTel1} AND  GE.PH12=  #{searchNoTel2}  AND  GE.PH13=  #{searchNoTel3}) 
+                OR
+                (GE.PH61 = #{searchNoTel1} AND  GE.PH62=  #{searchNoTel2}  AND  GE.PH63=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (GE.PH11 = #{searchNoComTel1} AND  GE.PH12=  #{searchNoComTel2}  AND  GE.PH13=  #{searchNoComTel3}) 
+                OR
+                (GE.PH61 = #{searchNoComTel1} AND  GE.PH62=  #{searchNoComTel2}  AND  GE.PH63=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(   
+        SELECT 
+        'UPS' AS CD_DIVISION
+        , '대출관리' AS NM_DIVISION 
+        , TO_CHAR(ML.NO) AS  NO_REQ
+        , TO_CHAR(ML.NO) AS  NO_CUSTOM_REQ 
+        , ML.NAME AS NM_CUSTOM
+        , ML.SSN11 AS NO_CUSTOM1
+        , ML.SSN12 AS NO_CUSTOM2
+        , (SELECT NAME FROM MEMBER@ERP WHERE ID =  ML.APP_MANAGER_ID) AS NM_SCREEN
+        , CASE
+            WHEN ML.STATUS = 'A' THEN '접수'
+            WHEN ML.STATUS = 'B' THEN '심사'
+            WHEN ML.STATUS = 'C' THEN '심사Ⅱ'
+            WHEN ML.STATUS = 'D' THEN '1차결재'
+            WHEN ML.STATUS = 'E' THEN '고객확인'
+            WHEN ML.STATUS = 'F' THEN '2차결재'
+            WHEN ML.STATUS = 'G' THEN '대출대상'
+            WHEN ML.STATUS = 'H' THEN '서류징구'
+            WHEN ML.STATUS = 'S' THEN 'ARS대출대기'
+            WHEN ML.STATUS = 'Y' THEN '대출'
+            WHEN ML.STATUS = 'R' THEN '보류'
+            WHEN ML.STATUS = 'X' THEN '거절'
+            WHEN ML.STATUS = 'L' THEN '거절'
+            WHEN ML.STATUS = 'K' THEN '거절'
+            WHEN ML.STATUS = 'N' THEN '휴지통'
+            ELSE ML.STATUS
+          END  AS NM_STATUS
+        , TIME_TO_ABS@UPS(ML.B_TIME) AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = ML.NAME THEN '본인이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = ML.SSN11||ML.SSN12 THEN '본인주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = ME.PH21 AND #{searchNoMobile2} = ME.PH22  AND #{searchNoMobile3} = ME.PH23 THEN '본인핸드폰'
+            WHEN #{searchNoMobileSecond1} = ME.PH81 AND #{searchNoMobileSecond2} = ME.PH82  AND #{searchNoMobileSecond3} = ME.PH83 THEN '본인핸드폰2'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = ME.PH11 AND #{searchNoComTel2} = ME.PH12  AND #{searchNoComTel3} = ME.PH13 THEN '집전화'
+            WHEN #{searchNoComTel1} = ME.PH31 AND #{searchNoComTel2} = ME.PH32  AND #{searchNoComTel3} = ME.PH33 THEN '회사직통'
+            WHEN #{searchNoComTel1} = ME.PH41 AND #{searchNoComTel2} = ME.PH42  AND #{searchNoComTel3} = ME.PH43 THEN '기타전화'
+            WHEN #{searchNoComTel1} = ME.PH51 AND #{searchNoComTel2} = ME.PH52  AND #{searchNoComTel3} = ME.PH53 THEN '파견업체전화'
+            WHEN #{searchNoComTel1} = ME.PH61 AND #{searchNoComTel2} = ME.PH62  AND #{searchNoComTel3} = ME.PH63 THEN '회사대표전화'
+            WHEN #{searchNoTel1} = ME.PH11 AND #{searchNoTel2} = ME.PH12  AND #{searchNoTel3} = ME.PH13 THEN '집전화'
+            WHEN #{searchNoTel1} = ME.PH31 AND #{searchNoTel2} = ME.PH32  AND #{searchNoTel3} = ME.PH33 THEN '회사직통'
+            WHEN #{searchNoTel1} = ME.PH41 AND #{searchNoTel2} = ME.PH42  AND #{searchNoTel3} = ME.PH43 THEN '기타전화'
+            WHEN #{searchNoTel1} = ME.PH51 AND #{searchNoTel2} = ME.PH52  AND #{searchNoTel3} = ME.PH53 THEN '파견업체전화'
+            WHEN #{searchNoTel1} = ME.PH61 AND #{searchNoTel2} = ME.PH62  AND #{searchNoTel3} = ME.PH63 THEN '회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , CASE
+            WHEN #{searchIP} = ML.APP_IP THEN '접수IP'
+            ELSE ''
+          END  AS FILTER_IP
+    FROM
+        MEMBER_LIST@UPS ML, MEMBER_LIST_EXTRA@UPS ME
+    WHERE 
+        ML.NO = ME.MEMBER_LIST_NO
+        AND ML.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100
+        AND 
+        (1=2 
+            <if test="searchIP != null and searchIP != ''">
+            OR 
+            (
+                ML.APP_IP = #{searchIP}
+            )
+            </if>        
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                ML.NAME =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+            OR 
+            (
+                ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond}
+            )
+            </if>
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (ME.PH21 = #{searchNoMobile1} AND  ME.PH22=  #{searchNoMobile2}  AND  ME.PH23=  #{searchNoMobile3}) 
+                OR
+                (ME.PH81 = #{searchNoMobile1} AND  ME.PH82=  #{searchNoMobile2}  AND  ME.PH83=  #{searchNoMobile3})
+            )
+            </if>
+            <if test="(searchNoMobileSecond1 != null and searchNoMobileSecond1 != '') and (searchNoMobileSecond2 != null and searchNoMobileSecond2 != '') and (searchNoMobileSecond3 != null and searchNoMobileSecond3 != '')">
+            OR 
+            (
+                (ME.PH21 = #{searchNoMobileSecond1} AND  ME.PH22=  #{searchNoMobileSecond2}  AND  ME.PH23=  #{searchNoMobileSecond3}) 
+                OR
+                (ME.PH81 = #{searchNoMobileSecond1} AND  ME.PH82=  #{searchNoMobileSecond2}  AND  ME.PH83=  #{searchNoMobileSecond3})
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (ME.PH11 = #{searchNoTel1} AND  ME.PH12=  #{searchNoTel2}  AND  ME.PH13=  #{searchNoTel3}) 
+                OR
+                (ME.PH31 = #{searchNoTel1} AND  ME.PH32=  #{searchNoTel2}  AND  ME.PH33=  #{searchNoTel3}) 
+                OR
+                (ME.PH41 = #{searchNoTel1} AND  ME.PH42=  #{searchNoTel2}  AND  ME.PH43=  #{searchNoTel3}) 
+                OR
+                (ME.PH51 = #{searchNoTel1} AND  ME.PH52=  #{searchNoTel2}  AND  ME.PH53=  #{searchNoTel3})
+                OR
+                (ME.PH61 = #{searchNoTel1} AND  ME.PH62=  #{searchNoTel2}  AND  ME.PH63=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (ME.PH11 = #{searchNoComTel1} AND  ME.PH12=  #{searchNoComTel2}  AND  ME.PH13=  #{searchNoComTel3}) 
+                OR
+                (ME.PH31 = #{searchNoComTel1} AND  ME.PH32=  #{searchNoComTel2}  AND  ME.PH33=  #{searchNoComTel3}) 
+                OR
+                (ME.PH41 = #{searchNoComTel1} AND  ME.PH42=  #{searchNoComTel2}  AND  ME.PH43=  #{searchNoComTel3}) 
+                OR
+                (ME.PH51 = #{searchNoComTel1} AND  ME.PH52=  #{searchNoComTel2}  AND  ME.PH53=  #{searchNoComTel3})
+                OR
+                (ME.PH61 = #{searchNoComTel1} AND  ME.PH62=  #{searchNoComTel2}  AND  ME.PH63=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(
+         SELECT 
+        'UPS_SURETY' AS CD_DIVISION
+        , '대출관리 보증인' AS NM_DIVISION 
+        , TO_CHAR(ML.NO) AS  NO_REQ
+        , TO_CHAR(ML.NO) AS  NO_CUSTOM_REQ 
+        , ML.NAME AS NM_CUSTOM
+        , ML.SSN11 AS NO_CUSTOM1
+        , ML.SSN12 AS NO_CUSTOM2
+        , (SELECT NAME FROM MEMBER@UPS WHERE ID =  ML.APP_MANAGER_ID) AS NM_SCREEN
+        , CASE
+            WHEN ML.STATUS = 'A' THEN '접수'
+            WHEN ML.STATUS = 'B' THEN '심사'
+            WHEN ML.STATUS = 'C' THEN '심사Ⅱ'
+            WHEN ML.STATUS = 'D' THEN '1차결재'
+            WHEN ML.STATUS = 'E' THEN '고객확인'
+            WHEN ML.STATUS = 'F' THEN '2차결재'
+            WHEN ML.STATUS = 'G' THEN '대출대상'
+            WHEN ML.STATUS = 'H' THEN '서류징구'
+            WHEN ML.STATUS = 'S' THEN 'ARS대출대기'
+            WHEN ML.STATUS = 'Y' THEN '대출'
+            WHEN ML.STATUS = 'R' THEN '보류'
+            WHEN ML.STATUS = 'X' THEN '거절'
+            WHEN ML.STATUS = 'L' THEN '거절'
+            WHEN ML.STATUS = 'K' THEN '거절'
+            WHEN ML.STATUS = 'N' THEN '휴지통'
+            ELSE ML.STATUS
+          END  AS NM_STATUS
+        , TIME_TO_ABS@UPS(ML.B_TIME) AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = GL.NAME THEN '보증인명'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = GL.SSN11||GL.SSN12 THEN '보증인주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = GE.PH21 AND #{searchNoMobile2} = GE.PH22  AND #{searchNoMobile3} = GE.PH23 THEN '보증인핸드폰'
+            WHEN #{searchNoMobileSecond1} = GE.PH81 AND #{searchNoMobileSecond2} = GE.PH82  AND #{searchNoMobileSecond3} = GE.PH83 THEN '보증인핸드폰'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = GE.PH11 AND #{searchNoComTel2} = GE.PH12  AND #{searchNoComTel3} = GE.PH13 THEN '보증인 집전화'
+            WHEN #{searchNoComTel1} = GE.PH31 AND #{searchNoComTel2} = GE.PH32  AND #{searchNoComTel3} = GE.PH33 THEN '보증인 회사직통'
+            WHEN #{searchNoComTel1} = GE.PH51 AND #{searchNoComTel2} = GE.PH52  AND #{searchNoComTel3} = GE.PH53 THEN '보증인 파견업체전화'
+            WHEN #{searchNoComTel1} = GE.PH61 AND #{searchNoComTel2} = GE.PH62  AND #{searchNoComTel3} = GE.PH63 THEN '보증인 회사대표전화'
+            WHEN #{searchNoTel1} = GE.PH11 AND #{searchNoTel2} = GE.PH12  AND #{searchNoTel3} = GE.PH13 THEN '보증인 집전화'
+            WHEN #{searchNoTel1} = GE.PH31 AND #{searchNoTel2} = GE.PH32  AND #{searchNoTel3} = GE.PH33 THEN '보증인 회사직통'
+            WHEN #{searchNoTel1} = GE.PH51 AND #{searchNoTel2} = GE.PH52  AND #{searchNoTel3} = GE.PH53 THEN '보증인 파견업체전화'
+            WHEN #{searchNoTel1} = GE.PH61 AND #{searchNoTel2} = GE.PH62  AND #{searchNoTel3} = GE.PH63 THEN '보증인 회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , '' AS FILTER_IP          
+    FROM
+        MEMBER_LIST@UPS ML , GUARANTOR@UPS GL, GUARANTOR_EXTRA@UPS GE
+    WHERE 
+        GL.MEMBER_LIST_NO = ML.NO 
+        AND GL.NO = GE.GUARANTOR_NO
+        AND ML.SAVE_STATUS = 'Y'
+        AND GL.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                GL.NAME =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+            OR 
+            (
+                GL.SSN11 = #{searchNoCustomFirst} AND GL.SSN12 = #{searchNoCustomSecond}
+            )
+            </if>
+           <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (GE.PH21 = #{searchNoMobile1} AND  GE.PH22=  #{searchNoMobile2}  AND  GE.PH23=  #{searchNoMobile3}) 
+            )
+            </if>
+            <if test="(searchNoMobileSecond1 != null and searchNoMobileSecond1 != '') and (searchNoMobileSecond2 != null and searchNoMobileSecond2 != '') and (searchNoMobileSecond3 != null and searchNoMobileSecond3 != '')">
+            OR 
+            (
+                (GE.PH21 = #{searchNoMobileSecond1} AND  GE.PH22=  #{searchNoMobileSecond2}  AND  GE.PH23=  #{searchNoMobileSecond3}) 
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (GE.PH11 = #{searchNoTel1} AND  GE.PH12=  #{searchNoTel2}  AND  GE.PH13=  #{searchNoTel3}) 
+                OR
+                (GE.PH31 = #{searchNoTel1} AND  GE.PH32=  #{searchNoTel2}  AND  GE.PH33=  #{searchNoTel3}) 
+                OR
+                (GE.PH51 is not null AND GE.PH51 = #{searchNoTel1} AND  GE.PH52=  #{searchNoTel2}  AND  GE.PH53=  #{searchNoTel3})
+                OR
+                (GE.PH61 is not null AND GE.PH61 = #{searchNoTel1} AND  GE.PH62=  #{searchNoTel2}  AND  GE.PH63=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (GE.PH11 = #{searchNoComTel1} AND  GE.PH12=  #{searchNoComTel2}  AND  GE.PH13=  #{searchNoComTel3}) 
+                OR
+                (GE.PH31 = #{searchNoComTel1} AND  GE.PH32=  #{searchNoComTel2}  AND  GE.PH33=  #{searchNoComTel3}) 
+                OR
+                (GE.PH51 is not null AND GE.PH51 = #{searchNoComTel1} AND  GE.PH52=  #{searchNoComTel2}  AND  GE.PH53=  #{searchNoComTel3})
+                OR
+                (GE.PH61 is not null AND GE.PH61 = #{searchNoComTel1} AND  GE.PH62=  #{searchNoComTel2}  AND  GE.PH63=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(
+    SELECT 
+        'ERP' AS CD_DIVISION
+        , '회수관리' AS NM_DIVISION 
+        , TO_CHAR(ML.NO) AS  NO_CUSTOM_REQ 
+        , TO_CHAR(CI.NO) AS  NO_REQ
+        , ML.NAME AS NM_CUSTOM
+        , ML.SSN11 AS NO_CUSTOM1
+        , ML.SSN12 AS NO_CUSTOM2
+        , (SELECT NAME FROM MEMBER@ERP WHERE ID =  CI.MANAGER_ID) AS NM_SCREEN
+        , 
+        CASE
+            WHEN CI.STATUS = 'A' THEN '정상'
+            WHEN CI.STATUS = 'B' THEN '연체'
+            WHEN CI.STATUS = 'C' THEN '화해정상'
+            WHEN CI.STATUS = 'D' THEN '화해연체'
+            WHEN CI.STATUS = 'I' THEN '개회정상'
+            WHEN CI.STATUS = 'J' THEN '개회연체'
+            WHEN CI.STATUS = 'F' THEN '신회정상'
+            WHEN CI.STATUS = 'G' THEN '신회연체'
+            WHEN CI.STATUS = 'E' THEN '완제'
+            WHEN CI.STATUS = 'ZY' THEN '잔액완제'
+            WHEN CI.STATUS = 'EL' THEN '리볼빙완제'
+            WHEN CI.STATUS = 'Y' THEN '양도'
+            WHEN CI.STATUS = 'S' THEN '대손'
+            WHEN CI.STATUS = 'M' THEN '매각'
+            ELSE CI.STATUS
+        END  AS NM_STATUS
+        , TO_CHAR(ML.OK_DATE, 'YYYY-MM-DD HH24:MI:SS') AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = ML.NAME THEN '본인이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = ML.SSN11||ML.SSN12 THEN '본인주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = ME.PH21 AND #{searchNoMobile2} = ME.PH22  AND #{searchNoMobile3} = ME.PH23 THEN '본인핸드폰'
+            WHEN #{searchNoMobileSecond1} = ME.PH81 AND #{searchNoMobileSecond2} = ME.PH82  AND #{searchNoMobileSecond3} = ME.PH83 THEN '본인핸드폰2'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = ME.PH11 AND #{searchNoComTel2} = ME.PH12  AND #{searchNoComTel3} = ME.PH13 THEN '집전화'
+            WHEN #{searchNoComTel1} = ME.PH31 AND #{searchNoComTel2} = ME.PH32  AND #{searchNoComTel3} = ME.PH33 THEN '회사직통'
+            WHEN #{searchNoComTel1} = ME.PH41 AND #{searchNoComTel2} = ME.PH42  AND #{searchNoComTel3} = ME.PH43 THEN '기타전화'
+            WHEN #{searchNoComTel1} = ME.PH51 AND #{searchNoComTel2} = ME.PH52  AND #{searchNoComTel3} = ME.PH53 THEN '파견업체전화'
+            WHEN #{searchNoComTel1} = ME.PH61 AND #{searchNoComTel2} = ME.PH62  AND #{searchNoComTel3} = ME.PH63 THEN '회사대표전화'
+            WHEN #{searchNoTel1} = ME.PH11 AND #{searchNoTel2} = ME.PH12  AND #{searchNoTel3} = ME.PH13 THEN '집전화'
+            WHEN #{searchNoTel1} = ME.PH31 AND #{searchNoTel2} = ME.PH32  AND #{searchNoTel3} = ME.PH33 THEN '회사직통'
+            WHEN #{searchNoTel1} = ME.PH41 AND #{searchNoTel2} = ME.PH42  AND #{searchNoTel3} = ME.PH43 THEN '기타전화'
+            WHEN #{searchNoTel1} = ME.PH51 AND #{searchNoTel2} = ME.PH52  AND #{searchNoTel3} = ME.PH53 THEN '파견업체전화'
+            WHEN #{searchNoTel1} = ME.PH61 AND #{searchNoTel2} = ME.PH62  AND #{searchNoTel3} = ME.PH63 THEN '회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , '' AS FILTER_IP          
+        FROM
+        MEMBER_LIST@ERP ML,MEMBER_LIST_EXTRA@ERP ME,CONTRACT_INFO@ERP CI
+    WHERE 
+        ML.NO = ME.MEMBER_LIST_NO
+        AND ML.NO = CI.MEMBER_LIST_NO 
+        AND ML.SAVE_STATUS = 'Y'
+        AND CI.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                ML.NAME =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+            OR 
+            (
+                ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond}
+            )
+            </if>
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (ME.PH21 = #{searchNoMobile1} AND  ME.PH22=  #{searchNoMobile2}  AND  ME.PH23=  #{searchNoMobile3}) 
+                OR
+                (ME.PH81 = #{searchNoMobile1} AND  ME.PH82=  #{searchNoMobile2}  AND  ME.PH83=  #{searchNoMobile3})
+            )
+            </if>
+            <if test="(searchNoMobileSecond1 != null and searchNoMobileSecond1 != '') and (searchNoMobileSecond2 != null and searchNoMobileSecond2 != '') and (searchNoMobileSecond3 != null and searchNoMobileSecond3 != '')">
+            OR 
+            (
+                (ME.PH21 = #{searchNoMobileSecond1} AND  ME.PH22=  #{searchNoMobileSecond2}  AND  ME.PH23=  #{searchNoMobileSecond3}) 
+                OR
+                (ME.PH81 = #{searchNoMobileSecond1} AND  ME.PH82=  #{searchNoMobileSecond2}  AND  ME.PH83=  #{searchNoMobileSecond3})
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (ME.PH11 = #{searchNoTel1} AND  ME.PH12=  #{searchNoTel2}  AND  ME.PH13=  #{searchNoTel3}) 
+                OR
+                (ME.PH31 = #{searchNoTel1} AND  ME.PH32=  #{searchNoTel2}  AND  ME.PH33=  #{searchNoTel3}) 
+                OR
+                (ME.PH41 = #{searchNoTel1} AND  ME.PH42=  #{searchNoTel2}  AND  ME.PH43=  #{searchNoTel3}) 
+                OR
+                (ME.PH51 = #{searchNoTel1} AND  ME.PH52=  #{searchNoTel2}  AND  ME.PH53=  #{searchNoTel3})
+                OR
+                (ME.PH61 = #{searchNoTel1} AND  ME.PH62=  #{searchNoTel2}  AND  ME.PH63=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (ME.PH11 = #{searchNoComTel1} AND  ME.PH12=  #{searchNoComTel2}  AND  ME.PH13=  #{searchNoComTel3}) 
+                OR
+                (ME.PH31 = #{searchNoComTel1} AND  ME.PH32=  #{searchNoComTel2}  AND  ME.PH33=  #{searchNoComTel3}) 
+                OR
+                (ME.PH41 = #{searchNoComTel1} AND  ME.PH42=  #{searchNoComTel2}  AND  ME.PH43=  #{searchNoComTel3}) 
+                OR
+                (ME.PH51 = #{searchNoComTel1} AND  ME.PH52=  #{searchNoComTel2}  AND  ME.PH53=  #{searchNoComTel3})
+                OR
+                (ME.PH61 = #{searchNoComTel1} AND  ME.PH62=  #{searchNoComTel2}  AND  ME.PH63=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+UNION ALL
+(
+    SELECT 
+        'ERP_SURETY' AS CD_DIVISION
+        , '회수관리 보증인' AS NM_DIVISION 
+        , TO_CHAR(ML.NO) AS  NO_CUSTOM_REQ 
+        , TO_CHAR(CI.NO) AS  NO_REQ
+        , ML.NAME AS NM_CUSTOM
+        , ML.SSN11 AS NO_CUSTOM1
+        , ML.SSN12 AS NO_CUSTOM2
+        , (SELECT NAME FROM MEMBER@ERP WHERE ID =  CI.MANAGER_ID) AS NM_SCREEN
+        , 
+        CASE
+            WHEN CI.STATUS = 'A' THEN '정상'
+            WHEN CI.STATUS = 'B' THEN '연체'
+            WHEN CI.STATUS = 'C' THEN '화해정상'
+            WHEN CI.STATUS = 'D' THEN '화해연체'
+            WHEN CI.STATUS = 'I' THEN '개회정상'
+            WHEN CI.STATUS = 'J' THEN '개회연체'
+            WHEN CI.STATUS = 'F' THEN '신회정상'
+            WHEN CI.STATUS = 'G' THEN '신회연체'
+            WHEN CI.STATUS = 'E' THEN '완제'
+            WHEN CI.STATUS = 'ZY' THEN '잔액완제'
+            WHEN CI.STATUS = 'EL' THEN '리볼빙완제'
+            WHEN CI.STATUS = 'Y' THEN '양도'
+            WHEN CI.STATUS = 'S' THEN '대손'
+            WHEN CI.STATUS = 'M' THEN '매각'
+            ELSE CI.STATUS
+        END  AS NM_STATUS
+        , TO_CHAR(ML.OK_DATE, 'YYYY-MM-DD HH24:MI:SS') AS DM_REG
+        , CASE
+            WHEN #{searchNmCustom} = GL.NAME THEN '보증인 이름'
+            ELSE ''
+          END  AS FILTER_NAME
+        , CASE
+            WHEN #{searchNoCustom} = GL.SSN11||GL.SSN12 THEN '보증인 주민번호'
+            ELSE ''
+          END  AS FILTER_JUMIN  
+        , CASE
+            WHEN #{searchNoMobile1} = GE.PH21 AND #{searchNoMobile2} = GE.PH22  AND #{searchNoMobile3} = GE.PH23 THEN '보증인 핸드폰'
+            WHEN #{searchNoMobileSecond1} = GE.PH81 AND #{searchNoMobileSecond2} = GE.PH82  AND #{searchNoMobileSecond3} = GE.PH83 THEN '보증인 핸드폰2'
+            ELSE ''
+          END  AS FILTER_MOBILE
+        , CASE
+            WHEN #{searchNoComTel1} = GE.PH11 AND #{searchNoComTel2} = GE.PH12  AND #{searchNoComTel3} = GE.PH13 THEN '보증인 집전화'
+            WHEN #{searchNoComTel1} = GE.PH31 AND #{searchNoComTel2} = GE.PH32  AND #{searchNoComTel3} = GE.PH33 THEN '보증인 회사직통'
+            WHEN #{searchNoComTel1} = GE.PH41 AND #{searchNoComTel2} = GE.PH42  AND #{searchNoComTel3} = GE.PH43 THEN '보증인 기타전화'
+            WHEN #{searchNoComTel1} = GE.PH51 AND #{searchNoComTel2} = GE.PH52  AND #{searchNoComTel3} = GE.PH53 THEN '보증인 파견업체전화'
+            WHEN #{searchNoComTel1} = GE.PH61 AND #{searchNoComTel2} = GE.PH62  AND #{searchNoComTel3} = GE.PH63 THEN '보증인 회사대표전화'
+            WHEN #{searchNoTel1} = GE.PH11 AND #{searchNoTel2} = GE.PH12  AND #{searchNoTel3} = GE.PH13 THEN '보증인 집전화'
+            WHEN #{searchNoTel1} = GE.PH31 AND #{searchNoTel2} = GE.PH32  AND #{searchNoTel3} = GE.PH33 THEN '보증인 회사직통'
+            WHEN #{searchNoTel1} = GE.PH41 AND #{searchNoTel2} = GE.PH42  AND #{searchNoTel3} = GE.PH43 THEN '보증인 기타전화'
+            WHEN #{searchNoTel1} = GE.PH51 AND #{searchNoTel2} = GE.PH52  AND #{searchNoTel3} = GE.PH53 THEN '보증인 파견업체전화'
+            WHEN #{searchNoTel1} = GE.PH61 AND #{searchNoTel2} = GE.PH62  AND #{searchNoTel3} = GE.PH63 THEN '보증인 회사대표전화'
+            ELSE ''
+          END  AS FILTER_PHONE
+        , '' AS FILTER_IP          
+        FROM
+        MEMBER_LIST@ERP ML, GUARANTOR@ERP GL,GUARANTOR_EXTRA@ERP GE,CONTRACT_INFO@ERP CI
+    WHERE 
+        GL.MEMBER_LIST_NO = ML.NO
+        AND GL.CONTRACT_INFO_NO = CI.NO 
+        AND GL.NO = GE.GUARANTOR_NO
+        AND ML.SAVE_STATUS = 'Y'
+        AND GL.SAVE_STATUS = 'Y'
+        AND CI.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100
+        AND 
+        (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            OR
+            (
+                GL.NAME =   #{searchNmCustom}
+            )
+            </if>
+            <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+            OR 
+            (
+                GL.SSN11 = #{searchNoCustomFirst} AND GL.SSN12 = #{searchNoCustomSecond}
+            )
+            </if>
+            <if test="(searchNoMobile1 != null and searchNoMobile1 != '') and (searchNoMobile2 != null and searchNoMobile2 != '') and (searchNoMobile3 != null and searchNoMobile3 != '')">
+            OR 
+            (
+                (GE.PH21 = #{searchNoMobile1} AND  GE.PH22=  #{searchNoMobile2}  AND  GE.PH23=  #{searchNoMobile3}) 
+                OR
+                (GE.PH81 = #{searchNoMobile1} AND  GE.PH82=  #{searchNoMobile2}  AND  GE.PH83=  #{searchNoMobile3})
+            )
+            </if>
+            <if test="(searchNoMobileSecond1 != null and searchNoMobileSecond1 != '') and (searchNoMobileSecond2 != null and searchNoMobileSecond2 != '') and (searchNoMobileSecond3 != null and searchNoMobileSecond3 != '')">
+            OR 
+            (
+                (GE.PH21 = #{searchNoMobileSecond1} AND  GE.PH22=  #{searchNoMobileSecond2}  AND  GE.PH23=  #{searchNoMobileSecond3}) 
+                OR
+                (GE.PH81 = #{searchNoMobileSecond1} AND  GE.PH82=  #{searchNoMobileSecond2}  AND  GE.PH83=  #{searchNoMobileSecond3})
+            )
+            </if>
+            <if test="(searchNoTel1 != null and searchNoTel1 != '') and (searchNoTel2 != null and searchNoTel2 != '') and (searchNoTel3 != null and searchNoTel3 != '')">
+            OR 
+            (
+                (GE.PH11 = #{searchNoTel1} AND  GE.PH12=  #{searchNoTel2}  AND  GE.PH13=  #{searchNoTel3}) 
+                OR
+                (GE.PH31 = #{searchNoTel1} AND  GE.PH32=  #{searchNoTel2}  AND  GE.PH33=  #{searchNoTel3}) 
+                OR
+                (GE.PH41 = #{searchNoTel1} AND  GE.PH42=  #{searchNoTel2}  AND  GE.PH43=  #{searchNoTel3}) 
+                OR
+                (GE.PH51 = #{searchNoTel1} AND  GE.PH52=  #{searchNoTel2}  AND  GE.PH53=  #{searchNoTel3})
+                OR
+                (GE.PH61 = #{searchNoTel1} AND  GE.PH62=  #{searchNoTel2}  AND  GE.PH63=  #{searchNoTel3}) 
+            )
+            </if>
+            <if test="(searchNoComTel1 != null and searchNoComTel1 != '') and (searchNoComTel2 != null and searchNoComTel2 != '') and (searchNoComTel3 != null and searchNoComTel3 != '')">
+            OR 
+            (
+                (GE.PH11 = #{searchNoComTel1} AND  GE.PH12=  #{searchNoComTel2}  AND  GE.PH13=  #{searchNoComTel3}) 
+                OR
+                (GE.PH31 = #{searchNoComTel1} AND  GE.PH32=  #{searchNoComTel2}  AND  GE.PH33=  #{searchNoComTel3}) 
+                OR
+                (GE.PH41 = #{searchNoComTel1} AND  GE.PH42=  #{searchNoComTel2}  AND  GE.PH43=  #{searchNoComTel3}) 
+                OR
+                (GE.PH51 = #{searchNoComTel1} AND  GE.PH52=  #{searchNoComTel2}  AND  GE.PH53=  #{searchNoComTel3})
+                OR
+                (GE.PH61 = #{searchNoComTel1} AND  GE.PH62=  #{searchNoComTel2}  AND  GE.PH63=  #{searchNoComTel3}) 
+            )
+            </if>
+        )
+)
+    </select>
+
+    <select id="getRelationHpSearch" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"
+        resultMap="brcRelationHpSearch">
+        SELECT 
+             A.CD_KIND, 
+             A.MEMBER_LIST_NO, 
+             B.NO AS CONTRACT_INFO_NO,     
+             C.NAME,     
+             B.CONTRACT_DATE AS APP_DATE, 
+             CASE
+                WHEN B.STATUS = 'A' THEN '정상'
+                WHEN B.STATUS = 'B' THEN '연체'
+                WHEN B.STATUS = 'C' THEN '화해정상'
+                WHEN B.STATUS = 'D' THEN '화해연체'
+                WHEN B.STATUS = 'I' THEN '개회정상'
+                WHEN B.STATUS = 'J' THEN '개회연체'
+                WHEN B.STATUS = 'F' THEN '신회정상'
+                WHEN B.STATUS = 'G' THEN '신회연체'
+                WHEN B.STATUS = 'E' THEN '완제'
+                WHEN B.STATUS = 'ZY' THEN '잔액완제'
+                WHEN B.STATUS = 'EL' THEN '리볼빙완제'
+                WHEN B.STATUS = 'Y' THEN '양도'
+                WHEN B.STATUS = 'S' THEN '대손'
+                WHEN B.STATUS = 'M' THEN '매각'
+                ELSE B.STATUS
+            END  AS STATUS,
+             ' ' AS REJECT_CODE ,
+             (SELECT NAME FROM MEMBER@ERP WHERE ID =  C.APP_MANAGER_ID) AS NM_SCREEN
+         FROM 
+             HP_HASH@ERP A, 
+             CONTRACT_INFO@ERP B, 
+             MEMBER_LIST@ERP C 
+         WHERE 
+             A.MEMBER_LIST_NO = B.MEMBER_LIST_NO 
+             AND 
+             A.MEMBER_LIST_NO = C.NO 
+             AND 
+             CD_KIND = 'ERP' 
+             AND 
+             HP_HASH = MD5HASH@ERP(#{searchNoMobileFull}) 
+         UNION ALL 
+         SELECT 
+             A.CD_KIND,   
+             A.MEMBER_LIST_NO, 
+             NULL AS CONTRACT_INFO_NO, 
+             B.NAME,     
+             B.APP_DATE AS APP_DATE,     
+             CASE
+                WHEN B.STATUS = 'A' THEN '접수'
+                WHEN B.STATUS = 'B' THEN '심사'
+                WHEN B.STATUS = 'C' THEN '심사Ⅱ'
+                WHEN B.STATUS = 'D' THEN '1차결재'
+                WHEN B.STATUS = 'E' THEN '고객확인'
+                WHEN B.STATUS = 'F' THEN '2차결재'
+                WHEN B.STATUS = 'G' THEN '대출대상'
+                WHEN B.STATUS = 'H' THEN '서류징구'
+                WHEN B.STATUS = 'S' THEN 'ARS대출대기'
+                WHEN B.STATUS = 'Y' THEN '대출'
+                WHEN B.STATUS = 'R' THEN '보류'
+                WHEN B.STATUS = 'X' THEN '거절'
+                WHEN B.STATUS = 'L' THEN '거절'
+                WHEN B.STATUS = 'K' THEN '거절'
+                WHEN B.STATUS = 'N' THEN '휴지통'
+                ELSE B.STATUS
+             END  AS STATUS,
+             B.REJECT_CODE ,
+             (SELECT NAME FROM MEMBER@UPS WHERE ID =  B.APP_MANAGER_ID) AS NM_SCREEN
+         FROM 
+             HP_HASH@ERP A, 
+             MEMBER_LIST@UPS B 
+         WHERE 
+             A.MEMBER_LIST_NO = B.NO 
+             AND 
+             CD_KIND = 'UPS' 
+             AND 
+             HP_HASH = MD5HASH@ERP(#{searchNoMobileFull}) 
+         UNION ALL 
+         SELECT 
+             A.CD_KIND, 
+             A.MEMBER_LIST_NO, 
+             NULL AS CONTRACT_INFO_NO,     
+             B.NAME,     
+             B.APP_DATE AS APP_DATE, 
+             CASE
+                    WHEN B.STATUS = 'D' THEN 'IVR'
+                    WHEN B.STATUS = 'E' THEN '홈페이지'
+                    WHEN B.STATUS = 'Y' THEN '상담완료'
+                    WHEN B.STATUS = 'J' THEN '장난콜'
+                    WHEN B.STATUS = 'X' THEN '거절'
+                    WHEN B.STATUS = 'H' THEN '취소'
+                    WHEN B.STATUS = 'R' THEN '보류'
+                    WHEN B.STATUS = 'S' THEN '보류Ⅱ'
+                    WHEN B.STATUS = 'N' THEN '휴지통'
+                    ELSE STATUS
+              END  AS STATUS,
+              (SELECT TITLE FROM CONFIG_VALUE@ERP WHERE CODE = B.REJECT_CODE ),
+              (SELECT NAME FROM MEMBER@UPS WHERE ID =  B.MG_MANAGER_ID) AS NM_SCREEN
+         FROM 
+             HP_HASH@ERP A, 
+             LOAN_MONEY_INQUIRE@UPS B 
+         WHERE 
+             A.MEMBER_LIST_NO = B.NO 
+             AND 
+             CD_KIND = 'TIM' 
+             AND 
+             HP_HASH = MD5HASH@ERP(#{searchNoMobileFull}) 
+    </select>
+    
+    <select id="getRelationJuminSearch" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"
+        resultMap="brcRelationHpSearch">
+        SELECT  
+                 'ERP' AS CD_KIND,  
+                 B.MEMBER_LIST_NO,  
+                 B.NO AS CONTRACT_INFO_NO,      
+                 C.NAME,      
+                 B.CONTRACT_DATE AS APP_DATE,  
+                 CASE
+		            WHEN B.STATUS = 'A' THEN '정상'
+		            WHEN B.STATUS = 'B' THEN '연체'
+		            WHEN B.STATUS = 'C' THEN '화해정상'
+		            WHEN B.STATUS = 'D' THEN '화해연체'
+		            WHEN B.STATUS = 'I' THEN '개회정상'
+		            WHEN B.STATUS = 'J' THEN '개회연체'
+		            WHEN B.STATUS = 'F' THEN '신회정상'
+		            WHEN B.STATUS = 'G' THEN '신회연체'
+		            WHEN B.STATUS = 'E' THEN '완제'
+		            WHEN B.STATUS = 'ZY' THEN '잔액완제'
+		            WHEN B.STATUS = 'EL' THEN '리볼빙완제'
+		            WHEN B.STATUS = 'Y' THEN '양도'
+		            WHEN B.STATUS = 'S' THEN '대손'
+		            WHEN B.STATUS = 'M' THEN '매각'
+		            ELSE B.STATUS
+		         END  AS STATUS,
+                 ' ' AS REJECT_CODE  
+             FROM  
+                 ERP_HASH@ERP A,  
+                 CONTRACT_INFO@ERP B,  
+                 MEMBER_LIST@ERP C  
+             WHERE  
+                 A.MEMBER_LIST_NO = B.MEMBER_LIST_NO  
+                 AND  
+                 A.MEMBER_LIST_NO = C.NO   
+                 AND  
+                 VALUE = MD5HASH@ERP(#{searchNoCustomFull} )  
+             UNION ALL  
+             SELECT  
+                 'UPS' AS CD_KIND,  
+                 B.NO AS MEMBER_LIST_NO,  
+                 NULL AS CONTRACT_INFO_NO,  
+                 B.NAME,      
+                 B.APP_DATE AS APP_DATE,      
+                CASE
+		            WHEN B.STATUS = 'A' THEN '접수'
+		            WHEN B.STATUS = 'B' THEN '심사'
+		            WHEN B.STATUS = 'C' THEN '심사Ⅱ'
+		            WHEN B.STATUS = 'D' THEN '1차결재'
+		            WHEN B.STATUS = 'E' THEN '고객확인'
+		            WHEN B.STATUS = 'F' THEN '2차결재'
+		            WHEN B.STATUS = 'G' THEN '대출대상'
+		            WHEN B.STATUS = 'H' THEN '서류징구'
+		            WHEN B.STATUS = 'S' THEN 'ARS대출대기'
+		            WHEN B.STATUS = 'Y' THEN '대출'
+		            WHEN B.STATUS = 'R' THEN '보류'
+		            WHEN B.STATUS = 'X' THEN '거절'
+		            WHEN B.STATUS = 'L' THEN '거절'
+		            WHEN B.STATUS = 'K' THEN '거절'
+		            WHEN B.STATUS = 'N' THEN '휴지통'
+		            ELSE B.STATUS
+		         END  AS STATUS,
+                 B.REJECT_CODE  
+             FROM  
+                 APP_HISTORY@UPS A,  
+                 MEMBER_LIST@UPS B  
+             WHERE  
+                 A.NO = B.NO   
+                 AND  
+                 VALUE = MD5HASH@UPS (#{searchNoCustomFull} ) 
+                 AND 
+                 A.COM_CD = #{cdCompany} 
+    </select>
+    
+    <select id="getStNoticeTel" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO" resultMap="brcRelationNotice">
+		SELECT 
+		    A.NO_TEL,
+		    A.DS_REMK,
+		    A.DM_REG,
+            (SELECT  GET_NM_USER (A.ID_REG) FROM DUAL)  ID_REG		    
+		FROM 
+		    ST_NOTICE_TEL A
+		WHERE
+		    A.NO_TEL = TRIM(REPLACE(#{searchNoTel1} || #{searchNoTel2} || #{searchNoTel3}, '-', ''))
+		    OR
+		    A.NO_TEL = TRIM(REPLACE(#{searchNoMobile1} || #{searchNoMobile2} || #{searchNoMobile3}, '-', ''))
+		    OR
+		    A.NO_TEL = TRIM(REPLACE(#{searchNoComTel1} || #{searchNoComTel2} || #{searchNoComTel3}, '-', ''))
+    </select>
+    
+    
+    <select id="getRelationSearchBridge" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+   SELECT 
+            '' AS  NO_CUSTOM_REQ 
+            ,  BL.NO_REQ
+            ,  NM_CUSTOM
+            ,  NO_CUSTOM
+            , (SELECT  GET_NM_USER (BL.ID_SCREEN) FROM DUAL)  NM_SCREEN
+            , NO_TEL1_MOBILE
+            , NO_TEL2_MOBILE
+            , NO_TEL3_MOBILE
+            , NO_TEL1_ETC1
+            , NO_TEL2_ETC1
+            , NO_TEL3_ETC1
+            , (SELECT GET_NM_CD(BL.CD_STATUS) FROM DUAL) AS NM_STATUS
+            , DM_RECEIVE AS DM_REG
+   FROM
+            BRC_LOAN BL , BRC_CUSTOM BC 
+    WHERE
+        BL.NO_REQ = BC.NO_REQ
+        AND ROWNUM &lt; 100   
+        AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (NM_CUSTOM LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (NO_CUSTOM =   #{searchNoCustom})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (NO_TEL1_MOBILE = #{searchNoMobile1}  AND NO_TEL2_MOBILE= #{searchNoMobile2}  AND NO_TEL3_MOBILE= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (NO_TEL1_ETC1 = #{searchNoTel1}  AND NO_TEL2_ETC1= #{searchNoTel2} AND NO_TEL3_ETC1= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    <select id="getRelationSearchTim" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+        SELECT 
+            NO AS  NO_CUSTOM_REQ 
+            , NO AS  NO_REQ
+            , NAME AS NM_CUSTOM
+            , SSN11 AS NO_CUSTOM1
+            , SSN12 AS NO_CUSTOM2
+            , PH21 AS NO_TEL1_MOBILE
+            , PH22 AS NO_TEL2_MOBILE
+            , PH23 AS NO_TEL3_MOBILE
+            , PH11 AS NO_TEL1_ETC1
+            , PH12 AS NO_TEL2_ETC1
+            , PH13 AS NO_TEL3_ETC1
+             , CASE
+                    WHEN STATUS = 'D' THEN 'IVR'
+                    WHEN STATUS = 'E' THEN '홈페이지'
+                    WHEN STATUS = 'Y' THEN '상담완료'
+                    WHEN STATUS = 'J' THEN '장난콜'
+                    WHEN STATUS = 'X' THEN '거절'
+                    WHEN STATUS = 'H' THEN '취소'
+                    WHEN STATUS = 'R' THEN '보류'
+                    WHEN STATUS = 'N' THEN '휴지통'
+                    ELSE STATUS
+              END  AS NM_STATUS
+            , APP_DATE AS DM_REG
+            , (SELECT NAME FROM MEMBER@ERP WHERE ID =  MG_MANAGER_ID) AS NM_SCREEN
+   FROM
+           LOAN_MONEY_INQUIRE@UPS 
+   WHERE 
+             SAVE_STATUS = 'Y'
+            AND ROWNUM &lt; 100   
+            AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (NAME LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (SSN11 = #{searchNoCustomFirst} AND SSN12 = #{searchNoCustomSecond})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (PH21 = #{searchNoMobile1} AND PH22= #{searchNoMobile2}  AND PH23= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (PH11 = #{searchNoTel1}  AND PH12= #{searchNoTel2} AND PH13= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    <select id="getRelationSearchUps" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+        SELECT 
+            ML.NO AS  NO_CUSTOM_REQ 
+            , ML.NO AS  NO_REQ
+            , ML.NAME AS NM_CUSTOM
+            , ML.SSN11 AS NO_CUSTOM1
+            , ML.SSN12 AS NO_CUSTOM2
+            , ME.PH21 AS NO_TEL1_MOBILE
+            , ME.PH22 AS NO_TEL2_MOBILE
+            , ME.PH23 AS NO_TEL3_MOBILE
+            , ME.PH11 AS NO_TEL1_ETC1
+            , ME.PH12 AS NO_TEL2_ETC1
+            , ME.PH13 AS NO_TEL3_ETC1
+            , CASE
+                WHEN ML.STATUS = 'A' THEN '접수'
+                WHEN ML.STATUS = 'B' THEN '심사'
+                WHEN ML.STATUS = 'C' THEN '심사Ⅱ'
+                WHEN ML.STATUS = 'D' THEN '1차결재'
+                WHEN ML.STATUS = 'E' THEN '고객확인'
+                WHEN ML.STATUS = 'F' THEN '2차결재'
+                WHEN ML.STATUS = 'G' THEN '대출대상'
+                WHEN ML.STATUS = 'H' THEN '서류징구'
+                WHEN ML.STATUS = 'S' THEN 'ARS대출대기'
+                WHEN ML.STATUS = 'Y' THEN '대출'
+                WHEN ML.STATUS = 'R' THEN '보류'
+                WHEN ML.STATUS = 'X' THEN '거절'
+                WHEN ML.STATUS = 'L' THEN '거절'
+                WHEN ML.STATUS = 'K' THEN '거절'
+                WHEN ML.STATUS = 'N' THEN '휴지통'
+                ELSE ML.STATUS
+             END  AS NM_STATUS
+            , TIME_TO_ABS@UPS(ML.B_TIME) AS DM_REG
+            , (SELECT NAME FROM MEMBER@ERP WHERE ID =  ML.APP_MANAGER_ID) AS NM_SCREEN
+   FROM
+            MEMBER_LIST@UPS ML, MEMBER_LIST_EXTRA@UPS ME
+   WHERE 
+            ML.NO = ME.MEMBER_LIST_NO
+            AND ML.SAVE_STATUS = 'Y'
+            AND ROWNUM &lt; 100
+            AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (ML.NAME LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (ME.PH21 = #{searchNoMobile1} AND ME.PH22= #{searchNoMobile2}  AND ME.PH23= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (ME.PH11 = #{searchNoTel1}  AND ME.PH12= #{searchNoTel2} AND ME.PH13= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    <select id="getRelationSearchErp" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"
+        resultMap="brcRelationSearch">
+        SELECT 
+             ML.NO AS  NO_CUSTOM_REQ 
+            , CI.NO AS  NO_REQ
+            , ML.NAME AS NM_CUSTOM
+            , ML.SSN11 AS NO_CUSTOM1
+            , ML.SSN12 AS NO_CUSTOM2
+            , ME.PH21 AS NO_TEL1_MOBILE
+            , ME.PH22 AS NO_TEL2_MOBILE
+            , ME.PH23 AS NO_TEL3_MOBILE
+            , ME.PH11 AS NO_TEL1_ETC1
+            , ME.PH12 AS NO_TEL2_ETC1
+            , ME.PH13 AS NO_TEL3_ETC1
+            , 
+            CASE
+                WHEN CI.STATUS = 'A' THEN '정상'
+                WHEN CI.STATUS = 'B' THEN '연체'
+                WHEN CI.STATUS = 'C' THEN '화해정상'
+                WHEN CI.STATUS = 'D' THEN '화해연체'
+                WHEN CI.STATUS = 'I' THEN '개회정상'
+                WHEN CI.STATUS = 'J' THEN '개회연체'
+                WHEN CI.STATUS = 'F' THEN '신회정상'
+                WHEN CI.STATUS = 'G' THEN '신회연체'
+                WHEN CI.STATUS = 'E' THEN '완제'
+                WHEN CI.STATUS = 'ZY' THEN '잔액완제'
+                WHEN CI.STATUS = 'EL' THEN '리볼빙완제'
+                WHEN CI.STATUS = 'Y' THEN '양도'
+                WHEN CI.STATUS = 'S' THEN '대손'
+                WHEN CI.STATUS = 'M' THEN '매각'
+                ELSE CI.STATUS
+            END  AS NM_STATUS
+            , ML.OK_DATE AS DM_REG
+        FROM
+            MEMBER_LIST@ERP ML,MEMBER_LIST_EXTRA@ERP ME,CONTRACT_INFO@ERP CI
+            WHERE 
+            ML.NO = ME.MEMBER_LIST_NO
+            AND ML.NO = CI.MEMBER_LIST_NO 
+            AND ML.SAVE_STATUS = 'Y'
+            AND ROWNUM &lt; 100
+            AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (ML.NAME LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (ME.PH21 = #{searchNoMobile1} AND ME.PH22= #{searchNoMobile2}  AND ME.PH23= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (ME.PH11 = #{searchNoTel1}  AND ME.PH12= #{searchNoTel2} AND ME.PH13= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    
+        <select id="getRelationSearchSuretyBridge" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+       SELECT 
+            '' AS  NO_CUSTOM_REQ 
+            ,  BL.NO_REQ
+            ,  BS.NM_CUSTOM
+            ,  BS.NO_CUSTOM
+            , BS.NO_TEL1_MOBILE
+            , BS.NO_TEL2_MOBILE
+            , BS.NO_TEL3_MOBILE
+            , BS.NO_TEL1_ETC1
+            , BS.NO_TEL2_ETC1
+            , BS.NO_TEL3_ETC1
+            ,    (SELECT GET_NM_CD(BL.CD_STATUS) FROM DUAL) AS NM_STATUS
+            , BL.DM_RECEIVE AS DM_REG
+    FROM
+            BRC_LOAN BL , BRC_SURETY BS
+    WHERE
+        BL.NO_REQ = BS.NO_REQ
+        AND ROWNUM &lt; 100   
+        AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (BS.NM_CUSTOM LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (BS.NO_CUSTOM =   #{searchNoCustom})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (BS.NO_TEL1_MOBILE = #{searchNoMobile1}  AND BS.NO_TEL2_MOBILE= #{searchNoMobile2}  AND BS.NO_TEL3_MOBILE= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (BS.NO_TEL1_ETC1 = #{searchNoTel1}  AND BS.NO_TEL2_ETC1= #{searchNoTel2} AND NO_TEL3_ETC1= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    <select id="getRelationSearchSuretyTim" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+        SELECT 
+            A.NO AS  NO_CUSTOM_REQ 
+            , A.NO AS  NO_REQ
+            , A.NAME AS NM_CUSTOM
+            , A.SSN11 AS NO_CUSTOM1
+            , A.SSN12 AS NO_CUSTOM2
+            , B.PH21 AS NO_TEL1_MOBILE
+            , B.PH22 AS NO_TEL2_MOBILE
+            , B.PH23 AS NO_TEL3_MOBILE
+            , B.PH11 AS NO_TEL1_ETC1
+            , B.PH12 AS NO_TEL2_ETC1
+            , B.PH13 AS NO_TEL3_ETC1
+             , CASE
+                    WHEN A.STATUS = 'Y' THEN '유효'
+                    ELSE A.STATUS
+              END  AS NM_STATUS
+            , TIME_TO_ABS@UPS(B.SAVE_TIME) AS DM_REG
+   FROM
+            LOAN_MONEY_INQUIRE@UPS A,  INQUIRE_GUARANTOR@UPS B
+   WHERE 
+        A.NO = B.INQUIRE_LIST_NO
+        AND A.SAVE_STATUS = 'Y'
+        AND ROWNUM &lt; 100   
+            AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (A.NAME LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (A.SSN11 = #{searchNoCustomFirst} AND A.SSN12 = #{searchNoCustomSecond})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (B.PH21 = #{searchNoMobile1} AND B.PH22= #{searchNoMobile2}  AND B.PH23= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (B.PH11 = #{searchNoTel1}  AND B.PH12= #{searchNoTel2} AND B.PH13= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    <select id="getRelationSearchSuretyUps" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"  resultMap="brcRelationSearch">
+        SELECT 
+            ML.MEMBER_LIST_NO AS  NO_CUSTOM_REQ 
+            , ML.MEMBER_LIST_NO AS  NO_REQ
+            , ML.NAME AS NM_CUSTOM
+            , ML.SSN11 AS NO_CUSTOM1
+            , ML.SSN12 AS NO_CUSTOM2
+            , ME.PH21 AS NO_TEL1_MOBILE
+            , ME.PH22 AS NO_TEL2_MOBILE
+            , ME.PH23 AS NO_TEL3_MOBILE
+            , ME.PH11 AS NO_TEL1_ETC1
+            , ME.PH12 AS NO_TEL2_ETC1
+            , ME.PH13 AS NO_TEL3_ETC1
+            , CASE
+                    WHEN ML.STATUS = 'Y' THEN '유효'
+                    ELSE ML.STATUS
+              END  AS NM_STATUS
+            ,'' AS DM_REG
+   FROM
+            GUARANTOR@UPS ML, GUARANTOR_EXTRA@UPS ME
+   WHERE 
+            ML.NO = ME.GUARANTOR_NO
+            AND ML.SAVE_STATUS = 'Y'
+            AND ROWNUM &lt; 100
+            AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (ML.NAME LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (ME.PH21 = #{searchNoMobile1} AND ME.PH22= #{searchNoMobile2}  AND ME.PH23= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (ME.PH11 = #{searchNoTel1}  AND ME.PH12= #{searchNoTel2} AND ME.PH13= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+    
+    <select id="getRelationSearchSuretyErp" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"
+        resultMap="brcRelationSearch">
+        SELECT 
+             ML.MEMBER_LIST_NO AS  NO_CUSTOM_REQ 
+            , CI.NO AS  NO_REQ
+            , ML.NAME AS NM_CUSTOM
+            , ML.SSN11 AS NO_CUSTOM1
+            , ML.SSN12 AS NO_CUSTOM2
+            , ME.PH21 AS NO_TEL1_MOBILE
+            , ME.PH22 AS NO_TEL2_MOBILE
+            , ME.PH23 AS NO_TEL3_MOBILE
+            , ME.PH11 AS NO_TEL1_ETC1
+            , ME.PH12 AS NO_TEL2_ETC1
+            , ME.PH13 AS NO_TEL3_ETC1
+            , 
+            CASE
+                WHEN CI.STATUS = 'A' THEN '정상'
+                WHEN CI.STATUS = 'B' THEN '연체'
+                WHEN CI.STATUS = 'C' THEN '화해정상'
+                WHEN CI.STATUS = 'D' THEN '화해연체'
+                WHEN CI.STATUS = 'I' THEN '개회정상'
+                WHEN CI.STATUS = 'J' THEN '개회연체'
+                WHEN CI.STATUS = 'F' THEN '신회정상'
+                WHEN CI.STATUS = 'G' THEN '신회연체'
+                WHEN CI.STATUS = 'E' THEN '완제'
+                WHEN CI.STATUS = 'ZY' THEN '잔액완제'
+                WHEN CI.STATUS = 'EL' THEN '리볼빙완제'
+                WHEN CI.STATUS = 'Y' THEN '양도'
+                WHEN CI.STATUS = 'S' THEN '대손'
+                WHEN CI.STATUS = 'M' THEN '매각'
+                ELSE CI.STATUS
+            END  AS NM_STATUS
+            , '' AS DM_REG
+        FROM
+            GUARANTOR@ERP ML,GUARANTOR_EXTRA@ERP ME,CONTRACT_INFO@ERP CI
+            WHERE 
+            ML.NO = ME.GUARANTOR_NO
+            AND ML.SAVE_STATUS = 'Y'
+            AND ML.CONTRACT_INFO_NO = CI.NO
+            AND ROWNUM &lt; 100
+            AND (1=2 
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+              OR (ML.NAME LIKE   #{searchNmCustom}||'%' )
+            </if>
+             <if test="searchNoCustomFirst != null and searchNoCustomFirst != '' and searchNoCustomSecond != null and searchNoCustomSecond != ''">
+              OR (ML.SSN11 = #{searchNoCustomFirst} AND ML.SSN12 = #{searchNoCustomSecond})
+            </if>
+            <if test=" searchNoMobile3 != null and searchNoMobile3 != '' ">
+               OR (ME.PH21 = #{searchNoMobile1} AND ME.PH22= #{searchNoMobile2}  AND ME.PH23= #{searchNoMobile3})
+             </if>
+             <if test=" searchNoTel3 != null and searchNoTel3 != '' ">
+               OR (ME.PH11 = #{searchNoTel1}  AND ME.PH12= #{searchNoTel2} AND ME.PH13= #{searchNoTel3} )
+             </if>
+             )
+    </select>
+
+	<select id="getRelationHashSearch" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSearchRequestVO"
+        resultMap="brcRelationHashSearch">
+		SELECT 
+		    (CASE 
+		        WHEN A.CD_KIND = 'UPS' THEN 2
+		        WHEN A.CD_KIND = 'ERP' THEN 3
+		        ELSE 9
+		    END) AS SORT_INT,
+		    '본인' AS CD_MAN,
+		    A.CD_KIND AS CD_KIND,
+		    TO_CHAR(A.MEMBER_LIST_NO) AS MEMBER_LIST_NO,
+		    C.NO AS CONTRACT_INFO_NO,
+		    (CASE 
+		        WHEN A.CD_KIND = 'TIM' THEN E.NAME
+		        WHEN A.CD_KIND = 'UPS' THEN D.NAME
+		        WHEN A.CD_KIND = 'ERP' THEN B.NAME
+		        ELSE ' '
+		    END) AS NAME,
+		    (CASE 
+		        WHEN A.CD_KIND = 'TIM' THEN E.APP_DATE
+		        WHEN A.CD_KIND = 'UPS' THEN D.APP_DATE
+		        WHEN A.CD_KIND = 'ERP' THEN C.CONTRACT_DATE
+		        ELSE NULL
+		    END) AS APP_DATE,
+		    CASE 
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'D' THEN 'IVR'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'E' THEN '홈페이지'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'Y' THEN '상담완료'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'J' THEN '장난콜'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'X' THEN '거절'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'H' THEN '취소'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'R' THEN '보류'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'S' THEN '보류II'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'N' THEN '휴지통'        
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'A' THEN '접수'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'B' THEN '심사'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'C' THEN '심사II'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'D' THEN '1차결재'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'E' THEN '고객확인'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'F' THEN '2차결재'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'G' THEN '대출대상'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'H' THEN '서류징구'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'S' THEN 'ARS대출대기'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'Y' THEN '대출'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'R' THEN '보류'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'X' THEN '거절'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'L' THEN '거절'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'K' THEN '거절'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'N' THEN '휴지통'        
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'A' THEN '정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'B' THEN '연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'C' THEN '화해정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'D' THEN '화해연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'I' THEN '개회정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'J' THEN '개회연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'F' THEN '신회정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'G' THEN '신회연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'E' THEN '완제'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'ZY' THEN '잔액완제'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'EL' THEN '리볼빙완제'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'Y' THEN '양도'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'S' THEN '대손'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'M' THEN '매각'
+		        ELSE ' ' 
+		    END AS STATUS     ,
+		    (SELECT NAME FROM MEMBER@ERP
+		    WHERE ID = 
+		                            (CASE 
+		                                WHEN A.CD_KIND = 'TIM' THEN E.MG_MANAGER_ID
+		                                WHEN A.CD_KIND = 'UPS' THEN D.B_ID
+		                                WHEN A.CD_KIND = 'ERP' THEN C.MANAGER_ID
+		                                ELSE NULL
+		                            END)) 
+		    AS NM_MANAGER,    
+		    (CASE WHEN A.SSN_HASH = #{searchSsnHash} THEN 'O' ELSE ' ' END) AS SSN_FLAG,
+		    (CASE WHEN A.HP_HASH = #{searchHpHash} THEN 'O' ELSE ' ' END) AS HP_FLAG
+		FROM 
+		    MEMBER_LIST_HASH@ERP A,
+		    MEMBER_LIST@ERP B,
+		    CONTRACT_INFO@ERP C,
+		    MEMBER_LIST@UPS D,
+		    LOAN_MONEY_INQUIRE@UPS E
+		WHERE
+		    (A.SSN_HASH = #{searchSsnHash} OR A.HP_HASH = #{searchHpHash})
+		    AND
+		    A.MEMBER_LIST_NO = B.NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = C.MEMBER_LIST_NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = D.NO(+) 
+		    AND
+		    A.MEMBER_LIST_NO = E.NO(+)     
+		UNION ALL
+		SELECT 
+		    1 SORT_INT,
+		    '본인' AS CD_MAN,
+		    'BRG' AS CD_KIND,
+		    BH.NO_REQ AS MEMBER_LIST_NO,
+		    NULL AS CONTRACT_INFO_NO,
+		    BC.NM_CUSTOM NAME,
+		    BL.DM_RECEIVE AS APP_DATE,
+		    (SELECT GET_NM_CD (BL.CD_STATUS) FROM DUAL) STATUS,
+		    (SELECT GET_NM_USER (BL.ID_SCREEN) FROM DUAL) NM_MANAGER,
+		    (CASE WHEN BH.NO_CUSTOM_HASH = #{searchSsnHash} THEN 'O' ELSE ' ' END) AS SSN_FLAG,
+		    (CASE WHEN BH.NO_TEL_MOBILE_HASH = #{searchHpHash} THEN 'O' ELSE ' ' END) AS HP_FLAG
+		FROM 
+		    BRC_CUSTOM_HASH BH,
+		    BRC_CUSTOM BC,
+		    BRC_LOAN BL
+		WHERE
+		    (BH.NO_CUSTOM_HASH = #{searchSsnHash} OR BH.NO_TEL_MOBILE_HASH = #{searchHpHash})
+		    AND
+		    BH.NO_REQ = BC.NO_REQ
+		    AND
+		    BH.NO_REQ = BL.NO_REQ
+		UNION ALL    
+		SELECT 
+		    (CASE 
+		        WHEN A.CD_KIND = 'UPS' THEN 2
+		        WHEN A.CD_KIND = 'ERP' THEN 3
+		        ELSE 9
+		    END) AS SORT_INT,
+		    '보증인' AS CD_MAN,
+		    A.CD_KIND AS CD_KIND,
+		    TO_CHAR(A.MEMBER_LIST_NO) AS MEMBER_LIST_NO,
+		    C.NO AS CONTRACT_INFO_NO,
+		    (CASE 
+		        WHEN A.CD_KIND = 'TIM' THEN EG.NAME
+		        WHEN A.CD_KIND = 'UPS' THEN DG.NAME
+		        WHEN A.CD_KIND = 'ERP' THEN BG.NAME
+		        ELSE ' '
+		    END) AS NAME,
+		    (CASE 
+		        WHEN A.CD_KIND = 'TIM' THEN E.APP_DATE
+		        WHEN A.CD_KIND = 'UPS' THEN D.APP_DATE
+		        WHEN A.CD_KIND = 'ERP' THEN C.CONTRACT_DATE
+		        ELSE NULL
+		    END) AS APP_DATE,
+		    CASE 
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'D' THEN 'IVR'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'E' THEN '홈페이지'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'Y' THEN '상담완료'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'J' THEN '장난콜'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'X' THEN '거절'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'H' THEN '취소'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'R' THEN '보류'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'S' THEN '보류II'
+		        WHEN A.CD_KIND = 'TIM' AND E.STATUS = 'N' THEN '휴지통'        
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'A' THEN '접수'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'B' THEN '심사'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'C' THEN '심사II'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'D' THEN '1차결재'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'E' THEN '고객확인'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'F' THEN '2차결재'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'G' THEN '대출대상'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'H' THEN '서류징구'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'S' THEN 'ARS대출대기'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'Y' THEN '대출'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'R' THEN '보류'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'X' THEN '거절'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'L' THEN '거절'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'K' THEN '거절'
+		        WHEN A.CD_KIND = 'UPS' AND D.STATUS = 'N' THEN '휴지통'        
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'A' THEN '정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'B' THEN '연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'C' THEN '화해정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'D' THEN '화해연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'I' THEN '개회정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'J' THEN '개회연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'F' THEN '신회정상'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'G' THEN '신회연체'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'E' THEN '완제'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'ZY' THEN '잔액완제'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'EL' THEN '리볼빙완제'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'Y' THEN '양도'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'S' THEN '대손'
+		        WHEN A.CD_KIND = 'ERP' AND C.STATUS = 'M' THEN '매각'
+		        ELSE ' ' 
+		    END AS STATUS     ,
+		    (SELECT NAME FROM MEMBER@ERP
+		    WHERE ID = 
+		                            (CASE 
+		                                WHEN A.CD_KIND = 'TIM' THEN E.MG_MANAGER_ID
+		                                WHEN A.CD_KIND = 'UPS' THEN D.B_ID
+		                                WHEN A.CD_KIND = 'ERP' THEN C.MANAGER_ID
+		                                ELSE NULL
+		                            END)) 
+		    AS NM_MANAGER,    
+		    (CASE WHEN A.SSN_HASH = #{searchSsnHash} THEN 'O' ELSE ' ' END) AS SSN_FLAG,
+		    (CASE WHEN A.HP_HASH = #{searchHpHash} THEN 'O' ELSE ' ' END) AS HP_FLAG
+		FROM 
+		    GUARANTOR_HASH@ERP A,
+		    MEMBER_LIST@ERP B,
+		    GUARANTOR@ERP BG,
+		    CONTRACT_INFO@ERP C,
+		    MEMBER_LIST@UPS D,
+		    GUARANTOR@UPS DG,
+		    LOAN_MONEY_INQUIRE@UPS E,
+		    INQUIRE_GUARANTOR@UPS EG
+		WHERE
+		    (A.SSN_HASH = #{searchSsnHash} OR A.HP_HASH = #{searchHpHash})
+		    AND
+		    A.MEMBER_LIST_NO = B.NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = BG.MEMBER_LIST_NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = C.MEMBER_LIST_NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = D.NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = DG.MEMBER_LIST_NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = E.NO(+)
+		    AND
+		    A.MEMBER_LIST_NO = EG.INQUIRE_LIST_NO(+)    
+		UNION ALL
+		SELECT 
+		    1 AS SORT_INT,
+		    '보증인' AS CD_MAN,
+		    'BRG' AS CD_KIND,
+		    BH.NO_REQ AS MEMBER_LIST_NO,
+		    NULL AS CONTRACT_INFO_NO,
+		    BC.NM_CUSTOM NAME,
+		    BL.DM_RECEIVE AS APP_DATE,
+		    (SELECT GET_NM_CD (BL.CD_STATUS) FROM DUAL) STATUS,
+		    (SELECT GET_NM_USER (BL.ID_SCREEN) FROM DUAL) NM_MANAGER,
+		    (CASE WHEN BH.NO_CUSTOM_HASH = #{searchSsnHash} THEN 'O' ELSE ' ' END) AS SSN_FLAG,
+		    (CASE WHEN BH.NO_TEL_MOBILE_HASH = #{searchHpHash} THEN 'O' ELSE ' ' END) AS HP_FLAG
+		FROM 
+		    BRC_SURETY_HASH BH,
+		    BRC_SURETY BC,
+		    BRC_LOAN BL
+		WHERE
+		    (BH.NO_CUSTOM_HASH = #{searchSsnHash} OR BH.NO_TEL_MOBILE_HASH = #{searchHpHash})
+		    AND
+		    BH.NO_REQ = BC.NO_REQ
+		    AND
+		    BH.NO_REQ = BL.NO_REQ
+		ORDER BY
+		    SORT_INT, CD_MAN, MEMBER_LIST_NO
+	</select>        
+        
+    
+
+</mapper>
+    

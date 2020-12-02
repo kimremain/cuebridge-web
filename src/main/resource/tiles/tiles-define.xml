@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd"
+       >
+
+<tiles-definitions>
+
+	<definition name="popupTemplate" template="/WEB-INF/layouts/popupLayout.jsp">
+		<put-attribute name="headoc" value="/WEB-INF/layouts/publicHeadoc.jsp" />
+		<put-attribute name="body" value="" />
+	</definition>
+
+	<definition name="*.pop" extends="popupTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
+	</definition>
+	<definition name="*/*.pop" extends="popupTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	</definition>
+	<definition name="*/*/*.pop" extends="popupTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
+	</definition>
+
+	<definition name="defaultTemplate" template="/WEB-INF/layouts/defaultLayout.jsp">
+		<put-attribute name="headoc" value="/WEB-INF/layouts/publicHeadoc.jsp" />
+		<put-attribute name="header" value="/WEB-INF/layouts/publicHeader.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/layouts/publicFooter.jsp" />
+	</definition>
+	<definition name="*.tiles" extends="defaultTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
+	</definition>
+	<definition name="*/*.tiles" extends="defaultTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	</definition>
+	<definition name="*/*/*.tiles" extends="defaultTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
+	</definition>
+
+</tiles-definitions>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.common.dao.CommonBizDAO">
+
+	<resultMap id="codeResult" type="com.jcuesoft.cuebridge.common.vo.CodeVO">
+		<result property="code" column="cd" />
+		<result property="text" column="nm_cd" />
+	</resultMap>
+	
+	<resultMap id="resultBrcLoanForUpsVO" type="com.jcuesoft.cuebridge.common.vo.UpsVO">
+        <result property="noReq"    column="NO_REQ"    />
+        <result property="dtCbAgree"    column="DT_CB_AGREE"    />
+        <result property="dmReg"    column="DM_REG"    />
+        <result property="cdPath"   column="CD_PATH"   />        
+        <result property="idScreen" column="ID_SCREEN" />
+        <result property="cdCooperate" column="CD_COOPERATE" />
+	</resultMap>	
+	
+	<resultMap id="resultBrcInfoLegal" type="com.jcuesoft.cuebridge.common.vo.CommonBizBrcInfoLegalVO">
+        <result property="nmCustom"    column="NM_CUSTOM"    />
+        <result property="noCustom"    column="NO_CUSTOM"    />
+        <result property="dsSex"    column="DS_SEX"    />
+        <result property="cdInfoCollect"   column="CD_INFO_COLLECT"   />        
+        <result property="cdContactCust" column="CD_CONTACT_CUST" />
+        <result property="dsContactCust" column="DS_CONTACT_CUST" />
+        <result property="cdContactAgent" column="CD_CONTACT_AGENT" />
+        <result property="nmContactAgent" column="NM_CONTACT_AGENT" />
+        <result property="dsContactAgent" column="DS_CONTACT_AGENT" />
+        <result property="cdCallAgent" column="CD_CALL_AGENT" />
+        <result property="dtAgent" column="DT_AGENT" />
+        <result property="nmAgent" column="NM_AGENT" />
+        <result property="nmAgentCeo" column="NM_AGENT_CEO" />
+        <result property="nmAgentManager" column="NM_AGENT_MANAGER" />
+        <result property="dsAgentUrl" column="DS_AGENT_URL" />
+	</resultMap>
+	
+	<resultMap id="resultBrcSupply" type="com.jcuesoft.cuebridge.common.vo.CommonBizBrcSupplyVO">
+        <result property="noSupply"    column="NO_SUPPLY"    />
+        <result property="dtSupply"    column="DT_SUPPLY"    />
+        <result property="nmSupply"    column="NM_SUPPLY"    />
+        <result property="noSupplyLoan"   column="NO_SUPPLY_LOAN"   />        
+        <result property="noSupplySociety" column="NO_SUPPLY_SOCIETY" />
+        <result property="noSuuplyTel" column="NO_SUPPLY_TEL" />
+        <result property="noSuuplyTel1" column="NO_SUPPLY_TEL1" />
+        <result property="noSuuplyTel2" column="NO_SUPPLY_TEL2" />
+        <result property="noSuuplyTel3" column="NO_SUPPLY_TEL3" />
+	</resultMap>
+	
+	<resultMap id="resultSafekeyOffer" type="com.jcuesoft.cuebridge.common.vo.CommonBizSafekeyOfferVO">
+        <result property="cd_nice_safekey_ext"    column="CD_NICE_SAFEKEY_EXT"    />
+        <result property="ds_nice_safekey_ext"    column="DS_NICE_SAFEKEY_EXT"    />
+        <result property="s_cd_nice_safekey_ext"    column="S_CD_NICE_SAFEKEY_EXT"    />
+        <result property="s_ds_nice_safekey_ext"   column="S_DS_NICE_SAFEKEY_EXT"   />        
+	</resultMap>
+	
+	<select id="getBrcLoanNoReq" resultType="String">
+        SELECT
+            SUBSTRB(NO_REQ, 1, 9) || LPAD((SUBSTRB(NO_REQ, 10, 14)  + 1), 4, '0') AS NO_REQ
+        FROM
+            BRC_LOAN
+        WHERE
+            NO_REQ = (SELECT MAX(NO_REQ) FROM BRC_LOAN WHERE NO_REQ >= TO_CHAR(SYSDATE, 'YYYYMMDD')) 
+        FOR UPDATE
+    </select>
+    
+	<select id="getBrcSuretyNoSurety" parameterType="String" resultType="String">
+        SELECT
+            LPAD(NO_SURETY+1, 3, '0')  AS NO_SURETY
+        FROM
+            BRC_SURETY
+        WHERE
+        	NO_REQ = #{noReq}
+        	AND
+            NO_SURETY = (SELECT MAX(NO_SURETY) FROM BRC_SURETY WHERE NO_REQ = #{noReq}) 
+        FOR UPDATE
+    </select>  
+    
+	<select id="getBexMasterNoEx" parameterType="String" resultType="String">
+	SELECT
+	    LPAD(NO_EX+1, 3, '0')  AS NO_EX
+	FROM
+	    BEX_MASTER
+	WHERE
+		NO_REQ = #{noReq}
+		AND
+	    NO_EX = (SELECT MAX(NO_EX) FROM BEX_MASTER WHERE NO_REQ = #{noReq})
+        FOR UPDATE
+    </select>      
+    
+    <select id="getDbTime" parameterType="String" resultType="String">
+        SELECT 
+            TO_CHAR(SYSDATE, #{dateFormat}) AS DBTIME 
+        FROM 
+            DUAL
+    </select>
+    
+    <select id="getStCustomerDsImgUrl" parameterType="String" resultType="String">
+        SELECT 
+            DS_URL_IMG
+        FROM 
+            ST_CUSTOMER
+		WHERE
+			CD_COOPERATE = #{cdCooperate}
+    </select>
+    
+    <select id="selectBrcLoanForUpsVO" parameterType="String" resultMap="resultBrcLoanForUpsVO">
+		SELECT
+			A.NO_REQ,
+			B.DT_CB_AGREE,
+			TO_CHAR(A.DM_REG, 'YYYYMMDD') AS DM_REG,
+			A.CD_PATH,
+			A.ID_SCREEN,
+			A.CD_COOPERATE
+		FROM
+			BRC_LOAN A,
+			BRC_CUSTOM B
+		WHERE
+			A.NO_REQ = B.NO_REQ
+			AND
+			A.NO_REQ = #{noReq}
+    </select>    
+    
+    <select id="selectMemberListInoutTm" parameterType="com.jcuesoft.cuebridge.common.vo.UpsVO" resultType="String">
+		SELECT
+			COUNT(*) AS CNT
+		FROM
+			MEMBER_LIST_INOUT_TM@ERP
+		WHERE
+			BRG_NO = #{noReq}
+    </select>
+    
+    <select id="selectYnSameCdCooperate" parameterType="com.jcuesoft.cuebridge.common.vo.UpsVO" resultType="String">
+		SELECT
+			(CASE WHEN CD_COOPERATE = #{cdCooperate} THEN 'Y' ELSE 'N' END) AS YN
+		FROM
+			BRC_LOAN
+		WHERE
+			NO_REQ = #{noReq}
+    </select>
+
+    <update id="updateMemberListInoutTm" parameterType="com.jcuesoft.cuebridge.common.vo.UpsVO">
+		UPDATE MEMBER_LIST_INOUT_TM@ERP T SET
+			T.CD_INOUT = 'I',
+			T.CD_KIND = #{cdKind},
+	        T.DT_AGREE_INFO = #{dtAgreeInfo},
+			T.UPS_NO = #{upsNo},	                                                    
+        T.ID_REG = #{idReg},
+        T.DTM_UPT = SYSDATE
+		WHERE
+			BRG_NO = #{noReq}
+    </update>
+    
+    <insert id="insertMemberListInoutTm" parameterType="com.jcuesoft.cuebridge.common.vo.UpsVO">
+    	INSERT INTO MEMBER_LIST_INOUT_TM@ERP
+	    (
+	        DT_CONTACT   ,
+	        SEQ          ,
+	        UPS_NO       ,
+	        DT_AGREE_INFO,
+	        CD_INOUT     ,
+	        CD_KIND      ,
+	        ID_REG       ,
+	        DTM_REG      ,
+	        BRG_NO       
+	    )
+	    VALUES
+	    (
+	        #{dmReg}   ,
+	        (SELECT LPAD(NVL(MAX(TO_NUMBER(SEQ)), '0') + 1, 8, '0') 
+	        FROM MEMBER_LIST_INOUT_TM@ERP WHERE DT_CONTACT = #{dmReg})          ,
+	        #{upsNo}       ,
+	        #{dtAgreeInfo},
+	        'I'     ,
+	        #{cdKind}     ,
+	        #{idReg}       ,
+	        SYSDATE      ,
+	        #{noReq}       
+	    )
+    </insert>
+    
+    <resultMap id="messageResult"
+        type="com.jcuesoft.cuebridge.common.vo.CommonBizVO">
+        <result property="message" column="MESSAGE" />
+        <result property="nmCustom"  column="NM_CUSTOM" />
+        <result property="idScreen" column="ID_SCREEN" />
+        <result property="nmScreen" column="NM_SCREEN" />
+        <result property="noFax" column="NO_FAX" />
+    </resultMap>
+    
+    
+    
+    
+     <select id="getSmsMessage" parameterType="com.jcuesoft.cuebridge.common.vo.CommonBizVO"
+        resultType="String">
+        SELECT
+            MESSAGE 
+        FROM 
+            SMS_MSG@UPS 
+        WHERE  
+            NO = #{messageNo}
+    </select>
+    
+    <select id="getCustomInfo" parameterType="String"
+        resultMap="messageResult">
+       SELECT 
+            BC.NM_CUSTOM
+            , BL.ID_SCREEN
+            , (SELECT GET_NM_USER(BL.ID_SCREEN) FROM DUAL)  NM_SCREEN
+        FROM
+            BRC_LOAN BL , BRC_CUSTOM BC
+        WHERE
+            BL.NO_REQ = BC.NO_REQ 
+            AND BL.NO_REQ =#{brcLonaNoReq}
+    </select>
+
+     <select id="getSafekeyOffer" parameterType="String"
+        resultMap="resultSafekeyOffer">
+		SELECT
+		    (CASE 
+		        WHEN TRIM(BC.CD_NICE_SAFEKEY_EXT) IS NULL THEN (SELECT DS_NICE_CD FROM ST_SETUP) 
+		        ELSE BC.CD_NICE_SAFEKEY_EXT 
+		    END) AS CD_NICE_SAFEKEY_EXT,
+		    (CASE 
+		        WHEN TRIM(BC.DS_NICE_SAFEKEY_EXT) IS NULL THEN (SELECT MAX(REQ_SEQ) FROM HSJ_NPAC_WEB@HSJ 
+		                                                                                                WHERE DIV = 'BRIDGE' 
+		                                                                                                AND RES_RETURN_CODE = '0000' 
+		                                                                                                AND CUST_SEQ = REPLACE(BC.NO_REQ, '-', '') )
+		        ELSE BC.DS_NICE_SAFEKEY_EXT 
+		    END) AS DS_NICE_SAFEKEY_EXT,    
+		    (CASE 
+		        WHEN BS.NO IS NULL THEN ' '
+		        WHEN TRIM(BS.CD_NICE_SAFEKEY_EXT) IS NULL THEN (SELECT DS_NICE_CD FROM ST_SETUP) 
+		        ELSE BS.CD_NICE_SAFEKEY_EXT 
+		    END) AS S_CD_NICE_SAFEKEY_EXT,
+		    (CASE
+		        WHEN BS.NO IS NULL THEN ' '
+		        WHEN TRIM(BS.DS_NICE_SAFEKEY_EXT) IS NULL THEN (SELECT MAX(REQ_SEQ) FROM HSJ_NPAC_WEB@HSJ 
+		                                                                                                WHERE DIV = 'BRIDGE_GUARANTOR' 
+		                                                                                                AND RES_RETURN_CODE = '0000' 
+		                                                                                                AND CUST_SEQ = REPLACE(BS.NO, '-', '') )
+		        ELSE BS.DS_NICE_SAFEKEY_EXT 
+		    END) AS S_DS_NICE_SAFEKEY_EXT
+		FROM
+		    BRC_CUSTOM BC,
+		    BRC_SURETY BS
+		WHERE
+		    BC.NO_REQ = BS.NO_REQ(+)
+		    AND
+		    BS.NO_SURETY(+) = '001'
+		    AND
+		    BC.NO_REQ = #{noReq}
+    </select>    
+
+    <select id="getPersonalFax" parameterType="String"
+        resultMap="messageResult">
+       SELECT 
+        (CASE 
+                WHEN 
+                    (SELECT COUNT(*) FROM FAX_CONFIG@ERP  WHERE USE_TYPE = 'P' AND SAVE_STATUS = 'Y' AND USER_CODE = #{idScreen}) > 0  
+                THEN  (SELECT FAX_NUMBER FROM FAX_CONFIG@ERP WHERE USE_TYPE = 'P' AND USER_CODE = #{idScreen} AND ROWNUM <![CDATA[<= ]]> 1)            
+                WHEN 
+                    (SELECT COUNT(*) FROM FAX_CONFIG@ERP  
+                     WHERE USE_TYPE = 'G' AND SAVE_STATUS = 'Y' AND BRANCH_TEAM = (SELECT BRANCH_TEAM FROM MEMBER@ERP  
+                     WHERE ID = #{idScreen} AND SAVE_STATUS = 'Y' AND ROWNUM <![CDATA[<= ]]>  1    )) > 0  
+                THEN 
+                     (SELECT FAX_NUMBER FROM FAX_CONFIG@ERP  
+                     WHERE USE_TYPE = 'G' AND SAVE_STATUS = 'Y' AND BRANCH_TEAM = (SELECT BRANCH_TEAM FROM MEMBER@ERP  
+                                                                                                                     WHERE ID = #{idScreen} AND SAVE_STATUS = 'Y' AND ROWNUM <![CDATA[<= ]]>  1    ) AND ROWNUM <![CDATA[<= ]]>  1)          
+                ELSE '0000' 
+        END) AS NO_FAX                                                                                                                                                                                                               
+     FROM 
+        DUAL 
+    </select>
+    
+    <select id="getBrcInfoLegal" parameterType="String" resultMap="resultBrcInfoLegal">
+		SELECT
+            BC.NM_CUSTOM,
+            SUBSTRB(BC.NO_CUSTOM, 1, 7) AS NO_CUSTOM,
+            CASE
+                WHEN SUBSTRB(BC.NO_CUSTOM, 7, 1) = '1' THEN 'M'
+                WHEN SUBSTRB(BC.NO_CUSTOM, 7, 1) = '2' THEN 'F'
+                ELSE ' '
+            END AS DS_SEX,                    
+			NVL(BIL.CD_INFO_COLLECT, '71601') AS CD_INFO_COLLECT,
+            CASE
+                WHEN BIL.CD_CONTACT_CUST IS NOT NULL THEN BIL.CD_CONTACT_CUST
+                WHEN BL.CD_PATH IN ('70403', '70404') THEN '71401'
+                ELSE '71402'
+            END AS CD_CONTACT_CUST,
+            CASE
+                WHEN BIL.CD_CONTACT_CUST = '71499' THEN BIL.DS_CONTACT_CUST
+                ELSE ' '
+            END AS DS_CONTACT_CUST,
+            NVL(BIL.CD_CONTACT_AGENT, ' ') AS CD_CONTACT_AGENT,
+            NVL(BIL.NM_CONTACT_AGENT, ' ') AS NM_CONTACT_AGENT,
+            CASE
+                WHEN BIL.CD_CONTACT_AGENT = '71899' THEN BIL.DS_CONTACT_AGENT
+                ELSE ' '
+            END AS DS_CONTACT_AGENT, 
+            NVL(BIL.CD_CALL_AGENT, ' ') AS CD_CALL_AGENT,
+            NVL(BIL.DT_AGENT, TO_CHAR(BL.DM_REG, 'YYYYMMDD')) AS DT_AGENT,
+            NVL(BIL.NM_AGENT, SC.NM_COMP) AS NM_AGENT,
+            NVL(BIL.NM_AGENT_CEO, SC.NM_CEO) AS NM_AGENT_CEO,
+            NVL(BIL.NM_AGENT_MANAGER, (SELECT NM_USER FROM ST_USER WHERE ID_USER = BL.ID_SCREEN)) AS NM_AGENT_MANAGER,
+            NVL(BIL.DS_AGENT_URL, SC.DS_HOMEPAGE) AS DS_AGENT_URL
+		FROM
+		    BRC_LOAN BL,
+		    BRC_CUSTOM BC,
+            BRC_INFO_LEGAL BIL,
+            ST_COMP SC
+		WHERE
+		    BL.NO_REQ = BC.NO_REQ
+		    AND 
+		    BL.NO_REQ = BIL.NO_REQ(+)
+		    AND
+		    BL.NO_REQ = #{noReq}      
+    </select>
+    
+    <select id="getBrcSupply" parameterType="String" resultMap="resultBrcSupply">
+    <!-- 접수 금융사에 따라 전화번호 분할 요구시 NO_SUPPLY_TEL1,NO_SUPPLY_TEL2,NO_SUPPLY_TEL3 사용 (ARS전화번호에 02지역번호 임의로 붙여준다)
+    1개 필드 요구시 NO_SUPPLY_TEL 사용
+       -->
+		SELECT 
+		    NO_REQ,
+		    LPAD(NO_SUPPLY, 3, '0') AS NO_SUPPLY,
+		    DT_SUPPLY,
+		    NM_SUPPLY,
+		    NO_SUPPLY_LOAN,
+		    NO_SUPPLY_SOCIETY,
+		    NO_SUPPLY_TEL AS NO_SUPPLY_TEL,
+		    CASE 
+		        WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN '02'
+		        WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,1,2)
+		        ELSE SUBSTRB(NO_SUPPLY_TEL,1,3)
+		    END AS NO_SUPPLY_TEL1,
+		    CASE 
+		        WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN SUBSTRB(NO_SUPPLY_TEL,1,4)
+		        WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,3,4)
+		        ELSE SUBSTRB(NO_SUPPLY_TEL,4,4)
+		    END AS NO_SUPPLY_TEL2,
+		    CASE 
+		        WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN SUBSTRB(NO_SUPPLY_TEL,5,4)
+		        WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,7,4)
+		        ELSE SUBSTRB(NO_SUPPLY_TEL,8,4)
+		    END AS NO_SUPPLY_TEL3
+		FROM  
+		    BRC_SUPPLY    
+		WHERE 
+		    NO_REQ = #{noReq}
+		UNION ALL
+		SELECT
+		    T1.NO_REQ AS NO_REQ, 
+		    LPAD(TO_CHAR((SELECT COUNT(*) FROM BRC_SUPPLY WHERE NO_REQ = T1.NO_REQ)+1), 3, '0') AS NO_SUPPLY,
+		    TO_CHAR(T1.DM_REG, 'YYYYMMDD') AS DT_SUPPLY, 
+		    T2.NM_COMP AS NM_SUPPLY, 
+		    T2.NO_LOAN AS NO_SUPPLY_LOAN,
+		    T2.NO_SOCIETY AS NO_SUPPLY_SOCIETY,
+			T2.NO_TEL_ARS AS NO_SUPPLY_TEL,
+		    '02' AS NO_SUPPLY_TEL1,
+		    SUBSTRB(T2.NO_TEL_ARS,1,4) AS NO_SUPPLY_TEL2,
+		    SUBSTRB(T2.NO_TEL_ARS,5,4) AS NO_SUPPLY_TEL3
+		FROM 
+		    BRC_LOAN T1, 
+		    ST_COMP T2
+		WHERE 
+		    NO_REQ = #{noReq}
+		ORDER BY
+		    NO_SUPPLY		    
+    </select>    
+    
+    <update id="updateBatchBrcLoan" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+       UPDATE BRC_LOAN T SET
+       <if test="updateCdStatus != null and updateCdStatus != ''">
+        T.CD_STATUS = #{updateCdStatus},
+       </if>
+       <if test="updateCdStatus == '71007' and updateCdReject != null and updateCdReject != ''">
+        T.CD_REJECT = #{updateCdReject},
+       </if>
+       <if test="updateCdStatus == '71008' and updateCdCancel != null and updateCdCancel != ''">
+        T.CD_CANCEL = #{updateCdCancel},
+       </if>       
+       <if test="updateIdScreen != null and updateIdScreen != ''">
+        T.ID_SCREEN = #{updateIdScreen},
+       </if>
+		<if test="updateCdStatus.equals('71004')"><!--상담완료 상태변경시 상담완료일시 SET -->
+			T.DM_SCREEN = NVL(T.DM_SCREEN, SYSDATE),
+		</if>
+		<if test="updateCdStatus.equals('71005')"><!--상담종료 상태변경시 결재일시 SET -->
+			T.DM_AUTH = NVL(T.DM_AUTH, SYSDATE),
+		</if>
+		<if test="updateCdStatus.equals('71007') or updateCdStatus.equals('71008') or updateCdStatus.equals('71011') or updateCdStatus.equals('71012')"><!--거절 상태변경시 거절일시 SET -->
+			T.DM_REJECT = NVL(T.DM_REJECT, SYSDATE),
+		</if>       
+		<if test="idUpt != null and idUpt != ''">
+			T.ID_UPT = #{idUpt},
+		</if>
+		T.DM_UPT = SYSDATE       
+       WHERE T.NO_REQ IN
+        <foreach collection="updateBatchNo" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+        
+        
+</mapper>

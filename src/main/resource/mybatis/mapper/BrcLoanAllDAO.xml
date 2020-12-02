@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.loanall">
+
+	<resultMap id="brcLoanAllListResult" type="com.jcuesoft.cuebridge.brc.vo.BrcLoanAllResponseVO">
+		<result property="no" column="NO" />
+		<result property="noReq" column="NO_REQ" />
+		<result property="cdPath" column="CD_PATH" />
+		<result property="cdPdt" column="CD_PDT" />
+		<result property="cdEchanel" column="CD_ECHANEL" />
+		<result property="cdEportal" column="CD_EPORTAL" />
+		<result property="nmEkeyword" column="NM_EKEYWORD" />
+		<result property="cdEpath" column="CD_EPATH" />
+		<result property="amCustom" column="AM_CUSTOM" />
+		<result property="amApp" column="AM_APP" />
+		<result property="cdStatus" column="CD_STATUS" />
+		<result property="idReceive" column="ID_RECEIVE" />
+		<result property="idScreen" column="ID_SCREEN" />
+		<result property="dmContact" column="DM_CONTACT" />
+		<result property="dmReceive" column="DM_RECEIVE" />
+		<result property="dmReject" column="DM_REJECT" />
+		<result property="dsAssRank" column="DS_ASS_RANK" />
+		<result property="cdTactic" column="CD_TACTIC" />
+		
+		<result property="nmCustom" column="NM_CUSTOM" />
+        <result property="noCustom" column="NO_CUSTOM" />
+        <result property="noSex" column="NO_SEX" />
+        <result property="ynNiceSafekey" column="YN_NICE_SAFEKEY" />
+        <result property="dsNiceSafekey" column="DS_NICE_SAFEKEY" />
+        <result property="bexCount" column="BEX_COUNT" />
+        <result property="receiveDiff" column="RECEIVE_DIFF" />
+        <result property="cnSafekeyExt" column="CN_SAFEKEY_EXT" />
+        <result property="cdRecruitGroup" column="CD_RECRUIT_GROUP" />
+	</resultMap>
+	
+	 <resultMap id="brcLoanStatusCountResult" type="com.jcuesoft.cuebridge.brc.vo.BrcLoanAllResponseVO">
+        <result property="cntToday" column="CNT_TODAY" />
+        <result property="cnt71001" column="CNT71001" />
+        <result property="cnt71002" column="CNT71002" />
+        <result property="cnt71003" column="CNT71003" />
+        <result property="cnt71004" column="CNT71004" />
+        <result property="cnt71006" column="CNT71006" />
+        <result property="cnt71013" column="CNT71013" />        
+    </resultMap>
+
+           
+
+	<select id="getLoanAllList" parameterType="org.springframework.data.domain.Pageable"
+		resultMap="brcLoanAllListResult">
+		SELECT /*+ FIRST_ROWS(50) */
+               BL.NO
+		     , BL.NO_REQ
+		     , (SELECT GET_NM_CD (BL.CD_PATH) FROM DUAL) CD_PATH
+		     , (SELECT NM_PDT FROM ST_PDT WHERE CD_PDT = BL.CD_PDT AND CD_COOPERATE = (SELECT CD_COOPERATE_GROUP FROM ST_COMP))  CD_PDT
+		     , (SELECT GET_NM_CD (BL.CD_ECHANEL) FROM DUAL)  CD_ECHANEL
+		     , (SELECT GET_NM_CD (BL.CD_EPORTAL) FROM DUAL)  CD_EPORTAL
+		     , (SELECT GET_NM_CD (BL.CD_EPATH)FROM DUAL) CD_EPATH
+		     , (SELECT GET_NM_CD (BL.CD_STATUS) FROM DUAL)  CD_STATUS
+		     , (SELECT GET_NM_USER (BL.ID_RECEIVE) FROM DUAL)  ID_RECEIVE
+		     , (SELECT  GET_NM_USER (BL.ID_SCREEN) FROM DUAL)  ID_SCREEN
+		     , BL.NM_EKEYWORD
+		     , BC.NM_CUSTOM
+		     , BC.NO_CUSTOM
+		     , CASE
+                WHEN LENGTH(TRIM(BC.NO_CUSTOM)) = 1 THEN BC.NO_CUSTOM
+                WHEN LENGTH(TRIM(BC.NO_CUSTOM)) = 3 THEN SUBSTRB(BC.NO_CUSTOM, 3, 1) 
+                WHEN LENGTH(TRIM(BC.NO_CUSTOM)) > 6 THEN SUBSTRB(BC.NO_CUSTOM, 7, 1) 
+                ELSE ''
+                END AS NO_SEX
+             , BC.YN_NICE_SAFEKEY
+             , TRIM(BC.DS_NICE_SAFEKEY) AS DS_NICE_SAFEKEY
+		     , BL.AM_CUSTOM / 10000 AM_CUSTOM
+		     , BL.AM_APP / 10000 AM_APP
+		     , BL.DM_CONTACT
+		     , BL.DM_RECEIVE
+		     , BL.DM_REJECT
+		     , ROUND((SYSDATE - BL.DM_RECEIVE)*24*60) AS RECEIVE_DIFF
+			, (SELECT DS_ASS_RANK FROM FR_HSJCSS_MASTER@HSJ T
+			WHERE T.CD_BIZ_KIND = 'BRG' AND T.NO_UNIQUE = BL.NO_REQ AND T.NO_SURETY = ' ' AND ROWNUM <![CDATA[<= ]]> 1)	AS DS_ASS_RANK
+			, (SELECT 
+				CASE WHEN CD_TACTIC = '1' THEN '승인가능'
+		     		   WHEN CD_TACTIC = '9' THEN '승인불가'
+		     		   ELSE ' '
+			   END FROM FR_HSJCSS_MASTER@HSJ T
+			WHERE T.CD_BIZ_KIND = 'BRG' AND T.NO_UNIQUE = BL.NO_REQ AND T.NO_SURETY = ' ' AND ROWNUM <![CDATA[<= ]]> 1)	AS CD_TACTIC
+<!-- 			디비링크 데이터 조회시 비정상적으로 느려지는 현상 발생하여 스칼라쿼리로 변경
+		     , CSS.DS_ASS_RANK
+		     , CASE WHEN CSS.CD_TACTIC = '1' THEN '승인가능'
+		     		   WHEN CSS.CD_TACTIC = '9' THEN '승인불가'
+		     		   ELSE ' '
+			   END AS CD_TACTIC -->
+		     , (SELECT GET_NM_CD (BL.CD_RECRUIT_GROUP)FROM DUAL) CD_RECRUIT_GROUP			   
+			, BC.CN_SAFEKEY_EXT			
+		     <if test="searchCdStatus == '71004' or searchCdStatus == '71005'  ">
+            , (SELECT COUNT(NO) FROM BEX_MASTER WHERE NO_REQ = BL.NO_REQ) AS BEX_COUNT
+            </if>
+        FROM
+            BRC_LOAN BL , BRC_CUSTOM BC
+             <if test="searchCdTactic != null and searchCdTactic != ''">
+             , FR_HSJCSS_MASTER@HSJ CSS
+             </if>            
+        WHERE
+            BL.NO_REQ = BC.NO_REQ
+             <if test="searchCdTactic != null and searchCdTactic != ''">
+             AND
+             BL.NO_REQ = CSS.NO_UNIQUE(+)
+			 AND
+             CSS.CD_BIZ_KIND (+)=  'BRG'
+			 AND
+             CSS.NO_SURETY (+)=  ' '                 
+             AND CSS.CD_TACTIC =  #{searchCdTactic}
+             </if>            
+            <if test="searchNoReq != null and searchNoReq != ''">
+            AND BL.NO_REQ = #{searchNoReq}
+            </if>                  
+            <if test="searchNoCooperate != null and searchNoCooperate != ''">
+            AND BL.NO_COOPERATE = #{searchNoCooperate}
+            </if>
+            <if test="searchCdStatus != null and searchCdStatus != ''">
+            AND BL.CD_STATUS = #{searchCdStatus}
+            </if>
+            <if test="searchCdStatus == null or searchCdStatus == ''">
+            AND BL.CD_STATUS != '71012'
+            </if>
+             <if test="searchIdScreen != null and searchIdScreen != ''">
+             AND BL.ID_SCREEN = #{searchIdScreen}
+            </if>
+            <if test="searchCdPath != null and searchCdPath != ''">
+             AND BL.CD_PATH = #{searchCdPath}
+            </if>
+            <if test="(searchDmStart != null and searchDmStart != '') and (searchDmEnd != null and searchDmEnd != '') ">
+	             <if test="searchDmColumn == 'dmContact' ">
+	              AND BL.DM_CONTACT BETWEEN #{searchDmStart} and TO_DATE(#{searchDmEnd},'YYYY-MM-DD')+1
+	             </if>
+	             <if test="searchDmColumn == 'dmReceive' ">
+	              AND BL.DM_RECEIVE BETWEEN #{searchDmStart} and TO_DATE(#{searchDmEnd},'YYYY-MM-DD')+1
+	             </if>
+	             <if test="searchDmColumn == 'dmScreen' ">
+	              AND BL.DM_SCREEN BETWEEN #{searchDmStart} and TO_DATE(#{searchDmEnd},'YYYY-MM-DD')+1
+	             </if>
+	             <if test="searchDmColumn == 'dmReject' ">
+                  AND BL.DM_REJECT BETWEEN #{searchDmStart} and TO_DATE(#{searchDmEnd},'YYYY-MM-DD')+1
+                 </if>
+	         </if>
+	         <if test="(searchNoTelMobile1 != null and searchNoTelMobile1 != '') and (searchNoTelMobile2 != null and searchNoTelMobile2 != '') and (searchNoTelMobile3 != null and searchNoTelMobile3 != '')">
+              AND (BC.NO_TEL1_MOBILE = #{searchNoTelMobile1} AND  BC.NO_TEL2_MOBILE=  #{searchNoTelMobile2}  AND  BC.NO_TEL3_MOBILE=  #{searchNoTelMobile3}) 
+            </if>
+             <if test="searchNmCustom != null and searchNmCustom != ''">
+             AND BC.NM_CUSTOM LIKE  #{searchNmCustom}||'%' 
+             </if>
+             <if test="searchNoCustom != null and searchNoCustom != ''">
+             AND BC.NO_CUSTOM LIKE  #{searchNoCustom}||'%' 
+             </if>
+             <if test="searchYnSafekey != null and searchYnSafekey != ''">
+                <if test="searchYnSafekey == 'Yes' ">
+                    AND  BC.DS_NICE_SAFEKEY <![CDATA[>]]>  ' '
+                </if>
+                <if test="searchYnSafekey == 'No' ">
+                     AND BC.DS_NICE_SAFEKEY = ' '
+                </if>
+             </if>
+             <if test="searchCdRecruitGroup != null and searchCdRecruitGroup != ''">
+             AND BL.CD_RECRUIT_GROUP =  #{searchCdRecruitGroup}
+             </if>
+             <if test="searchCnSafekeyExt != null and searchCnSafekeyExt != ''">
+             AND BC.CN_SAFEKEY_EXT =  #{searchCnSafekeyExt}
+             </if>                         
+             <if test="searchYnReSale != null and searchYnReSale != ''">
+			 AND BL.YN_RESALE =  #{searchYnReSale}          
+             </if>   
+
+	</select>
+	
+	<select id="getLoanStatusCount" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO"
+        resultMap="brcLoanStatusCountResult">
+       SELECT
+           MAX(CNT_TODAY) CNT_TODAY
+           ,  MAX(CNT_71001) CNT71001
+           ,  MAX(CNT_71002) CNT71002
+           ,  MAX(CNT_71003) CNT71003
+           ,  MAX(CNT_71004) CNT71004
+           ,  MAX(CNT_71006) CNT71006
+           ,  MAX(CNT_71013) CNT71013           
+       FROM
+       (
+           SELECT 
+               DECODE(CNT_NAME,'TODAY_TOTAL',CNT,0) CNT_TODAY
+               , DECODE(CNT_NAME,'71001',CNT,0) CNT_71001
+               , DECODE(CNT_NAME,'71002',CNT,0) CNT_71002
+               , DECODE(CNT_NAME,'71003',CNT,0) CNT_71003
+               , DECODE(CNT_NAME,'71004',CNT,0) CNT_71004
+               , DECODE(CNT_NAME,'71006',CNT,0) CNT_71006
+               , DECODE(CNT_NAME,'71013',CNT,0) CNT_71013               
+           FROM
+           (
+               SELECT
+                    'TODAY_TOTAL' CNT_NAME
+                    ,COUNT(NO_REQ) as CNT 
+               FROM 
+                   BRC_LOAN 
+               WHERE 
+                   DM_RECEIVE   >=   trunc(sysdate)
+               UNION ALL
+               SELECT 
+                   CD_STATUS CNT_NAME
+                    ,COUNT(NO_REQ) as CNT
+                FROM 
+                   BRC_LOAN 
+                WHERE 
+                   CD_STATUS IN( '71001','71002','71003','71004','71006','71013') 
+                 GROUP BY CD_STATUS   
+             )
+         ) 
+    </select>
+    
+
+</mapper>
+    

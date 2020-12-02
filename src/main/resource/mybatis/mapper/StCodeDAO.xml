@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.code">
+
+	<resultMap id="codeResult" type="com.jcuesoft.cuebridge.st.vo.StCodeResponseVO">
+		<result property="no" column="NO" />
+		<result property="cdGroup" column="CD_GROUP" />
+		<result property="cd" column="CD" />
+		<result property="nmCd" column="NM_CD" />
+		<result property="ynUse" column="YN_USE" />
+		<result property="noOrder" column="NO_ORDER" />
+		<result property="dmReg" column="DM_REG" />
+		<result property="idReg" column="ID_REG" />
+		<result property="dmUpt" column="DM_UPT" />
+		<result property="idUpt" column="ID_UPT" />
+	</resultMap>
+
+	<select id="getCodeList" parameterType="com.jcuesoft.cuebridge.st.vo.StCodeRequestVO"
+		resultMap="codeResult">
+		SELECT
+			NO 
+			, CD_GROUP 
+			, CD 
+			, NM_CD 
+			, YN_USE
+			ynUse
+			, NO_ORDER 
+			, DM_REG 
+			, (SELECT  GET_NM_USER(ID_REG) FROM DUAL)  ID_REG
+			, DM_UPT dmUpt
+			, (SELECT  GET_NM_USER(ID_UPT) FROM DUAL)  ID_UPT
+		FROM
+		  ST_Code
+		WHERE
+		  CD_GROUP = #{searchGroupCode}
+		ORDER BY
+		  NO_ORDER ASC
+	</select>
+
+	<select id="getCodeOne" parameterType="com.jcuesoft.cuebridge.st.vo.StCodeRequestVO"
+		resultMap="codeResult">
+		SELECT
+			NO 
+            , CD_GROUP 
+            , CD 
+            , NM_CD 
+            , YN_USE
+            ynUse
+            , NO_ORDER 
+            , DM_REG 
+            , (SELECT  GET_NM_USER(ID_REG) FROM DUAL)  ID_REG
+            , DM_UPT dmUpt
+            , (SELECT  GET_NM_USER(ID_UPT) FROM DUAL)  ID_UPT
+		FROM
+		ST_Code
+		WHERE
+		CD = #{cd}
+	</select>
+
+	<insert id="insertCode" parameterType="com.jcuesoft.cuebridge.st.vo.StCodeRequestVO">
+		INSERT INTO ST_CODE (
+		NO
+		, CD_GROUP
+		, CD
+		, NM_CD
+		, YN_USE
+		, NO_ORDER
+		, DM_REG
+		, ID_REG
+		) VALUES (
+		ST_CODE_SEQ.nextval
+		, #{cdGroup}
+		, #{cd}
+		, #{nmCd}
+		, #{ynUse}
+		, #{noOrder}
+		, sysdate
+		, #{idReg}
+		)
+	</insert>
+
+	<delete id="deleteCode" parameterType="com.jcuesoft.cuebridge.st.vo.StCodeRequestVO">
+		DELETE ST_CODE WHERE NO = #{no}
+	</delete>
+
+	<update id="updateCode" parameterType="com.jcuesoft.cuebridge.st.vo.StCodeRequestVO">
+		UPDATE ST_CODE SET
+		NM_CD = #{nmCd}
+		,YN_USE = #{ynUse}
+		,NO_ORDER = #{noOrder}
+		,DM_UPT = sysdate
+		,ID_UPT = #{idUpt}
+		where
+		NO = #{no}
+	</update>
+
+	<update id="updateCodeOrder" parameterType="com.jcuesoft.cuebridge.st.vo.StCodeRequestVO">
+		UPDATE ST_CODE SET 
+		NO_ORDER = #{qryChangeOrderNum}
+		,DM_UPT = sysdate
+		,ID_UPT = #{idUpt}
+		where
+		no = #{qryChangeOrderCodeNo}
+	</update>
+
+</mapper>
+    

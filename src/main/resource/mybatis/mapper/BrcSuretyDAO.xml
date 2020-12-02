@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.brcSurety">
+
+	<resultMap id="BrcSuretyResultMap" type="com.jcuesoft.cuebridge.brc.vo.BrcSuretyInfoResponseVO">
+		<id column="NO" jdbcType="DECIMAL" property="no" />
+		<result column="NO_REQ" jdbcType="VARCHAR" property="noReq" />
+		<result column="NO_SURETY" jdbcType="VARCHAR" property="noSurety" />
+		<result column="DT_CB_AGREE" property="dtCbAgree" jdbcType="VARCHAR" />
+ 		<result column="DM_PROMISE" property="dmPromise" jdbcType="TIMESTAMP" />
+		<result column="DM_PROMISE_YMD" property="dmPromiseYMD" jdbcType="VARCHAR"  />
+		<result column="DM_PROMISE_HH" property="dmPromiseHH" jdbcType="VARCHAR" />
+		<result column="DM_PROMISE_MI" property="dmPromiseMI" jdbcType="VARCHAR" />
+		<!--고객기본정보 -->
+		<!-- <result column="CD_AUTH" property="cdAuth" jdbcType="VARCHAR" /> -->
+		
+		<result column="BRC_SURETY_NO" property="brcSuretyNo" jdbcType="VARCHAR" />
+		<result column="DM_PROMISE" property="dmPromise" jdbcType="TIMESTAMP" />
+		<result column="DM_PROMISE_YMD" property="dmPromiseYMD" jdbcType="VARCHAR"  />
+		<result column="DM_PROMISE_HH" property="dmPromiseHH" jdbcType="VARCHAR" />
+		<result column="DM_PROMISE_MI" property="dmPromiseMI" jdbcType="VARCHAR" />		
+		<result column="NO_CUSTOM" property="noCustom" jdbcType="VARCHAR" />
+		<result column="NM_CUSTOM" property="nmCustom" jdbcType="VARCHAR" />
+		<result column="DS_EMAIL" property="dsEmail" jdbcType="VARCHAR" />
+		<result column="CD_MARRY" property="cdMarry" jdbcType="VARCHAR" />
+		<result column="CD_KND_MOBILE" property="cdKndMobile" jdbcType="VARCHAR" />
+		<result column="NO_TEL1_MOBILE" property="noTel1Mobile"
+			jdbcType="VARCHAR" />
+		<result column="NO_TEL2_MOBILE" property="noTel2Mobile"
+			jdbcType="VARCHAR" />
+		<result column="NO_TEL3_MOBILE" property="noTel3Mobile"
+			jdbcType="VARCHAR" />
+	    <result column="YN_NICE_SAFEKEY" property="ynNiceSafekey" jdbcType="VARCHAR" />  
+	    <result column="DS_NICE_SAFEKEY" property="dsNiceSafekey" jdbcType="VARCHAR" />  
+		<result column="CN_SAFEKEY_EXT" property="cnSafekeyExt" jdbcType="DECIMAL" />	    
+	    <result column="YN_CDT_INQUIRY" property="ynCdtInquiry" jdbcType="VARCHAR" />	
+	   
+		<!--고객직장정보 -->
+		<result column="CD_JOB_KIND" property="cdJobKind" jdbcType="VARCHAR" />		
+		
+		<result column="DM_REG" property="dmReg" jdbcType="TIMESTAMP" />
+		<result column="ID_REG" property="idReg" jdbcType="VARCHAR" />
+		<result column="DM_UPT" property="dmUpt" jdbcType="TIMESTAMP" />
+		<result column="ID_UPT" property="idUpt" jdbcType="VARCHAR" />		
+		<!--신용정보 -->
+		<result column="DS_CNT_CB" property="dsCntCb" jdbcType="VARCHAR" />
+		<result column="DS_AMT_CB" property="dsAmtCb" jdbcType="VARCHAR" />
+		<result column="DS_1ST_RANK" property="ds1stRank" jdbcType="VARCHAR" />
+		<result column="DS_2ND_RANK" property="ds2ndRank" jdbcType="VARCHAR" />
+		<result column="DS_PI_RANK" property="dsPiRank" jdbcType="VARCHAR" />
+		<result column="DS_ASS_RANK" property="dsAssRank" jdbcType="VARCHAR" />
+		<result column="CD_TACTIC" property="cdTactic" jdbcType="VARCHAR" />
+		<result column="CD_TACTIC_LIMIT" property="cdTacticLimit" jdbcType="VARCHAR" />		
+	</resultMap>
+
+    <select id="getBrcSuretyList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO" resultMap="BrcSuretyResultMap">
+		SELECT 
+		    A.NO_REQ,
+		    A.NO_SURETY,
+		    A.NM_CUSTOM,
+		    A.NO_CUSTOM,
+		    A.NO_TEL1_MOBILE,
+		    A.NO_TEL2_MOBILE,
+		    A.NO_TEL3_MOBILE,
+		    A.DM_REG,
+		    (SELECT GET_NM_USER(A.ID_REG) FROM DUAL) AS ID_REG
+		FROM 
+		    BRC_SURETY A
+		WHERE
+		    A.NO_REQ = #{noReq}
+		ORDER BY
+		    A.NO_SURETY DESC   
+    </select>
+    
+    <select id="getBrcSuretyInfo" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO" resultMap="BrcSuretyResultMap">
+		SELECT
+			A.NO_REQ,
+ 			(CASE WHEN LENGTHB(B.DT_CB_AGREE) = 8 THEN SUBSTRB(B.DT_CB_AGREE, 1, 4) || '-' || SUBSTRB(B.DT_CB_AGREE, 5, 2) || '-' || SUBSTRB(B.DT_CB_AGREE, 7, 2)
+					 ELSE ' 'END) AS DT_CB_AGREE,
+			B.NO AS BRC_SURETY_NO,
+			B.DM_PROMISE,			 
+ 		    TO_CHAR(B.DM_PROMISE, 'YYYY-MM-DD') AS DM_PROMISE_YMD,
+		    TO_CHAR(B.DM_PROMISE, 'HH24') AS DM_PROMISE_HH,
+		    TO_CHAR(B.DM_PROMISE, 'MI') AS DM_PROMISE_MI,
+			SUBSTRB(B.NO_CUSTOM, 1, 6) || '-' || SUBSTRB(B.NO_CUSTOM, 7, 7) AS NO_CUSTOM,
+			B.NM_CUSTOM,
+			TRIM(B.DS_EMAIL) AS DS_EMAIL,
+			B.CD_MARRY,
+			B.CD_KND_MOBILE,
+			B.YN_NICE_SAFEKEY,
+			B.DS_NICE_SAFEKEY,
+			B.CN_SAFEKEY_EXT,			
+			TRIM(B.NO_TEL1_MOBILE) AS NO_TEL1_MOBILE,
+			TRIM(B.NO_TEL2_MOBILE) AS NO_TEL2_MOBILE,
+			TRIM(B.NO_TEL3_MOBILE) AS NO_TEL3_MOBILE, 
+			C.CD_JOB_KIND,
+		    D.DS_CNT_CB AS DS_CNT_CB, 
+		    D.DS_AMT_CB AS DS_AMT_CB,
+		    D.DS_1ST_RANK AS DS_1ST_RANK,
+		    D.DS_2ND_RANK AS DS_2ND_RANK,
+		    TO_NUMBER(TRIM(D.DS_PI_RANK)) AS DS_PI_RANK,
+		    D.DS_ASS_RANK AS DS_ASS_RANK,
+		    (CASE 
+		        WHEN D.CD_TACTIC = '1' THEN '승인가능'
+		        WHEN D.CD_TACTIC = '9' THEN '승인불가'
+		        ELSE ' '
+		    END) AS CD_TACTIC		,
+		    (CASE 
+		        WHEN D.CD_TACTIC_LIMIT = '0' THEN '한도없음'
+		        WHEN D.CD_TACTIC_LIMIT = '1' THEN '한도하향'
+		        WHEN D.CD_TACTIC_LIMIT = '2' THEN '한도평준'
+		        WHEN D.CD_TACTIC_LIMIT = '3' THEN '한도상향'
+		        ELSE ' '
+		    END) AS CD_TACTIC_LIMIT,
+		    TRIM(A.DS_COOPERATE) AS DS_COOPERATE,
+		    B.YN_CDT_INQUIRY
+		FROM
+			BRC_LOAN A,
+			BRC_SURETY B,
+			BRC_SURETY_COMPANY C,
+			FR_HSJCSS_MASTER@HSJ D
+		WHERE
+			A.NO_REQ = B.NO_REQ
+			AND
+			A.NO_REQ = C.NO_REQ
+			AND
+			B.NO_SURETY = C.NO_SURETY
+            AND
+            A.NO_REQ = #{searchNoReq}
+            AND 
+            B.NO_SURETY = #{searchNoSurety}
+			AND
+            A.NO_REQ = D.NO_UNIQUE(+)
+			AND
+            D.CD_BIZ_KIND (+)=  'BRG'
+            AND 
+            D.NO_SURETY (+) = #{searchNoSurety}        
+    </select>    
+
+
+
+	<update id="updateBrcSurety" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+		UPDATE BRC_SURETY SET
+		<if test="nmCustom != null and nmCustom != ''">
+			NM_CUSTOM = NVL(REPLACE(#{nmCustom,jdbcType=VARCHAR}, ' ', ''), ' '),
+		</if>
+		<if test="noCustom != null and noCustom != ''">
+			NO_CUSTOM = REPLACE(#{noCustom,jdbcType=VARCHAR}, '-', ''),
+		</if>
+		<if test="dtCbAgree != null and dtCbAgree != ''">
+			DT_CB_AGREE = REPLACE(#{dtCbAgree}, '-', ''),
+		</if>		
+		<if test="dmPromise != null and dmPromise != ''">
+			DM_PROMISE = TO_DATE(#{dmPromise}, 'YYYY-MM-DDHH24MI'),
+		</if>			
+		<if test="dsEmail != null and dsEmail != ''">
+			DS_EMAIL = #{dsEmail,jdbcType=VARCHAR},
+		</if>
+		<if test="cdMarry != null and cdMarry != ''">
+			CD_MARRY = #{cdMarry,jdbcType=VARCHAR},
+		</if>
+		<if test="cdKndMobile != null and cdKndMobile != ''">
+			CD_KND_MOBILE = #{cdKndMobile,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel1Mobile != null and noTel1Mobile != ''">
+			NO_TEL1_MOBILE = #{noTel1Mobile,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel2Mobile != null and noTel2Mobile != ''">
+			NO_TEL2_MOBILE = #{noTel2Mobile,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel3Mobile != null and noTel3Mobile != ''">
+			NO_TEL3_MOBILE = #{noTel3Mobile,jdbcType=VARCHAR},
+		</if>
+		<if test="ynAuthMobile != null and ynAuthMobile != ''">
+			YN_AUTH_MOBILE = #{ynAuthMobile,jdbcType=VARCHAR},
+		</if>
+		<if test="ynNiceSafekey != null and ynNiceSafekey != ''">
+            YN_NICE_SAFEKEY = #{ynNiceSafekey,jdbcType=VARCHAR},
+        </if>
+		<if test="cdKndEtc != null and cdKndEtc != ''">
+			CD_KND_ETC = #{cdKndEtc,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel1Etc1 != null and noTel1Etc1 != ''">
+			NO_TEL1_ETC1 = #{noTel1Etc1,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel2Etc1 != null and noTel2Etc1 != ''">
+			NO_TEL2_ETC1 = #{noTel2Etc1,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel3Etc1 != null and noTel3Etc1 != ''">
+			NO_TEL3_ETC1 = #{noTel3Etc1,jdbcType=VARCHAR},
+		</if>
+		<if test="ynAuthEtc != null and ynAuthEtc != ''">
+			YN_AUTH_ETC = #{ynAuthEtc,jdbcType=VARCHAR},
+		</if>
+		<if test="noFax1 != null and noFax1 != ''">
+			NO_FAX1 = #{noFax1,jdbcType=VARCHAR},
+		</if>
+		<if test="noFax2 != null and noFax2 != ''">
+			NO_FAX2 = #{noFax2,jdbcType=VARCHAR},
+		</if>
+		<if test="noFax3 != null and noFax3 != ''">
+			NO_FAX3 = #{noFax3,jdbcType=VARCHAR},
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			ID_UPT = #{idUpt,jdbcType=VARCHAR},
+		</if>
+		<if test="ynCdtInquiry != null and ynCdtInquiry != ''" >
+			YN_CDT_INQUIRY = #{ynCdtInquiry,jdbcType=VARCHAR},
+		</if>		
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+		AND
+		NO_SURETY = #{noSurety}
+	</update>
+	
+
+	<update id="updateBrcSuretyCompany" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+		UPDATE BRC_SURETY_COMPANY SET
+		<if test="cdJobKind != null and cdJobKind != ''">
+			CD_JOB_KIND = #{cdJobKind,jdbcType=VARCHAR},
+		</if>
+		<if test="cdRank != null and cdRank != ''">
+			CD_RANK = #{cdRank,jdbcType=VARCHAR},
+		</if>
+		<if test="cdJobAct != null and cdJobAct != ''">
+			CD_JOB_ACT = #{cdJobAct,jdbcType=VARCHAR},
+		</if>
+		<if test="cdJobStatus != null and cdJobStatus != ''">
+			CD_JOB_STATUS = #{cdJobStatus,jdbcType=VARCHAR},
+		</if>
+		<if test="nmComp != null and nmComp != ''">
+			NM_COMP = #{nmComp,jdbcType=VARCHAR},
+		</if>
+		<if test="nmDept != null and nmDept != ''">
+			NM_DEPT = #{nmDept,jdbcType=VARCHAR},
+		</if>
+		<if test="dtRegJoin != null and dtRegJoin != ''">
+			DT_REG_JOIN = #{dtRegJoin,jdbcType=VARCHAR},
+		</if>
+		<if test="ddPay != null and ddPay != ''">
+			DD_PAY = #{ddPay,jdbcType=VARCHAR},
+		</if>
+		<if test="amPayMonth != null and amPayMonth != ''">
+			AM_PAY_MONTH = #{amPayMonth,jdbcType=DECIMAL},
+		</if>
+		<if test="noPostComp != null and noPostComp != ''">
+			NO_POST_COMP = #{noPostComp,jdbcType=VARCHAR},
+		</if>
+		<if test="dsStrtComp != null and dsStrtComp != ''">
+			DS_STRT_COMP = #{dsStrtComp,jdbcType=VARCHAR},
+		</if>
+		<if test="dsAddrComp != null and dsAddrComp != ''">
+			DS_ADDR_COMP = #{dsAddrComp,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel1Comp != null and noTel1Comp != ''">
+			NO_TEL1_COMP = #{noTel1Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel2Comp != null and noTel2Comp != ''">
+			NO_TEL2_COMP = #{noTel2Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel3Comp != null and noTel3Comp != ''">
+			NO_TEL3_COMP = #{noTel3Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noExtComp != null and noExtComp != ''">
+			NO_EXT_COMP = #{noExtComp,jdbcType=VARCHAR},
+		</if>
+		<if test="noMaintel1Comp != null and noMaintel1Comp != ''">
+			NO_MAINTEL1_COMP = #{noMaintel1Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noMaintel2Comp != null and noMaintel2Comp != ''">
+			NO_MAINTEL2_COMP = #{noMaintel2Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noMaintel3Comp != null and noMaintel3Comp != ''">
+			NO_MAINTEL3_COMP = #{noMaintel3Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			ID_UPT = #{idUpt,jdbcType=VARCHAR},
+		</if>
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+		AND
+		NO_SURETY = #{noSurety}
+	</update>
+	
+	<update id="updateBrcSuretyHash" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+		UPDATE BRC_SURETY_HASH SET
+		<if test="noCustom != null and noCustom != ''">
+			NO_CUSTOM_HASH = SHA512_HASH(REPLACE(#{noCustom,jdbcType=VARCHAR}, '-', '')),
+		</if>
+		<if test="noTel1Mobile != null and noTel1Mobile != ''">
+			NO_TEL_MOBILE_HASH = SHA512_HASH(#{noTel1Mobile,jdbcType=VARCHAR}||#{noTel2Mobile,jdbcType=VARCHAR}||#{noTel3Mobile,jdbcType=VARCHAR}),
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			ID_UPT = #{idUpt,jdbcType=VARCHAR},
+		</if>
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+		AND
+		NO_SURETY = #{noSurety}		
+	</update>
+		
+	<update id="updateBrcLoanYnSurety" parameterType="String">
+		UPDATE BRC_LOAN SET
+		YN_SURETY = 'Y'
+		WHERE
+			NO_REQ = #{noReq} 
+	</update>	
+
+    <insert id="insertBrcSurety" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+        INSERT INTO BRC_SURETY ( 
+			 NO
+			,NO_REQ        
+			,NO_SURETY
+			,NM_CUSTOM          
+			,NO_CUSTOM     
+			,DS_EMAIL      
+			,CD_MARRY      
+			,CD_KND_MOBILE 
+			,NO_TEL1_MOBILE
+			,NO_TEL2_MOBILE
+			,NO_TEL3_MOBILE
+			,YN_AUTH_MOBILE
+			,CD_KND_ETC    
+			,NO_TEL1_ETC1  
+			,NO_TEL2_ETC1  
+			,NO_TEL3_ETC1  
+			,YN_AUTH_ETC   
+			,YN_NICE_SAFEKEY 
+			,NO_FAX1       
+			,NO_FAX2       
+			,NO_FAX3      
+            ,DT_CB_AGREE             	 
+			,DM_REG        
+			,ID_REG
+        ) VALUES (
+			 BRC_SURETY_SEQ.NEXTVAL    
+			,#{noReq}        
+			,#{noSurety}
+			,NVL(#{nmCustom}, ' ')
+			,NVL(REPLACE(#{noCustom,jdbcType=VARCHAR}, '-', ''), ' ')   
+			,NVL(#{dsEmail}, ' ')
+			,NVL(#{cdMarry}, ' ')               
+			,NVL(#{cdKndMobile}, ' ')                     
+			,NVL(#{noTel1Mobile}, ' ')           
+			,NVL(#{noTel2Mobile}, ' ')           
+			,NVL(#{noTel3Mobile}, ' ')           
+			,NVL(#{ynAuthMobile}, 'N')                       
+			,NVL(#{cdKndEtc}, ' ')                         
+			,NVL(#{noTel1Etc1}, ' ')                        
+			,NVL(#{noTel2Etc1}, ' ')                         
+			,NVL(#{noTel3Etc1}, ' ')                      
+			,NVL(#{ynAuthEtc}, 'N') 
+			,NVL(#{ynNiceSafekey}, 'N')                                     
+			,NVL(#{noFax1}, ' ')                       
+			,NVL(#{noFax2}, ' ')                      
+			,NVL(#{noFax3}, ' ')             
+			,NVL(REPLACE(#{dtCbAgree}, '-', ''), ' ')     			 			     
+			,SYSDATE                   
+			,NVL(#{idReg}, ' ')
+        )
+    </insert>
+
+    <insert id="insertBrcSuretyCompany" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+        INSERT INTO BRC_SURETY_COMPANY (
+             NO              
+			,NO_REQ
+			,NO_SURETY                   
+			,CD_JOB_KIND     
+			,CD_RANK         
+			,CD_JOB_ACT      
+			,CD_JOB_STATUS   
+			,NM_COMP         
+			,NM_DEPT         
+			,DT_REG_JOIN     
+			,DD_PAY          
+			,AM_PAY_MONTH    
+			,NO_POST_COMP    
+			,DS_STRT_COMP    
+			,DS_ADDR_COMP    
+			,NO_TEL1_COMP    
+			,NO_TEL2_COMP    
+			,NO_TEL3_COMP    
+			,NO_EXT_COMP     
+			,NO_MAINTEL1_COMP
+			,NO_MAINTEL2_COMP
+			,NO_MAINTEL3_COMP
+			,DM_REG          
+			,ID_REG
+        ) VALUES (
+			 BRC_SURETY_COMPANY_SEQ.NEXTVAL 
+			,#{noReq}
+			,#{noSurety}                       
+			,NVL(#{cdJobKind}, ' ')         
+			,NVL(#{cdRank}, ' ')                            
+			,NVL(#{cdJobAct}, ' ')                            
+			,NVL(#{cdJobStatus}, ' ')                           
+			,NVL(#{nmComp}, ' ')                           
+			,NVL(#{nmDept}, ' ')                           
+			,NVL(#{dtRegJoin}, ' ')                          
+			,NVL(#{ddPay}, ' ')                          
+			,NVL(#{amPayMonth}, '0')                         
+			,NVL(#{noPostComp}, ' ')                             
+			,NVL(#{dsStrtComp}, ' ')                            
+			,NVL(#{dsAddrComp}, ' ')                           
+			,NVL(#{noTel1Comp}, ' ')                          
+			,NVL(#{noTel2Comp}, ' ')                          
+			,NVL(#{noTel3Comp}, ' ')                          
+			,NVL(#{noExtComp}, ' ')                         
+			,NVL(#{noMaintel1Comp}, ' ')                        
+			,NVL(#{noMaintel2Comp}, ' ')                          
+			,NVL(#{noMaintel3Comp}, ' ')                           
+			,SYSDATE                        
+			,NVL(#{idReg}, ' ')
+        )
+    </insert>
+
+    <insert id="insertBrcSuretyHome" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+		INSERT INTO BRC_SURETY_HOME
+		(
+		    NO             ,
+		    NO_REQ         ,
+		    NO_SURETY         ,
+		    DT_REG_HOME    ,
+		    AM_DEPOSIT_HOME,
+		    AM_RENT_HOME   ,
+		    NO_POST_HOME   ,
+		    DS_STRT_HOME   ,
+		    DS_ADDR_HOME   ,
+		    NO_TEL1_HOME   ,
+		    NO_TEL2_HOME   ,
+		    NO_TEL3_HOME   ,
+		    NO_POST_CERT   ,
+		    DS_STRT_CERT   ,
+		    DS_ADDR_CERT   ,
+		    NO_POST_REAL   ,
+		    DS_STRT_REAL   ,
+		    DS_ADDR_REAL   ,
+		    DM_REG         ,
+		    ID_REG            
+		)
+		VALUES
+		(
+			 BRC_SURETY_HOME_SEQ.NEXTVAL , 
+			#{noReq} ,  
+			#{noSurety}, 
+		    ' ' ,    
+		    0	,
+		    0   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+			SYSDATE ,                        
+			NVL(#{idReg}, ' ')    
+		)
+    </insert>   
+    
+	<insert id="insertBrcSuretyHash" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSuretyRequestVO">
+        INSERT INTO BRC_SURETY_HASH ( 
+		    NO                ,
+		    NO_REQ            ,
+		    NO_SURETY			,
+		    NO_CUSTOM_HASH    ,
+		    NO_TEL_MOBILE_HASH,
+		    DM_REG,            
+		    ID_REG
+        ) VALUES (
+			BRC_SURETY_HASH_SEQ.NEXTVAL,    
+			#{noReq},
+			#{noSurety},
+			NVL(SHA512_HASH(REPLACE(#{noCustom,jdbcType=VARCHAR}, '-', '')), ' '),
+			NVL(SHA512_HASH(#{noTel1Mobile}||#{noTel2Mobile}||#{noTel3Mobile}), ' '),	       			         
+			SYSDATE,                   
+			NVL(#{idReg}, ' ')
+        )
+    </insert>    
+
+
+
+</mapper>

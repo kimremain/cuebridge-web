@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.permission">
+
+	<resultMap id="permissionResult"
+		type="com.jcuesoft.cuebridge.st.vo.StPermissionResponseVO">
+		<result property="no" column="NO" />
+		<result property="dsPgmId" column="DS_PGM_ID" />
+		<result property="dsPgm" column="DS_PGM" />
+		<result property="dsUrl" column="DS_URL" />
+		<result property="ynS" column="YN_S" />
+		<result property="ynU" column="YN_U" />
+		<result property="ynD" column="YN_D" />
+		<result property="ynP" column="YN_P" />
+		<result property="ynA" column="YN_A" />
+	</resultMap>
+
+	<select id="getUserPermissionList" parameterType="com.jcuesoft.cuebridge.st.vo.StPermissionRequestVO"
+		resultMap="permissionResult">
+		SELECT 
+		    SP.DS_PGM_ID
+		    , SP.DS_PGM
+		    , SP.DS_URL
+		    , SA.NO
+		    , SA.YN_S
+		    , SA.YN_U
+		    , SA.YN_D
+		    , SA.YN_P    
+		    , SA.YN_A
+		FROM ST_PGM SP , 
+		(
+		    SELECT  
+		        NO
+		        , DS_PGM_ID
+		        , YN_S
+		        , YN_U
+		        , YN_D
+		        , YN_P    
+		        , YN_A
+		    FROM 
+		    ST_USER_AUTH
+		    WHERE ID_USER = #{selectIdUser}
+		) SA  
+		WHERE
+		SP.DS_PGM_ID = SA.DS_PGM_ID(+)
+		AND SP.YN_APPLY = 'Y'
+		ORDER BY SP.DS_PGM_ID ASC 
+    </select>
+    
+    <insert id="insertUserPermission" parameterType="com.jcuesoft.cuebridge.st.vo.StPermissionRequestVO">
+        INSERT INTO ST_USER_AUTH (
+	        NO       
+			, ID_USER    
+			, DS_PGM_ID 
+			, YN_S      
+			, YN_U      
+			, YN_D      
+			, YN_E      
+			, YN_P      
+			, YN_A      
+			, DM_REG    
+			, ID_REG    
+        ) VALUES (
+	         ST_USER_AUTH_SEQ.nextval
+	        , #{selectIdUser}
+	        , #{authPgmID}
+	        , 'Y'
+	        , 'Y'
+	        , 'Y'
+	        , 'Y'
+	        , 'Y'
+	        , 'Y'
+	        , SYSDATE
+	        , #{idReg}
+        )
+    </insert>
+    
+    <insert id="insertUserPermissionHistory" parameterType="com.jcuesoft.cuebridge.st.vo.StPermissionRequestVO">
+        INSERT INTO
+		    ST_USER_AUTH_LOG
+		SELECT  
+		    NO       
+		    , ID_USER    
+		    , DS_PGM_ID 
+		    , YN_S      
+		    , YN_U      
+		    , YN_D      
+		    , YN_E      
+		    , YN_P      
+		    , YN_A      
+		    , DM_REG    
+		    , ID_REG  
+		    , SYSDATE
+		    ,#{idUpt}
+		FROM 
+		    ST_USER_AUTH
+		WHERE 
+		    ID_USER = #{selectIdUser}
+    </insert>
+    
+
+    <delete id="deleteUserPermission" parameterType="com.jcuesoft.cuebridge.st.vo.StPermissionRequestVO">
+        DELETE ST_USER_AUTH WHERE ID_USER = #{selectIdUser}
+    </delete>
+
+</mapper>
+    

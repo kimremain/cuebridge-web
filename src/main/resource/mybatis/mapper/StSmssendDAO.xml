@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.StSmssendDAO">
+
+  <resultMap id="stSmssendResultMap" type="com.jcuesoft.cuebridge.st.vo.StSmssendResponseVO">
+    <id column="NO" property="no" jdbcType="DECIMAL" />
+    <result column="CD_KIND" property="cdKind" jdbcType="VARCHAR" />
+    <result column="NO_REQ" property="noReq" jdbcType="VARCHAR" />
+    <result column="NM_REG" property="nmReg" jdbcType="VARCHAR" />
+    <result column="DM_SEND" property="dmSend" jdbcType="VARCHAR" />
+    <result column="NO_SEND" property="noSend" jdbcType="VARCHAR" />
+    <result column="NO_RCV" property="noRcv" jdbcType="VARCHAR" />
+    <result column="DS_MSG" property="dsMsg" jdbcType="VARCHAR" />
+    <result column="NM_RESULT" property="nmResult" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getStSmssendList" parameterType="org.springframework.data.domain.Pageable" resultMap="stSmssendResultMap">
+		SELECT
+		    RANK() OVER(ORDER BY DM_SEND) NO,
+		    CD_KIND,
+		    NO_REQ,
+		    NM_REG,
+		    DM_SEND,
+		    NO_SEND,
+		    SUBSTRB(NO_RCV, 1, 3) || '-' || '****' || '-' || SUBSTRB(NO_RCV, 8, 4)  AS NO_RCV,
+		    DS_MSG,
+		    NM_RESULT
+		FROM
+		(
+		SELECT
+		    'SMS' AS CD_KIND,
+		    BC.NO_REQ,
+		    (SELECT GET_NM_USER(BC.ID_REG) FROM DUAL)  NM_REG,
+		    SL.TR_SENDDATE AS DM_SEND,
+		    SL.TR_CALLBACK AS NO_SEND,
+		    SL.TR_PHONE AS NO_RCV,    
+		    SL.TR_MSG AS DS_MSG,
+		    SCS.NM_CD AS NM_RESULT
+		FROM
+		    SC_LOG SL,
+		    BRC_CONTACT BC,
+		    ST_CODE_SMS SCS
+		WHERE
+		    SL.TR_NUM = BC.NO_CONTACT_MODEL
+		    AND
+		    SL.TR_ETC1 = BC.NO_REQ
+		    AND
+		    BC.CD_CONTACT =  '71202'
+		    AND
+		    SCS.CD_KIND (+)= 'LGSMS'
+		    AND
+		    SL.TR_RSLTSTAT = SCS.CD(+)
+		    <if test="searchDmRegFrom != null and searchDmRegFrom != ''">
+				AND 
+				SL.TR_SENDDATE <![CDATA[>=]]> TO_DATE(#{searchDmRegFrom},'YYYY-MM-DD')
+		    </if>		    
+		    <if test="searchDmRegTo != null and searchDmRegTo != ''">
+				AND
+				SL.TR_SENDDATE <![CDATA[<]]> TO_DATE(#{searchDmRegTo}, 'YYYY-MM-DD') + 1
+		    </if>
+		    <if test="searchIdReg != null and searchIdReg != ''">
+				AND 
+				BC.ID_REG = #{searchIdReg}
+		    </if>		    		    
+			<if test="searchNoRcv != null and searchNoRcv != ''">
+				AND 
+				 SL.TR_PHONE = REPLACE(#{searchNoRcv}, '-', '')
+		    </if>
+		    <if test="searchNoReq != null and searchNoReq != ''">
+				AND 
+				BC.NO_REQ = #{searchNoReq}
+		    </if>
+		UNION ALL    
+		SELECT
+		    'MMS' AS CD_KIND,
+		    BC.NO_REQ,
+		    (SELECT GET_NM_USER(BC.ID_REG) FROM DUAL)  NM_REG,
+		    ML.REQDATE AS DM_SEND,
+		    ML.CALLBACK AS NO_SEND,
+		    ML.PHONE AS NO_RCV,  
+		    ML.MSG AS DS_MSG,
+		    SCS.NM_CD AS NM_RESULT
+		FROM
+		    MMS_LOG ML,
+		    BRC_CONTACT BC,
+		    ST_CODE_SMS SCS
+		WHERE
+		    1 = 1
+		    AND
+		    ML.MSGKEY = BC.NO_CONTACT_MODEL
+		    AND
+		    ML.ETC1 = BC.NO_REQ
+		    AND
+		    BC.CD_CONTACT =  '71202'
+		    AND
+		    SCS.CD_KIND (+)= 'LGMMS'
+		    AND
+		    ML.RSLT = SCS.CD(+)         
+		    <if test="searchDmRegFrom != null and searchDmRegFrom != ''">
+				AND 
+				ML.REQDATE <![CDATA[>=]]> TO_DATE(#{searchDmRegFrom},'YYYY-MM-DD')
+		    </if>		    
+		    <if test="searchDmRegTo != null and searchDmRegTo != ''">
+				AND
+				ML.REQDATE <![CDATA[<]]> TO_DATE(#{searchDmRegTo}, 'YYYY-MM-DD') + 1
+		    </if>
+		    <if test="searchIdReg != null and searchIdReg != ''">
+				AND 
+				BC.ID_REG = #{searchIdReg}
+		    </if>		    		    
+			<if test="searchNoRcv != null and searchNoRcv != ''">
+				AND 
+				 ML.PHONE = REPLACE(#{searchNoRcv}, '-', '')
+		    </if>
+		    <if test="searchNoReq != null and searchNoReq != ''">
+				AND 
+				BC.NO_REQ = #{searchNoReq}
+		    </if>		      
+		)    
+		ORDER BY NO
+  </select>
+    
+
+</mapper>

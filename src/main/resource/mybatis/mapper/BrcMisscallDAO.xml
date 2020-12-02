@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.misscall">
+
+	  <resultMap id="brcMisscallResult" type="com.jcuesoft.cuebridge.brc.vo.BrcMisscallResponseVO">
+        <result property="no" column="NO" />
+        <result property="noTel" column="NO_TEL" />
+        <result property="noTel1Mobile" column="NO_TEL1_MOBILE" />
+        <result property="noTel2Mobile" column="NO_TEL2_MOBILE" />
+        <result property="noTel3Mobile" column="NO_TEL3_MOBILE" />
+        <result property="cdCallProc" column="CD_CALL_PROC" />
+        <result property="dsRemk" column="DS_REMK" />
+        <result property="dmReg" column="DM_REG" />
+        <result property="idReg" column="ID_REG" />
+        <result property="dmUpt" column="DM_UPT" />
+        <result property="idUpt" column="ID_UPT" />
+        <result property="cnCustomTel" column="CN_CUSTOM_TEL" />
+        <result property="cnSuretyTel" column="CN_SURETY_TEL" />
+        <result property="cnMisscall" column="CN_MISS_CALL" />
+        <result property="dmRegMin" column="DM_REG_MIN" />
+        <result property="dmRegMax" column="DM_REG_MAX" />
+    </resultMap>
+
+    <select id="getMisscallCount"
+        resultMap="brcMisscallResult">
+            SELECT 
+			    COUNT(NO) AS CN_MISS_CALL
+			FROM 
+			    BRC_MISSCALL 
+			WHERE  
+			    CD_CALL_PROC = '71501'
+    </select>
+    
+    <select id="getMisscallHistoryList" parameterType="org.springframework.data.domain.Pageable"
+        resultMap="brcMisscallResult">
+            SELECT 
+			NO      
+			, NO_TEL        
+			, (SELECT GET_NM_CD(CD_CALL_PROC) FROM DUAL) AS CD_CALL_PROC  
+			, DS_REMK       
+			, DM_REG         
+			, DM_UPT        
+			, (SELECT GET_NM_USER(ID_UPT) FROM DUAL) AS ID_UPT
+			FROM
+			    BRC_MISSCALL    
+			WHERE
+            1=1
+            <if test="searchNoTel != null and searchNoTel != ''">
+            AND NO_TEL = #{searchNoTel}
+            </if>
+            <if test="searchCdCallProc != null and searchCdCallProc != ''">
+            AND CD_CALL_PROC = #{searchCdCallProc}
+            </if>
+            <if test="( searchDmRegStart != null and searchDmRegStart != '') and ( searchDmRegEnd != null and searchDmRegEnd != '') ">
+             AND DM_REG BETWEEN #{searchDmRegStart} and TO_DATE(#{searchDmRegEnd},'YYYY-MM-DD')+1
+            </if> 
+    </select>
+    
+    <select id="getMisscallList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcMisscallRequestVO"
+        resultMap="brcMisscallResult">
+           SELECT   
+			    NO_TEL
+			    ,  SUBSTRB (NO_TEL, 1, 3) AS NO_TEL1_MOBILE
+                ,  CASE
+                        WHEN LENGTH (NO_TEL) = 11 THEN SUBSTRB (NO_TEL, 4, 4)
+                        WHEN LENGTH (NO_TEL) = 10 THEN SUBSTRB (NO_TEL, 4, 3)
+                    END
+                    AS NO_TEL2_MOBILE
+                ,  CASE
+                            WHEN LENGTH (NO_TEL) = 11 THEN SUBSTRB (NO_TEL, 8, 4)
+                            WHEN LENGTH (NO_TEL) = 10 THEN SUBSTRB (NO_TEL, 7, 4)
+                   END
+                   AS  NO_TEL3_MOBILE
+			    , COUNT(NO) AS CN_MISS_CALL
+			    , (
+			    SELECT 
+			        COUNT(A.NO_REQ)
+			    FROM 
+			        BRC_CUSTOM A , BRC_LOAN B
+			    WHERE 
+			        A.NO_REQ = B.NO_REQ
+                    AND B.CD_STATUS != '71012'
+			        AND A.NO_TEL1_MOBILE = SUBSTRB (NO_TEL, 1, 3)
+			        AND A.NO_TEL2_MOBILE =
+			            CASE
+			                WHEN LENGTH (NO_TEL) = 11 THEN SUBSTRB (NO_TEL, 4, 4)
+			                WHEN LENGTH (NO_TEL) = 10 THEN SUBSTRB (NO_TEL, 4, 3)
+			            END
+			        AND A.NO_TEL3_MOBILE =
+			            CASE
+			                WHEN LENGTH (NO_TEL) = 11 THEN SUBSTRB (NO_TEL, 8, 4)
+			                WHEN LENGTH (NO_TEL) = 10 THEN SUBSTRB (NO_TEL, 7, 4)
+			            END
+			     ) AS CN_CUSTOM_TEL
+			     , (
+                SELECT 
+                    COUNT(A.NO_REQ)
+                FROM 
+                    BRC_SURETY A , BRC_LOAN B
+                WHERE 
+                    A.NO_REQ = B.NO_REQ
+                    AND B.CD_STATUS != '71012'
+                    AND A.NO_TEL1_MOBILE = SUBSTRB (NO_TEL, 1, 3)
+                    AND A.NO_TEL2_MOBILE =
+                        CASE
+                            WHEN LENGTH (NO_TEL) = 11 THEN SUBSTRB (NO_TEL, 4, 4)
+                            WHEN LENGTH (NO_TEL) = 10 THEN SUBSTRB (NO_TEL, 4, 3)
+                        END
+                    AND A.NO_TEL3_MOBILE =
+                        CASE
+                            WHEN LENGTH (NO_TEL) = 11 THEN SUBSTRB (NO_TEL, 8, 4)
+                            WHEN LENGTH (NO_TEL) = 10 THEN SUBSTRB (NO_TEL, 7, 4)
+                        END
+                 ) AS CN_SURETY_TEL
+			     , MIN (DM_REG) AS DM_REG_MIN
+			     , MAX (DM_REG) AS DM_REG_MAX
+			     , MAX (NO) AS NO
+			FROM 
+			    BRC_MISSCALL
+			WHERE 
+			    CD_CALL_PROC = '71501'
+			GROUP BY 
+			    NO_TEL
+			ORDER BY 
+			    MAX (DM_REG) DESC
+    </select>
+    
+     <update id="updateMisscall" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcMisscallRequestVO">
+       UPDATE BRC_MISSCALL  SET
+            CD_CALL_PROC = #{cdCallProc}
+            , DS_REMK = NVL(#{dsRemk},' ')
+            , ID_UPT = #{idUpt}
+            , DM_UPT = SYSDATE       
+        WHERE NO = #{no}
+    </update>
+    
+    <update id="updateMisscallOverlap" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcMisscallRequestVO">
+        UPDATE BRC_MISSCALL SET 
+            CD_CALL_PROC = '71503'  
+            , ID_UPT = #{idUpt}
+            , DM_UPT = SYSDATE  
+        WHERE 
+            CD_CALL_PROC = '71501' 
+            AND NO != #{no}
+            AND NO_TEL = #{noTel}
+    </update>
+
+    <update id="updateBatchCdCallProc" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcMisscallRequestVO">
+       UPDATE BRC_MISSCALL  SET
+            CD_CALL_PROC = #{updateCdCallProc},
+            <if test="idUpt != null and idUpt != ''">
+            ID_UPT = #{idUpt},
+             </if>
+            DM_UPT = SYSDATE       
+        WHERE NO IN
+        <foreach collection="updateBatchNo" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+	
+</mapper>
+    

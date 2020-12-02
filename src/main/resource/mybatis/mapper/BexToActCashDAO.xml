@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexToActCashDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.bex.vo.BexToActCashVO" id="bexToActCashResult">
+    	<result property="ds_url" column="ds_url" />
+		<result property="mode" column="tmp_mode" />
+		<result property="nm_applicant" column="nm_applicant" />
+		<result property="ssn_applicant" column="ssn_applicant" />
+		<result property="amt_apply" column="amt_apply" />
+		<result property="no_agency" column="no_agency" />
+		<result property="id_agency" column="id_agency" />
+		<result property="hp" column="hp" />
+		<result property="post_home" column="post_home" />
+		<result property="addr1_home" column="addr1_home" />
+		<result property="addr2_home" column="addr2_home" />
+		<result property="cd_hp_co" column="cd_hp_co" />
+		<result property="cd_marry" column="cd_marry" />
+		<result property="cd_job_class" column="cd_job_class" />
+		<result property="nm_comp" column="nm_comp" />
+		<result property="ph_comp" column="ph_comp" />
+		<result property="nm_duty_comp" column="nm_duty_comp" />
+		<result property="nm_part_comp" column="nm_part_comp" />
+		<result property="ym_start_comp" column="ym_start_comp" />
+		<result property="amt_monthly_income" column="amt_monthly_income" />
+		<result property="url_attach_file1" column="url_attach_file1" />
+		<result property="url_attach_file2" column="url_attach_file2" />
+		<result property="url_attach_file3" column="url_attach_file3" />
+		<result property="url_attach_file4" column="url_attach_file4" />
+		<result property="url_attach_file5" column="url_attach_file5" />
+		<result property="url_attach_file6" column="url_attach_file6" />
+		<result property="url_attach_file7" column="url_attach_file7" />
+		<result property="url_attach_file8" column="url_attach_file8" />
+		<result property="url_attach_file9" column="url_attach_file9" />
+		<result property="url_attach_file10" column="url_attach_file10" />
+		<result property="nm_grt_list" column="nm_grt_list" />
+		<result property="ssn_grt_list" column="ssn_grt_list" />
+		<result property="hp_grt_list" column="hp_grt_list" />
+		<result property="cd_job_class_grt_list" column="cd_job_class_grt_list" />
+		<result property="seq_agency_level_list" column="seq_agency_level_list" />
+		<result property="ymd_agency_list" column="ymd_agency_list" />
+		<result property="nm_agency_list" column="nm_agency_list" />
+		<result property="no_agency_list" column="no_agency_list" />
+		<result property="ph_agency_list" column="ph_agency_list" />
+		<result property="no_institute_list" column="no_institute_list" />
+		<result property="cd_goods" column="cd_goods" />
+		<result property="agent_path_type" column="agent_path_type" />
+		<result property="agent_path_route" column="agent_path_route" />
+		<result property="agent_path_call" column="agent_path_call" />
+		<result property="agent_path_name" column="agent_path_name" />
+		<result property="agent_owner" column="agent_owner" />
+		<result property="agent_homepage" column="agent_homepage" />
+		<result property="agent_staff" column="agent_staff" />
+		<result property="agent_date" column="agent_date" />
+		<result property="agent_path_etc" column="agent_path_etc" />
+		<result property="memo_agency" column="memo_agency" />
+    </resultMap>
+    
+	
+    <select id="getBexToActCash" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexToActCashResult">
+		SELECT
+		    CASE 
+		        WHEN (SELECT CD_SALES FROM ST_PDT WHERE CD_PDT = A.CD_PDT) = '72002' THEN 'G52' 
+		        ELSE 'G44' 
+		    END  AS cd_goods,		
+			<!-- CASE WHEN A.CD_PDT IN ('21856', '21857', '21883', '21888', '21889', '21895', '21816', '21817', '21818') THEN 'G52' ELSE 'G44' END AS cd_goods, -->
+			(SELECT DS_URL FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS ds_url,
+		    'trxApplication' AS tmp_mode,
+		    B.NM_CUSTOM AS nm_applicant,
+		    SUBSTRB(B.NO_CUSTOM, 1, 7) AS ssn_applicant,
+		    A.AM_CUSTOM / 1000 AS amt_apply,
+		    D.NO_COOPERATE AS no_agency,
+			(SELECT DS_ID FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS id_agency,		    
+		    B.NO_TEL1_MOBILE || '-' || B.NO_TEL2_MOBILE || '-' || B.NO_TEL3_MOBILE AS hp,
+		    '000000' AS post_home,
+		    'N/A' AS addr1_home,
+		    'N/A' AS addr2_home,
+		    (CASE
+		        WHEN B.CD_KND_MOBILE = '70801' THEN '10'
+		        WHEN B.CD_KND_MOBILE = '70802' THEN '20'
+		        WHEN B.CD_KND_MOBILE = '70803' THEN '30'
+		        ELSE ' '
+		    END) AS cd_hp_co         ,
+		    (CASE
+		        WHEN B.CD_MARRY = '70701' THEN '1'
+		        WHEN B.CD_MARRY = '70702' THEN '2'
+		        WHEN B.CD_MARRY = '70703' THEN '3'
+		        WHEN B.CD_MARRY = '70705' THEN '4'
+		        WHEN B.CD_MARRY = '70704' THEN '5'
+		        WHEN B.CD_MARRY = '70707' THEN '6'
+		        ELSE ' '
+		    END) AS cd_marry       ,
+		    (CASE
+		        WHEN C.CD_JOB_KIND = '70901' THEN '10'
+		        WHEN C.CD_JOB_KIND = '70902' THEN '20'
+		        WHEN C.CD_JOB_KIND = '70903' THEN '50'
+		        ELSE '99'
+		    END) AS cd_job_class,
+		    C.NM_COMP AS nm_comp,
+		    (CASE
+		        WHEN C.NO_MAINTEL2_COMP > ' ' THEN C.NO_MAINTEL1_COMP || '-' || C.NO_MAINTEL2_COMP || '-' || C.NO_MAINTEL3_COMP
+		        ELSE ' '
+		    END) AS ph_comp,
+		    NVL((SELECT GET_NM_CD(C.CD_RANK) FROM DUAL), ' ') AS nm_duty_comp,
+		    C.NM_DEPT AS nm_part_comp,
+		    SUBSTRB(C.DT_REG_JOIN, 1, 6) AS ym_start_comp,
+		    C.AM_PAY_MONTH AS amt_monthly_income,
+		    NVL(G.URL_ATTACH_FILE1, ' ') AS url_attach_file1,
+		    NVL(G.URL_ATTACH_FILE2, ' ') AS url_attach_file2,
+		    NVL(G.URL_ATTACH_FILE3, ' ') AS url_attach_file3,
+		    NVL(G.URL_ATTACH_FILE4, ' ') AS url_attach_file4,
+		    NVL(G.URL_ATTACH_FILE5, ' ') AS url_attach_file5,
+		    NVL(G.URL_ATTACH_FILE6, ' ') AS url_attach_file6,
+		    NVL(G.URL_ATTACH_FILE7, ' ') AS url_attach_file7,
+		    NVL(G.URL_ATTACH_FILE8, ' ') AS url_attach_file8,
+		    NVL(G.URL_ATTACH_FILE9, ' ') AS url_attach_file9,
+		    NVL(G.URL_ATTACH_FILE10, ' ') AS url_attach_file10,
+		    NVL(E.NM_CUSTOM, ' ') AS nm_grt_list,
+		    SUBSTRB(E.NO_CUSTOM, 1, 7) AS ssn_grt_list,
+		    (CASE
+		        WHEN E.NO_TEL2_MOBILE > ' ' THEN E.NO_TEL1_MOBILE || '-' || E.NO_TEL2_MOBILE || '-' || E.NO_TEL3_MOBILE
+		        ELSE ' '
+		    END) AS hp_grt_list,
+		    (CASE
+		        WHEN F.CD_JOB_KIND IS NULL THEN ' '
+		        WHEN F.CD_JOB_KIND = '70901' THEN '10'
+		        WHEN F.CD_JOB_KIND = '70902' THEN '20'
+		        WHEN F.CD_JOB_KIND = '70903' THEN '50'
+		        ELSE '99'
+		    END) AS cd_job_class_grt_list ,
+		    <!--중개경로-->
+		    NVL(BSP.seq_agency_level_list, 0) AS seq_agency_level_list,
+		    NVL(BSP.ymd_agency_list, TO_CHAR(SYSDATE, 'YYYYMMDD')) AS ymd_agency_list,
+		    NVL(BSP.nm_agency_list, SC.NM_COMP) AS nm_agency_list,
+		    NVL(BSP.no_agency_list, SC.NO_LOAN) AS no_agency_list,
+		    NVL(BSP.ph_agency_list, SC.NO_TEL_ARS) AS ph_agency_list,
+		    NVL(BSP.no_institute_list, SC.NO_SOCIETY) AS no_institute_list,
+		    <!--정보적법수집 -->
+			CASE WHEN BIL.CD_INFO_COLLECT IS NULL THEN '01'
+                     WHEN BIL.CD_INFO_COLLECT = '71601' THEN '01'
+                     ELSE '02'
+            END AS agent_path_type,		    
+            CASE
+                WHEN BIL.CD_CONTACT_CUST = '71401' THEN '01' 
+                WHEN BIL.CD_CONTACT_CUST = '71402' THEN '02' 
+                WHEN BIL.CD_CONTACT_CUST = '71403' THEN '03' 
+                WHEN BIL.CD_CONTACT_CUST = '71404' THEN '04' 
+                WHEN BIL.CD_CONTACT_CUST = '71405' THEN '05'  
+                WHEN BIL.CD_CONTACT_CUST IS NOT NULL THEN '99' 
+                WHEN A.CD_PATH IN ('70403', '70404') THEN '01'
+                ELSE '02'
+            END AS agent_path_route,			
+			' ' AS agent_path_call,
+			NVL(BIL.NM_AGENT, SC.NM_COMP) AS agent_path_name,
+			NVL(BIL.NM_AGENT_CEO, SC.NM_CEO) AS agent_owner,
+			' ' AS agent_homepage,
+		    NVL(BIL.NM_AGENT_MANAGER, (SELECT NM_USER FROM ST_USER WHERE ID_USER = A.ID_SCREEN)) AS agent_staff,		
+		    NVL(BIL.DT_AGENT, TO_CHAR(A.DM_REG, 'YYYY-MM-DD')) AS agent_date,
+			' ' AS agent_path_etc		    ,
+			A.DS_COOPERATE AS memo_agency
+		FROM
+		    BRC_LOAN A,
+		    BRC_CUSTOM B,
+		    BRC_CUSTOM_COMPANY C,
+		    BEX_MASTER D,
+		    BRC_SURETY E,
+		    BRC_SURETY_COMPANY F,
+            BRC_INFO_LEGAL BIL,
+            ST_COMP SC,		    
+		    (SELECT
+		        NO_REQ,
+		        MAX(URL_ATTACH_FILE1) AS URL_ATTACH_FILE1,
+		        MAX(URL_ATTACH_FILE2) AS URL_ATTACH_FILE2,
+		        MAX(URL_ATTACH_FILE3) AS URL_ATTACH_FILE3,
+		        MAX(URL_ATTACH_FILE4) AS URL_ATTACH_FILE4,
+		        MAX(URL_ATTACH_FILE5) AS URL_ATTACH_FILE5,
+		        MAX(URL_ATTACH_FILE6) AS URL_ATTACH_FILE6,
+		        MAX(URL_ATTACH_FILE7) AS URL_ATTACH_FILE7,
+		        MAX(URL_ATTACH_FILE8) AS URL_ATTACH_FILE8,
+		        MAX(URL_ATTACH_FILE9) AS URL_ATTACH_FILE9,
+		        MAX(URL_ATTACH_FILE10) AS URL_ATTACH_FILE10
+		    FROM
+		    (
+		        SELECT
+		            NO_REQ,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 1 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE1,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 2 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE2,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 3 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE3,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 4 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE4,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 5 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE5,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 6 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE6,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 7 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE7,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 8 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE8,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 9 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE9,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 10 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE10
+		        FROM
+		            BRC_FILE    
+		        WHERE
+		            NO_REQ = #{noReq}
+		    )        
+		    GROUP BY
+		        NO_REQ) G        ,
+			(
+            SELECT 
+               MAX(NO_REQ) AS NO_REQ,
+               RTRIM (XMLAGG (XMLELEMENT (E, TO_NUMBER(NO_SUPPLY)-1 || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || (TO_NUMBER(MAX(NO_SUPPLY))+1-1) seq_agency_level_list,
+               RTRIM (XMLAGG (XMLELEMENT (E, DT_SUPPLY || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || TO_CHAR(SYSDATE, 'YYYYMMDD') ymd_agency_list,
+               RTRIM (XMLAGG (XMLELEMENT (E, NM_SUPPLY || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NM_COMP) nm_agency_list,
+               RTRIM (XMLAGG (XMLELEMENT (E, NO_SUPPLY_LOAN || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NO_LOAN) no_agency_list,
+               RTRIM (XMLAGG (XMLELEMENT (E, NO_SUPPLY_SOCIETY || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NO_SOCIETY) no_institute_list,
+               RTRIM (XMLAGG (XMLELEMENT (E, NO_SUPPLY_TEL || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NO_TEL_ARS) ph_agency_list
+            FROM 
+               BRC_SUPPLY,
+               ST_COMP C
+            WHERE   
+                NO_REQ = #{noReq}
+            GROUP BY 
+               NO_REQ            
+            ) BSP		        
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = C.NO_REQ
+		    AND
+		    A.NO_REQ = D.NO_REQ
+		    AND
+		    A.NO_REQ = E.NO_REQ(+)
+		    AND
+		    E.NO_SURETY (+) = '001'
+		    AND
+		    A.NO_REQ = F.NO_REQ(+)
+		    AND
+		    F.NO_SURETY (+) = '001'
+		    AND
+		    A.NO_REQ = G.NO_REQ(+)
+		    AND 
+		    A.NO_REQ = BIL.NO_REQ(+)
+		    AND 
+            A.NO_REQ = BSP.NO_REQ(+)
+		    AND
+		    D.NO_REQ = #{noReq}
+		    AND
+		    D.NO_EX = #{noEx}
+    </select>	  
+
+</mapper>
+

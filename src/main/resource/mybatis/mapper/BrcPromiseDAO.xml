@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.promise">
+
+	<resultMap id="brcPromiseListResult" type="com.jcuesoft.cuebridge.brc.vo.BrcPromiseResponseVO">
+		<result property="noReq" column="NO_REQ" />
+		<result property="dmPromise" column="DM_PROMISE" />
+		<result property="idReceive" column="ID_RECEIVE" />
+		<result property="idScreen" column="ID_SCREEN" />
+		<result property="nmCustom" column="NM_CUSTOM" />
+		<result property="amApp" column="AM_APP" />
+		<result property="cdStatus" column="CD_STATUS" />
+		<result property="dmContact" column="DM_CONTACT" />
+		<result property="dmReceive" column="DM_RECEIVE" />
+	</resultMap>
+
+	<select id="getPromiseList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcPromiseRequestVO"
+        resultMap="brcPromiseListResult">
+        SELECT 
+            BL.NO_REQ
+            , (SELECT GET_NM_USER(BL.ID_RECEIVE) FROM DUAL) ID_RECEIVE 
+            , (SELECT GET_NM_USER(BL.ID_SCREEN) FROM DUAL)  ID_SCREEN
+            , BC.NM_CUSTOM
+            , BC.DM_PROMISE
+            , BL.DM_CONTACT
+            , BL.AM_APP / 10000  AM_APP
+            , GET_NM_CD(BL.CD_STATUS) CD_STATUS
+            , BL.DM_RECEIVE
+        FROM
+            BRC_LOAN BL , BRC_CUSTOM BC
+        WHERE
+            BL.NO_REQ = BC.NO_REQ 
+            AND BL.CD_STATUS IN (71002,71003,71006,71007,71009,71010) 
+            <if test="searchIdScreen != null and searchIdScreen != ''">
+            AND BL.ID_SCREEN = #{searchIdScreen}
+            </if>
+            <choose>
+                <when
+                    test=" searchDmPromiseStart != null and searchDmPromiseStart != '' and searchDmPromiseEnd != null and searchDmPromiseEnd != '' ">
+                    AND BC.DM_PROMISE BETWEEN #{searchDmPromiseStart} and TO_DATE(#{searchDmPromiseEnd},'YYYY-MM-DD')+1
+                </when>
+                <otherwise>
+                    AND BC.DM_PROMISE IS NOT NULL
+                </otherwise>
+            </choose>
+            <if test="searchNmCustom != null and searchNmCustom != ''">
+            AND BC.NM_CUSTOM LIKE  #{searchNmCustom}||'%' 
+            </if>
+            <if test="searchNoCustom != null and searchNoCustom != ''">
+            AND BC.NO_CUSTOM LIKE  #{searchNoCustom}||'%' 
+            </if>
+        ORDER BY 
+            BC.DM_PROMISE ASC
+    </select>
+	
+	
+</mapper>
+    

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.setting">
+
+	<resultMap id="settingResult"
+		type="com.jcuesoft.cuebridge.st.vo.StSettingResponseVO">
+		<result property="ynDailyBatch" column="YN_DAILY_BATCH" />
+		<result property="ynScreenAssign" column="YN_SCREEN_ASSIGN" />
+		<result property="ynSyncUser" column="YN_SYNC_USER" />
+		<result property="ynSyncTeam" column="YN_SYNC_TEAM" />
+		<result property="ynOnlineBatch" column="YN_ONLINE_BATCH" />
+		<result property="ynUserMsg" column="YN_USER_MSG" />
+		<result property="dsNiceCd" column="DS_NICE_CD" />
+		<result property="dsNiceTcpId" column="DS_NICE_TCP_ID" />
+		<result property="dsNiceFtpId" column="DS_NICE_FTP_ID" />
+		<result property="dsNiceFtpPwd" column="DS_NICE_FTP_PWD" />
+		<result property="dmReg" column="DM_REG" />
+		<result property="idReg" column="ID_REG" />
+		<result property="dmUpt" column="DM_UPT" />
+		<result property="idUpt" column="ID_UPT" />
+	</resultMap>
+
+	<select id="getSettingOne" parameterType="com.jcuesoft.cuebridge.st.vo.StSettingRequestVO"
+		resultMap="settingResult">
+		SELECT
+			YN_DAILY_BATCH 
+			, YN_SCREEN_ASSIGN 
+			, YN_SYNC_USER 
+			, YN_SYNC_TEAM 
+			, YN_ONLINE_BATCH 
+			, YN_USER_MSG 
+			, DS_NICE_CD 
+			, DS_NICE_TCP_ID 
+			, DS_NICE_FTP_ID 
+			, DS_NICE_FTP_PWD 
+			, DM_REG 
+			,  (SELECT  GET_NM_USER(ID_REG) FROM DUAL)  ID_REG
+			, DM_UPT 
+			, (SELECT  GET_NM_USER(ID_UPT) FROM DUAL)  ID_UPT
+		FROM
+		  ST_SETUP
+		WHERE
+		  ROWNUM = 1
+	</select>
+
+	<update id="updateSetting" parameterType="com.jcuesoft.cuebridge.st.vo.StSettingRequestVO">
+		UPDATE ST_SETUP SET
+			YN_DAILY_BATCH = #{ynDailyBatch}
+			,YN_SCREEN_ASSIGN = #{ynScreenAssign}
+			,YN_SYNC_USER = #{ynSyncUser}
+			,YN_SYNC_TEAM = #{ynSyncTeam}
+			,YN_ONLINE_BATCH = #{ynOnlineBatch}
+			,YN_USER_MSG = #{ynUserMsg}
+			,DS_NICE_CD = #{dsNiceCd}
+			,DS_NICE_TCP_ID = #{dsNiceTcpId}
+			,DS_NICE_FTP_ID = #{dsNiceFtpId}
+			,DM_UPT = sysdate
+			,ID_UPT = #{idUpt}
+		WHERE
+		  ROWNUM = 1
+	</update>
+
+</mapper>
+    

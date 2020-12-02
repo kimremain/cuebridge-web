@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.BrcReAppDAO">
+
+	<resultMap id="BrcSuretyResultMap" type="com.jcuesoft.cuebridge.brc.vo.BrcReAppSuretyListVO">
+		<id column="NO" jdbcType="DECIMAL" property="no" />
+		<result column="NO_REQ" jdbcType="VARCHAR" property="noReq" />
+		<result column="NO_SURETY" jdbcType="VARCHAR" property="noSurety" />	
+	</resultMap>
+	
+	<resultMap id="BrcFileResultMap" type="com.jcuesoft.cuebridge.brc.vo.BrcReAppFileListVO">
+		<id column="NO" property="no" jdbcType="DECIMAL" />
+		<result column="NO_REQ" property="noReq" jdbcType="VARCHAR" />
+		<result column="NO_IMG" property="noImg" jdbcType="VARCHAR" />
+		<result column="NM_FILE" property="nmFile" jdbcType="VARCHAR" />
+		<result column="DS_PATH" property="dsPath" jdbcType="VARCHAR" />
+	</resultMap>	
+	
+    <select id="getSuretyList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO" resultMap="BrcSuretyResultMap">
+    	SELECT
+    		NO,
+    		NO_REQ,
+    		NO_SURETY
+    	FROM
+    		BRC_SURETY
+		WHERE
+			NO_REQ = #{noReqFrom}
+		ORDER BY
+			NO ASC			    		
+    </select>
+    	
+    <select id="getBrcFileList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO" resultMap="BrcFileResultMap">
+    	SELECT
+    		NO,
+    		NO_REQ,
+    		DS_PATH,
+    		NM_FILE
+    	FROM
+    		BRC_FILE
+		WHERE
+			NO_REQ = #{noReqFrom}
+		ORDER BY
+			NO ASC			    		
+    </select>	
+	
+	<insert id="buildBrcLoan" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_LOAN
+		(
+		    NO           ,
+		    NO_REQ       ,
+		    CD_COOPERATE ,
+		    NO_COOPERATE ,
+		    CD_PATH      ,
+		    YN_SURETY    ,
+		    CD_PDT       ,
+		    DD           ,
+		    AM_CUSTOM    ,
+		    AM_COOPERATE ,
+		    AM_APP       ,
+		    CD_USE       ,    
+		    CD_ECHANEL   ,
+		    CD_EPORTAL   ,
+		    NM_EKEYWORD  ,
+		    CD_EPATH     ,
+		    ID_RECEIVE   ,    
+		    CD_STATUS    ,
+		    CD_REJECT    ,
+		    ID_SCREEN    ,
+		    ID_AUTH      ,
+		    DS_RECEIVE   ,
+		    DS_SCREEN    ,
+		    DM_RECEIVE   ,
+		    DM_SCREEN    ,
+		    DM_CONTACT   ,
+		    DM_AUTH      ,
+		    DM_REG       ,
+		    ID_REG       ,
+		    CD_CANCEL    ,
+		    YN_REAPP	,
+		    DS_ACCESS_IP
+		)
+		SELECT 
+		    BRC_LOAN_SEQ.NEXTVAL           ,
+		    #{noReqTo}       ,
+		    S.CD_COOPERATE ,
+		    S.NO_COOPERATE ,
+		    S.CD_PATH      ,
+		    'N' AS YN_SURETY    ,
+		    S.CD_PDT       ,
+		    S.DD           ,
+		    S.AM_CUSTOM    ,
+		    S.AM_COOPERATE ,
+		    S.AM_APP       ,
+		    S.CD_USE       ,    
+		    S.CD_ECHANEL   ,
+		    S.CD_EPORTAL   ,
+		    S.NM_EKEYWORD  ,
+		    S.CD_EPATH     ,
+		    #{idReg}   ,    
+		    '71002' AS STATUS    ,
+		    ' ' AS CD_REJECT    ,
+		    #{idReg}    ,
+		    ' ' AS ID_AUTH      ,
+		    ' ' AS DS_RECEIVE   ,
+		    ' ' AS DS_SCREEN    ,
+		    SYSDATE AS DM_RECEIVE   ,
+		    NULL AS DM_SCREEN    ,
+		    SYSDATE AS DM_CONTACT   ,
+		    NULL AS DM_AUTH      ,
+		    SYSDATE AS DM_REG       ,
+		    #{idReg}       ,
+		    ' ' AS CD_CANCEL    ,
+		    'Y' AS YN_REAPP	,
+		    S.DS_ACCESS_IP
+		FROM
+		    BRC_LOAN S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}
+	</insert>
+	
+	<insert id="buildBrcCustom" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_CUSTOM
+		(
+		    NO             ,
+		    NO_REQ         ,
+		    NM_CUSTOM      ,
+		    NO_CUSTOM      ,
+		    CD_BANK        ,
+		    NO_BANK_ACT    ,
+		    DS_EMAIL       ,
+		    CD_MARRY       ,
+		    CD_KND_MOBILE  ,
+		    NO_TEL1_MOBILE ,
+		    NO_TEL2_MOBILE ,
+		    NO_TEL3_MOBILE ,
+		    YN_AUTH_MOBILE ,
+		    CD_KND_ETC     ,
+		    NO_TEL1_ETC1   ,
+		    NO_TEL2_ETC1   ,
+		    NO_TEL3_ETC1   ,
+		    YN_AUTH_ETC    ,
+		    NO_FAX1        ,
+		    NO_FAX2        ,
+		    NO_FAX3        ,
+		    DT_CB_AGREE    ,
+		    DM_PROMISE     ,
+		    DM_REG         ,
+		    ID_REG         ,
+		    DS_NICE_SAFEKEY,
+		    YN_NICE_SAFEKEY
+		)
+		SELECT
+		    BRC_CUSTOM_SEQ.NEXTVAL             ,
+		    #{noReqTo}         ,
+		    S.NM_CUSTOM      ,
+		    S.NO_CUSTOM      ,
+		    S.CD_BANK        ,
+		    S.NO_BANK_ACT    ,
+		    S.DS_EMAIL       ,
+		    S.CD_MARRY       ,
+		    S.CD_KND_MOBILE  ,
+		    S.NO_TEL1_MOBILE ,
+		    S.NO_TEL2_MOBILE ,
+		    S.NO_TEL3_MOBILE ,
+		    S.YN_AUTH_MOBILE ,
+		    S.CD_KND_ETC     ,
+		    S.NO_TEL1_ETC1   ,
+		    S.NO_TEL2_ETC1   ,
+		    S.NO_TEL3_ETC1   ,
+		    S.YN_AUTH_ETC    ,
+		    S.NO_FAX1        ,
+		    S.NO_FAX2        ,
+		    S.NO_FAX3        ,
+		    S.DT_CB_AGREE    ,
+		    S.DM_PROMISE     ,
+		    SYSDATE AS DM_REG         ,
+		    #{idReg}         ,
+		    S.DS_NICE_SAFEKEY,
+		    S.YN_NICE_SAFEKEY
+		FROM
+		    BRC_CUSTOM S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}	
+	</insert>
+	
+	<insert id="buildBrcCustomHome" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_CUSTOM_HOME
+		(
+		    NO             ,
+		    NO_REQ         ,
+		    DT_REG_HOME    ,
+		    AM_DEPOSIT_HOME,
+		    AM_RENT_HOME   ,
+		    NO_POST_HOME   ,
+		    DS_STRT_HOME   ,
+		    DS_ADDR_HOME   ,
+		    NO_TEL1_HOME   ,
+		    NO_TEL2_HOME   ,
+		    NO_TEL3_HOME   ,
+		    NO_POST_CERT   ,
+		    DS_STRT_CERT   ,
+		    DS_ADDR_CERT   ,
+		    NO_POST_REAL   ,
+		    DS_STRT_REAL   ,
+		    DS_ADDR_REAL   ,
+		    DM_REG         ,
+		    ID_REG 
+		)
+		SELECT
+		    BRC_CUSTOM_HOME_SEQ.NEXTVAL         ,
+		    #{noReqTo} ,
+		    S.DT_REG_HOME    ,
+		    S.AM_DEPOSIT_HOME,
+		    S.AM_RENT_HOME   ,
+		    S.NO_POST_HOME   ,
+		    S.DS_STRT_HOME   ,
+		    S.DS_ADDR_HOME   ,
+		    S.NO_TEL1_HOME   ,
+		    S.NO_TEL2_HOME   ,
+		    S.NO_TEL3_HOME   ,
+		    S.NO_POST_CERT   ,
+		    S.DS_STRT_CERT   ,
+		    S.DS_ADDR_CERT   ,
+		    S.NO_POST_REAL   ,
+		    S.DS_STRT_REAL   ,
+		    S.DS_ADDR_REAL   ,
+		    SYSDATE AS DM_REG         ,
+		    #{idReg} 
+		FROM
+		    BRC_CUSTOM_HOME S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}	
+	</insert>
+	
+	<insert id="buildBrcCustomCompany" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_CUSTOM_COMPANY
+		(
+		    NO              ,
+		    NO_REQ          ,
+		    CD_JOB_KIND     ,
+		    CD_RANK         ,
+		    CD_JOB_ACT      ,
+		    CD_JOB_STATUS   ,
+		    NM_COMP         ,
+		    NM_DEPT         ,
+		    DT_REG_JOIN     ,
+		    DD_PAY          ,
+		    AM_PAY_MONTH    ,
+		    NO_POST_COMP    ,
+		    DS_STRT_COMP    ,
+		    DS_ADDR_COMP    ,
+		    NO_TEL1_COMP    ,
+		    NO_TEL2_COMP    ,
+		    NO_TEL3_COMP    ,
+		    NO_EXT_COMP     ,
+		    NO_MAINTEL1_COMP,
+		    NO_MAINTEL2_COMP,
+		    NO_MAINTEL3_COMP,
+		    DM_REG          ,
+		    ID_REG          
+		)
+		SELECT
+		    BRC_CUSTOM_COMPANY_SEQ.NEXTVAL              ,
+		    #{noReqTo}          ,
+		    S.CD_JOB_KIND     ,
+		    S.CD_RANK         ,
+		    S.CD_JOB_ACT      ,
+		    S.CD_JOB_STATUS   ,
+		    S.NM_COMP         ,
+		    S.NM_DEPT         ,
+		    S.DT_REG_JOIN     ,
+		    S.DD_PAY          ,
+		    S.AM_PAY_MONTH    ,
+		    S.NO_POST_COMP    ,
+		    S.DS_STRT_COMP    ,
+		    S.DS_ADDR_COMP    ,
+		    S.NO_TEL1_COMP    ,
+		    S.NO_TEL2_COMP    ,
+		    S.NO_TEL3_COMP    ,
+		    S.NO_EXT_COMP     ,
+		    S.NO_MAINTEL1_COMP,
+		    S.NO_MAINTEL2_COMP,
+		    S.NO_MAINTEL3_COMP,
+		    SYSDATE AS DM_REG          ,
+		    #{idReg}          
+		FROM
+		    BRC_CUSTOM_COMPANY S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}	
+	</insert>
+	
+	<insert id="buildBrcSurety" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_SURETY
+		(
+		    NO              ,
+		    NO_REQ          ,
+		    NO_SURETY       ,
+		    NM_CUSTOM       ,
+		    NO_CUSTOM       ,
+		    DS_EMAIL        ,
+		    CD_MARRY        ,
+		    CD_KND_MOBILE   ,
+		    NO_TEL1_MOBILE  ,
+		    NO_TEL2_MOBILE  ,
+		    NO_TEL3_MOBILE  ,
+		    YN_AUTH_MOBILE  ,
+		    CD_KND_ETC      ,
+		    NO_TEL1_ETC1    ,
+		    NO_TEL2_ETC1    ,
+		    NO_TEL3_ETC1    ,
+		    YN_AUTH_ETC     ,
+		    NO_FAX1         ,
+		    NO_FAX2         ,
+		    NO_FAX3         ,
+		    DT_CB_AGREE     ,
+		    DM_PROMISE      ,
+		    DM_REG          ,
+		    ID_REG           ,   
+		    DS_NICE_SAFEKEY ,
+		    YN_NICE_SAFEKEY 
+		)
+		SELECT
+		    BRC_SURETY_SEQ.NEXTVAL              ,
+		    #{noReqTo}          ,
+		    #{noSuretyTo}       ,
+		    S.NM_CUSTOM       ,
+		    S.NO_CUSTOM       ,
+		    S.DS_EMAIL        ,
+		    S.CD_MARRY        ,
+		    S.CD_KND_MOBILE   ,
+		    S.NO_TEL1_MOBILE  ,
+		    S.NO_TEL2_MOBILE  ,
+		    S.NO_TEL3_MOBILE  ,
+		    S.YN_AUTH_MOBILE  ,
+		    S.CD_KND_ETC      ,
+		    S.NO_TEL1_ETC1    ,
+		    S.NO_TEL2_ETC1    ,
+		    S.NO_TEL3_ETC1    ,
+		    S.YN_AUTH_ETC     ,
+		    S.NO_FAX1         ,
+		    S.NO_FAX2         ,
+		    S.NO_FAX3         ,
+		    S.DT_CB_AGREE     ,
+		    S.DM_PROMISE      ,
+		    SYSDATE AS DM_REG          ,
+		    #{idReg}           ,   
+		    S.DS_NICE_SAFEKEY ,
+		    S.YN_NICE_SAFEKEY 
+		FROM
+		    BRC_SURETY S    
+		WHERE
+		    S.NO_REQ = #{noReqFrom}
+		    AND
+		    S.NO_SURETY = #{noSuretyFrom}	
+	</insert>
+	
+	<insert id="buildBrcSuretyHome" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_SURETY_HOME
+		(
+		    NO              ,
+		    NO_REQ          ,
+		    NO_SURETY       ,
+		    DT_REG_HOME     ,
+		    AM_DEPOSIT_HOME ,
+		    AM_RENT_HOME    ,
+		    NO_POST_HOME    ,
+		    DS_STRT_HOME    ,
+		    DS_ADDR_HOME    ,
+		    NO_TEL1_HOME    ,
+		    NO_TEL2_HOME    ,
+		    NO_TEL3_HOME    ,
+		    NO_POST_CERT    ,
+		    DS_STRT_CERT    ,
+		    DS_ADDR_CERT    ,
+		    NO_POST_REAL    ,
+		    DS_STRT_REAL    ,
+		    DS_ADDR_REAL    ,
+		    DM_REG          ,
+		    ID_REG              
+		)
+		SELECT
+		    BRC_SURETY_HOME_SEQ.NEXTVAL              ,
+		    #{noReqTo}          ,
+		    #{noSuretyTo}       ,
+		    S.DT_REG_HOME     ,
+		    S.AM_DEPOSIT_HOME ,
+		    S.AM_RENT_HOME    ,
+		    S.NO_POST_HOME    ,
+		    S.DS_STRT_HOME    ,
+		    S.DS_ADDR_HOME    ,
+		    S.NO_TEL1_HOME    ,
+		    S.NO_TEL2_HOME    ,
+		    S.NO_TEL3_HOME    ,
+		    S.NO_POST_CERT    ,
+		    S.DS_STRT_CERT    ,
+		    S.DS_ADDR_CERT    ,
+		    S.NO_POST_REAL    ,
+		    S.DS_STRT_REAL    ,
+		    S.DS_ADDR_REAL    ,
+		    SYSDATE AS DM_REG          ,
+		    #{idReg}              
+		FROM
+		    BRC_SURETY_HOME S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}
+		    AND
+		    S.NO_SURETY = #{noSuretyFrom}	
+	</insert>
+	
+	<insert id="buildBrcSuretyCompany" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_SURETY_COMPANY
+		(
+		    NO              ,
+		    NO_REQ          ,
+		    NO_SURETY       ,
+		    CD_JOB_KIND     ,
+		    CD_RANK         ,
+		    CD_JOB_ACT      ,
+		    CD_JOB_STATUS   ,
+		    NM_COMP         ,
+		    NM_DEPT         ,
+		    DT_REG_JOIN     ,
+		    DD_PAY          ,
+		    AM_PAY_MONTH    ,
+		    NO_POST_COMP    ,
+		    DS_STRT_COMP    ,
+		    DS_ADDR_COMP    ,
+		    NO_TEL1_COMP    ,
+		    NO_TEL2_COMP    ,
+		    NO_TEL3_COMP    ,
+		    NO_EXT_COMP     ,
+		    NO_MAINTEL1_COMP,
+		    NO_MAINTEL2_COMP,
+		    NO_MAINTEL3_COMP,
+		    DM_REG          ,
+		    ID_REG          
+		)   
+		SELECT
+		    BRC_SURETY_COMPANY_SEQ.NEXTVAL              ,
+		    #{noReqTo}          ,
+		    #{noSuretyTo}       ,
+		    S.CD_JOB_KIND     ,
+		    S.CD_RANK         ,
+		    S.CD_JOB_ACT      ,
+		    S.CD_JOB_STATUS   ,
+		    S.NM_COMP         ,
+		    S.NM_DEPT         ,
+		    S.DT_REG_JOIN     ,
+		    S.DD_PAY          ,
+		    S.AM_PAY_MONTH    ,
+		    S.NO_POST_COMP    ,
+		    S.DS_STRT_COMP    ,
+		    S.DS_ADDR_COMP    ,
+		    S.NO_TEL1_COMP    ,
+		    S.NO_TEL2_COMP    ,
+		    S.NO_TEL3_COMP    ,
+		    S.NO_EXT_COMP     ,
+		    S.NO_MAINTEL1_COMP,
+		    S.NO_MAINTEL2_COMP,
+		    S.NO_MAINTEL3_COMP,
+		    SYSDATE AS DM_REG          ,
+		    #{idReg}          
+		FROM    
+		    BRC_SURETY_COMPANY S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}
+		    AND
+		    S.NO_SURETY = #{noSuretyFrom}	
+	</insert>
+	
+	<insert id="buildBrcFile" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_FILE
+		(
+		    NO          ,
+		    NO_REQ      ,
+		    NO_IMG      ,
+		    CD_FILE     ,
+		    NM_FILE     ,
+		    NM_FILE_USER,
+		    DS_PATH     ,
+		    DS_URL      ,
+		    DS_REMK     ,
+		    DM_REG      ,
+		    ID_REG      
+		)
+		SELECT/*+ INDEX(S PK_BRC_FILE) */
+		    #{brcFileSeq}          ,
+		    #{noReqTo}      ,
+		    (SELECT LPAD(NVL(MAX(NO_IMG), '0')+1, 3, '0') FROM BRC_FILE
+		    WHERE NO_REQ = #{noReqTo}) AS NO_IMG,     	    
+		    S.CD_FILE     ,
+<!-- 		    S.NM_FILE     , -->
+			#{brcFileNmFile}      ,
+		    S.NM_FILE_USER,
+<!-- 		    S.DS_PATH     , -->
+			#{brcFileDsPath}      ,
+		    S.DS_URL      ,
+		    S.DS_REMK     ,
+		    SYSDATE AS DM_REG      ,
+		    #{idReg}      
+		FROM
+		    BRC_FILE S    
+		WHERE
+		    S.NO_REQ = #{noReqFrom}	
+		    AND
+		    S.NO = #{brcFileNo}		    
+	</insert>
+	
+	<insert id="buildBrcContact" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+		INSERT INTO BRC_CONTACT
+		(
+		    NO              ,
+		    NO_REQ          ,
+		    NO_CONTACT_SEQ  ,
+		    CD_CONTACT      ,
+		    CD_CALL_KIND    ,
+		    CD_CALLER       ,
+		    CD_CALL_LOCAL   ,
+		    YN_IMPORTANT    ,
+		    DM_PROMISE      ,
+		    YN_RECORD       ,
+		    NO_RECORD       ,
+		    DS_MEMO         ,
+		    DM_REG          ,
+		    ID_REG          ,
+		    NO_CONTACT_MODEL
+		)
+		SELECT/*+ INDEX(S PK_BRC_CONTACT) */
+		    BRC_CONTACT_SEQ.NEXTVAL              ,
+		    #{noReqTo}          ,
+          	LPAD((SELECT NVL (MAX (NO_CONTACT_SEQ) + 1, 1) 
+          			FROM BRC_CONTACT
+            		WHERE NO_REQ = #{noReqTo}) + (ROWNUM-1), 5, '0') AS NO_CONTACT_SEQ,		    
+		    S.CD_CONTACT      ,
+		    S.CD_CALL_KIND    ,
+		    S.CD_CALLER       ,
+		    S.CD_CALL_LOCAL   ,
+		    S.YN_IMPORTANT    ,
+		    S.DM_PROMISE      ,
+		    S.YN_RECORD       ,
+		    S.NO_RECORD       ,
+		    S.DS_MEMO         ,
+		    S.DM_REG          ,
+		    S.ID_REG          ,
+		    S.NO_CONTACT_MODEL
+		FROM
+		    BRC_CONTACT S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}	
+	</insert>
+
+	<insert id="buildBrcCustomHash" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcReAppVO">
+        INSERT INTO BRC_CUSTOM_HASH ( 
+		    NO                ,
+		    NO_REQ            ,
+		    NO_CUSTOM_HASH    ,
+		    NO_TEL_MOBILE_HASH,
+		    DM_REG,            
+		    ID_REG
+        )
+		SELECT
+		    BRC_CUSTOM_HASH_SEQ.NEXTVAL              ,
+		    #{noReqTo}          ,
+		    S.NO_CUSTOM_HASH     ,
+		    S.NO_TEL_MOBILE_HASH ,
+		    SYSDATE AS DM_REG          ,
+		    #{idReg}              
+		FROM
+		    BRC_CUSTOM_HASH S
+		WHERE
+		    S.NO_REQ = #{noReqFrom}
+	</insert>
+	
+</mapper>
+

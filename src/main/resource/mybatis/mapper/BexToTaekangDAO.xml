@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexToTaekangDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.bex.vo.BexToTaekangVO" id="bexToTaekangResult">
+    	<result property="ds_url" column="ds_url" />
+    	<result property="nm_comp_short_eng" column="nm_comp_short_eng" />
+		<result property="pro_code" column="pro_code" />
+		<result property="com_code" column="com_code" />
+		<result property="cooperate_code" column="cooperate_code" />
+		<result property="sub_com_code" column="sub_com_code" />
+		<result property="name" column="name" />
+		<result property="ssn11" column="ssn11" />
+		<result property="ssn12" column="ssn12" />
+		<result property="app_money" column="app_money" />
+		<result property="surety" column="surety" />
+		<result property="email" column="email" />
+		<result property="ph21" column="ph21" />
+		<result property="ph22" column="ph22" />
+		<result property="ph23" column="ph23" />
+		<result property="marry" column="marry" />
+		<result property="job" column="job" />
+		<result property="s_jobtype" column="s_jobtype" />
+		<result property="s_com" column="s_com" />
+		<result property="s_tel1" column="s_tel1" />
+		<result property="s_tel2" column="s_tel2" />
+		<result property="s_tel3" column="s_tel3" />
+		<result property="s_date1" column="s_date1" />
+		<result property="s_date2" column="s_date2" />
+		<result property="s_class" column="s_class" />
+		<result property="s_money" column="s_money" />
+		<result property="s_jobpart" column="s_jobpart" />
+		<result property="s_hiredtype" column="s_hiredtype" />
+		<result property="img_url1" column="img_url1" />
+		<result property="img_url2" column="img_url2" />
+		<result property="img_url3" column="img_url3" />
+		<result property="img_url4" column="img_url4" />
+		<result property="img_url5" column="img_url5" />
+		<result property="img_url6" column="img_url6" />
+		<result property="img_url7" column="img_url7" />
+		<result property="img_url8" column="img_url8" />
+		<result property="img_url9" column="img_url9" />
+		<result property="img_url10" column="img_url10" />
+		<result property="bo_job" column="bo_job" />
+		<result property="bo_hp_com" column="bo_hp_com" />
+		<result property="bo_hp_kuk" column="bo_hp_kuk" />
+		<result property="bo_hp_bn" column="bo_hp_bn" />
+		<result property="bo_cust_id" column="bo_cust_id" />
+		<result property="bo_korn_nm" column="bo_korn_nm" />
+		<result property="agent1_level" column="agent1_level" />
+		<result property="agent1_app_date" column="agent1_app_date" />
+		<result property="agent1_name" column="agent1_name" />
+		<result property="agent1_ssn" column="agent1_ssn" />
+		<result property="agent1_ph11" column="agent1_ph11" />
+		<result property="agent1_ph12" column="agent1_ph12" />
+		<result property="agent1_ph13" column="agent1_ph13" />
+		
+		<result property="agent2_level" column="agent2_level" />
+		<result property="agent2_app_date" column="agent2_app_date" />
+		<result property="agent2_name" column="agent2_name" />
+		<result property="agent2_ssn" column="agent2_ssn" />
+		<result property="agent2_ph11" column="agent2_ph11" />
+		<result property="agent2_ph12" column="agent2_ph12" />
+		<result property="agent2_ph13" column="agent2_ph13" />
+		
+		<result property="agent3_level" column="agent3_level" />
+		<result property="agent3_app_date" column="agent3_app_date" />
+		<result property="agent3_name" column="agent3_name" />
+		<result property="agent3_ssn" column="agent3_ssn" />
+		<result property="agent3_ph11" column="agent3_ph11" />
+		<result property="agent3_ph12" column="agent3_ph12" />
+		<result property="agent3_ph13" column="agent3_ph13" />
+		
+		<result property="agent4_level" column="agent4_level" />
+		<result property="agent4_app_date" column="agent4_app_date" />
+		<result property="agent4_name" column="agent4_name" />
+		<result property="agent4_ssn" column="agent4_ssn" />
+		<result property="agent4_ph11" column="agent4_ph11" />
+		<result property="agent4_ph12" column="agent4_ph12" />
+		<result property="agent4_ph13" column="agent4_ph13" />
+		
+		<result property="agent5_level" column="agent5_level" />
+		<result property="agent5_app_date" column="agent5_app_date" />
+		<result property="agent5_name" column="agent5_name" />
+		<result property="agent5_ssn" column="agent5_ssn" />
+		<result property="agent5_ph11" column="agent5_ph11" />
+		<result property="agent5_ph12" column="agent5_ph12" />
+		<result property="agent5_ph13" column="agent5_ph13" />
+		
+		<result property="agent6_level" column="agent6_level" />
+		<result property="agent6_app_date" column="agent6_app_date" />
+		<result property="agent6_name" column="agent6_name" />
+		<result property="agent6_ssn" column="agent6_ssn" />
+		<result property="agent6_ph11" column="agent6_ph11" />
+		<result property="agent6_ph12" column="agent6_ph12" />
+		<result property="agent6_ph13" column="agent6_ph13" />
+		
+		<result property="agent7_level" column="agent7_level" />
+		<result property="agent7_app_date" column="agent7_app_date" />
+		<result property="agent7_name" column="agent7_name" />
+		<result property="agent7_ssn" column="agent7_ssn" />
+		<result property="agent7_ph11" column="agent7_ph11" />
+		<result property="agent7_ph12" column="agent7_ph12" />
+		<result property="agent7_ph13" column="agent7_ph13" />
+		
+		<result property="agent8_level" column="agent8_level" />
+		<result property="agent8_app_date" column="agent8_app_date" />
+		<result property="agent8_name" column="agent8_name" />
+		<result property="agent8_ssn" column="agent8_ssn" />
+		<result property="agent8_ph11" column="agent8_ph11" />
+		<result property="agent8_ph12" column="agent8_ph12" />
+		<result property="agent8_ph13" column="agent8_ph13" />
+		
+		<result property="agent9_level" column="agent9_level" />
+		<result property="agent9_app_date" column="agent9_app_date" />
+		<result property="agent9_name" column="agent9_name" />
+		<result property="agent9_ssn" column="agent9_ssn" />
+		<result property="agent9_ph11" column="agent9_ph11" />
+		<result property="agent9_ph12" column="agent9_ph12" />
+		<result property="agent9_ph13" column="agent9_ph13" />
+		
+		<result property="info_name" column="info_name" />
+		<result property="info_birth" column="info_birth" />
+		<result property="info_sex" column="info_sex" />
+		<result property="info_gubun" column="info_gubun" />
+		<result property="info_channel_1" column="info_channel_1" />
+		<result property="info_remark_1" column="info_remark_1" />
+		<result property="info_channel_2" column="info_channel_2" />
+		<result property="info_remark_2" column="info_remark_2" />
+		<result property="info_contact" column="info_contact" />
+		<result property="info_contact_remark" column="info_contact_remark" />
+		<result property="info_write_dt" column="info_write_dt" />
+		<result property="info_owner" column="info_owner" />
+		<result property="info_consulter" column="info_consulter" />		
+    </resultMap>
+    
+    <select id="getBexToTaekang" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexToTaekangResult">
+        SELECT
+            (SELECT DS_URL FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS ds_url,
+            (SELECT NM_COMP_SHORT_ENG FROM ST_COMP WHERE ROWNUM <![CDATA[<= ]]> 1) AS nm_comp_short_eng,
+            '001' AS pro_code,
+            (SELECT DS_ID FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS com_code,    
+            D.NO_COOPERATE AS cooperate_code,
+            ' ' AS sub_com_code,
+            B.NM_CUSTOM AS name,
+            NVL(SUBSTRB(B.NO_CUSTOM, 1, 6), ' ') AS ssn11,
+            NVL(SUBSTRB(B.NO_CUSTOM, 7, 1), ' ') AS ssn12,
+            NVL(A.AM_CUSTOM, 0) / 10000 AS app_money,
+            A.YN_SURETY AS surety,
+            B.DS_EMAIL AS email,
+            B.NO_TEL1_MOBILE AS ph21,
+            B.NO_TEL2_MOBILE AS ph22,
+            B.NO_TEL3_MOBILE AS ph23,
+            CASE
+                WHEN B.CD_MARRY = '70701' THEN 'N'
+                WHEN B.CD_MARRY = '70702' THEN 'Y'
+                WHEN B.CD_MARRY = '70703' THEN 'A'
+                WHEN B.CD_MARRY = '70704' THEN 'B'
+                WHEN B.CD_MARRY = '70705' THEN 'D'
+                WHEN B.CD_MARRY = '70706' THEN 'Y'
+                WHEN B.CD_MARRY = '70707' THEN 'T'
+                ELSE ' '
+            END AS marry,
+            CASE
+                WHEN C.CD_JOB_KIND = '70901' THEN 'A'
+                WHEN C.CD_JOB_KIND = '70902' THEN 'B'
+                WHEN C.CD_JOB_KIND = '70903' THEN 'S'
+                WHEN C.CD_JOB_KIND = '70904' THEN 'C'
+                WHEN C.CD_JOB_KIND = '70905' THEN 'D'
+                WHEN C.CD_JOB_KIND = '70906' THEN 'E'
+                WHEN C.CD_JOB_KIND = '70907' THEN 'E'
+                ELSE  'E'
+            END AS job     ,
+            ' ' AS s_jobtype,
+            C.NM_COMP AS s_com,
+            C.NO_MAINTEL1_COMP AS s_tel1,
+            C.NO_MAINTEL2_COMP AS s_tel2,
+            C.NO_MAINTEL3_COMP AS s_tel3,
+            SUBSTRB(C.DT_REG_JOIN, 1, 4) AS s_date1,
+            SUBSTRB(C.DT_REG_JOIN, 5, 2) AS s_date2,
+            CASE
+                WHEN C.CD_RANK = '13302' THEN '12902'
+                WHEN C.CD_RANK = '13303' THEN '12903'
+                WHEN C.CD_RANK = '13304' THEN '12904'
+                WHEN C.CD_RANK = '13305' THEN '12905'
+                WHEN C.CD_RANK = '13306' THEN '12906'
+                WHEN C.CD_RANK = '13307' THEN '12909'
+                WHEN C.CD_RANK = '13308' THEN '12999'
+                WHEN C.CD_RANK = '13309' THEN ' '
+                WHEN C.CD_RANK = '13312' THEN ' '
+                WHEN C.CD_RANK = '13313' THEN '12902'
+                WHEN C.CD_RANK = '13314' THEN '12901'
+                WHEN C.CD_RANK = '13315' THEN '12902'
+                ELSE ' '
+            END AS s_class,
+            NVL(C.AM_PAY_MONTH, 0) / 10000 AS s_money,
+            C.NM_DEPT AS s_jobpart,
+            CASE
+                WHEN C.CD_JOB_STATUS = '18501' THEN '13901'
+                WHEN C.CD_JOB_STATUS = '18511' THEN '13902'
+                WHEN C.CD_JOB_STATUS = '18512' THEN '13902'
+                ELSE ' '
+            END AS s_hiredtype,
+            G.IMG_URL1 AS img_url1,
+            G.IMG_URL2 AS img_url2,
+            G.IMG_URL3 AS img_url3,
+            G.IMG_URL4 AS img_url4,
+            G.IMG_URL5 AS img_url5,
+            G.IMG_URL6 AS img_url6,
+            G.IMG_URL7 AS img_url7,
+            G.IMG_URL8 AS img_url8,
+            G.IMG_URL9 AS img_url9,
+            G.IMG_URL10 AS img_url10,
+            G.IMG_FILE1 AS img_file1,
+            G.IMG_FILE2 AS img_file2,
+            G.IMG_FILE3 AS img_file3,
+            G.IMG_FILE4 AS img_file4,
+            G.IMG_FILE5 AS img_file5,
+            G.IMG_FILE6 AS img_file6,
+            G.IMG_FILE7 AS img_file7,
+            G.IMG_FILE8 AS img_file8,
+            G.IMG_FILE9 AS img_file9,
+            G.IMG_FILE10 AS img_file10,    
+            E.NO_TEL1_MOBILE AS bo_hp_com,
+            E.NO_TEL2_MOBILE AS bo_hp_kuk,
+            E.NO_TEL3_MOBILE AS bo_hp_bn,
+            SUBSTRB(E.NO_CUSTOM, 1, 7) AS bo_cust_id,
+            E.NM_CUSTOM AS bo_korn_nm,
+            CASE
+                WHEN F.CD_JOB_KIND = '70901' THEN '10101'
+                WHEN F.CD_JOB_KIND = '70902' THEN '10102'
+                WHEN F.CD_JOB_KIND = '70903' THEN '10104'
+                WHEN F.CD_JOB_KIND = '70904' THEN '10103'
+                WHEN F.CD_JOB_KIND = '70905' THEN '10105'
+                WHEN F.CD_JOB_KIND = '70906' THEN '10106'
+                WHEN F.CD_JOB_KIND = '70907' THEN '10109'
+                ELSE  '10107'
+            END AS bo_job     ,
+            H.AGENT1_LEVEL AS agent1_level,
+            TO_CHAR(H.AGENT1_APP_DATE, 'YYYY-MM-DD') AS agent1_app_date,
+            H.AGENT1_NAME AS agent1_name,
+            H.AGENT1_SSN AS agent1_ssn,
+            H.AGENT1_PH11 AS agent1_ph11,
+            H.AGENT1_PH12 AS agent1_ph12,
+            H.AGENT1_PH13 AS agent1_ph13,
+            H.AGENT2_LEVEL AS agent2_level,
+            TO_CHAR(H.AGENT2_APP_DATE, 'YYYY-MM-DD') AS agent2_app_date,
+            H.AGENT2_NAME AS agent2_name,
+            H.AGENT2_SSN AS agent2_ssn,
+            H.AGENT2_PH11 AS agent2_ph11,
+            H.AGENT2_PH12 AS agent2_ph12,
+            H.AGENT2_PH13 AS agent2_ph13,
+            H.AGENT3_LEVEL AS agent3_level,
+            TO_CHAR(H.AGENT3_APP_DATE, 'YYYY-MM-DD') AS agent3_app_date,
+            H.AGENT3_NAME AS agent3_name,
+            H.AGENT3_SSN AS agent3_ssn,
+            H.AGENT3_PH11 AS agent3_ph11,
+            H.AGENT3_PH12 AS agent3_ph12,
+            H.AGENT3_PH13 AS agent3_ph13,
+            H.AGENT4_LEVEL AS agent4_level,
+            TO_CHAR(H.AGENT4_APP_DATE, 'YYYY-MM-DD') AS agent4_app_date,
+            H.AGENT4_NAME AS agent4_name,
+            H.AGENT4_SSN AS agent4_ssn,
+            H.AGENT4_PH11 AS agent4_ph11,
+            H.AGENT4_PH12 AS agent4_ph12,
+            H.AGENT4_PH13 AS agent4_ph13,
+            H.AGENT5_LEVEL AS agent5_level,
+            TO_CHAR(H.AGENT5_APP_DATE, 'YYYY-MM-DD') AS agent5_app_date,
+            H.AGENT5_NAME AS agent5_name,
+            H.AGENT5_SSN AS agent5_ssn,
+            H.AGENT5_PH11 AS agent5_ph11,
+            H.AGENT5_PH12 AS agent5_ph12,
+            H.AGENT5_PH13 AS agent5_ph13,
+            H.AGENT6_LEVEL AS agent6_level,
+            TO_CHAR(H.AGENT6_APP_DATE, 'YYYY-MM-DD') AS agent6_app_date,
+            H.AGENT6_NAME AS agent6_name,
+            H.AGENT6_SSN AS agent6_ssn,
+            H.AGENT6_PH11 AS agent6_ph11,
+            H.AGENT6_PH12 AS agent6_ph12,
+            H.AGENT6_PH13 AS agent6_ph13,
+            H.AGENT7_LEVEL AS agent7_level,
+            TO_CHAR(H.AGENT7_APP_DATE, 'YYYY-MM-DD') AS agent7_app_date,
+            H.AGENT7_NAME AS agent7_name,
+            H.AGENT7_SSN AS agent7_ssn,
+            H.AGENT7_PH11 AS agent7_ph11,
+            H.AGENT7_PH12 AS agent7_ph12,
+            H.AGENT7_PH13 AS agent7_ph13,
+            H.AGENT8_LEVEL AS agent8_level,
+            TO_CHAR(H.AGENT8_APP_DATE, 'YYYY-MM-DD') AS agent8_app_date,
+            H.AGENT8_NAME AS agent8_name,
+            H.AGENT8_SSN AS agent8_ssn,
+            H.AGENT8_PH11 AS agent8_ph11,
+            H.AGENT8_PH12 AS agent8_ph12,
+            H.AGENT8_PH13 AS agent8_ph13,            
+            H.AGENT9_LEVEL AS agent9_level,
+            TO_CHAR(H.AGENT9_APP_DATE, 'YYYY-MM-DD') AS agent9_app_date,
+            H.AGENT9_NAME AS agent9_name,
+            H.AGENT9_SSN AS agent9_ssn,
+            H.AGENT9_PH11 AS agent9_ph11,
+            H.AGENT9_PH12 AS agent9_ph12,
+            H.AGENT9_PH13 AS agent9_ph13,
+		    <!--정보적법수집 -->    
+		    B.NM_CUSTOM AS info_name,
+		    NVL(SUBSTRB(B.NO_CUSTOM, 1, 6), ' ') AS info_birth,
+			CASE 
+				WHEN SUBSTRB(B.NO_CUSTOM, 7, 1) = '1' THEN 'M' 
+				WHEN SUBSTRB(B.NO_CUSTOM, 7, 1) = '2' THEN 'F'
+				ELSE ' '
+			END AS info_sex,
+			CASE WHEN BIL.CD_INFO_COLLECT IS NULL THEN '40601'
+                     WHEN BIL.CD_INFO_COLLECT = '71601' THEN '40601'
+                     ELSE '40602'
+            END AS info_gubun,				
+            CASE
+                WHEN BIL.CD_INFO_COLLECT = '71602' THEN NULL <!--정보수집경로코드 중개인일경우 비매핑 -->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71401' THEN '40301'  <!--인터넷광고-전화 = 인터넷-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71402' THEN '40304'  <!--인터넷광고-홈페이지 = 	인터넷-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71403' THEN '40302'  <!--신문광고 = 신문-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71404' THEN '40303'  <!--전단지광고 = 전단지-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71405' THEN '40399' <!--방문신청 = 기타-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71406' THEN '40399' <!--제휴처제공 = 기타-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71499' THEN '40399' <!--기타 = 기타-->
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST IS NOT NULL THEN '40399'  <!--인입된 적법수집데이터 존재하지만 코드매핑안될경우 = 기타-->
+                WHEN A.CD_PATH IN ('70401', '70402') THEN '40304' <!--그외자사모집건 접수경로로 판단 = 인터넷-->
+                ELSE '40301' <!--그외자사모집건 접수경로로 판단 = 기타-->
+            END AS info_channel_1,			
+            DS_CONTACT_CUST AS info_remark_1,
+            CASE
+            	WHEN BIL.CD_INFO_COLLECT = '71601' THEN NULL <!--정보수집경로코드 고객일경우 비매핑 -->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CONTACT_AGENT = '71801' THEN '40503' <!--제휴처제공 = 제휴처제공-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CONTACT_AGENT = '71899' THEN '40599' <!--제휴처제공 = 제휴처제공-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CONTACT_AGENT IS NOT NULL THEN '40599'  <!--인입된 적법수집데이터 존재하지만 코드매핑안될경우 = 기타-->
+            	ELSE NULL <!--그외자사모집건 비매핑-->
+			END AS info_channel_2,
+			DS_CONTACT_AGENT AS info_remark_2,
+            CASE
+            	WHEN BIL.CD_INFO_COLLECT = '71601' THEN NULL <!--정보수집경로코드 고객일경우 비매핑 -->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71701' THEN '40402' <!--전화 = 전화-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71702' THEN '40403' <!--SMS = SMS-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71703' THEN '40404' <!--EMAIL = EMAIL-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71704' THEN '40405' <!--우편물 = 우편물-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71705' THEN '40401' <!--직접방문 = 기타-->
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71799' THEN '40499' <!--기타 = 기타-->            	
+				ELSE NULL <!--그외자사모집건 비매핑-->            				
+			END AS info_contact,
+			NULL AS info_contact_remark,
+			NVL(BIL.DT_AGENT, TO_CHAR(A.DM_REG, 'YYYYMMDD')) AS info_write_dt,
+			NVL(BIL.NM_AGENT_CEO, SC.NM_CEO) AS info_owner,			
+			NVL(BIL.NM_AGENT_MANAGER, (SELECT NM_USER FROM ST_USER WHERE ID_USER = A.ID_SCREEN)) AS info_consulter
+		FROM
+		    BRC_LOAN A,
+		    BRC_CUSTOM B,
+		    BRC_CUSTOM_COMPANY C,
+		    BEX_MASTER D,
+		    BRC_SURETY E,
+		    BRC_SURETY_COMPANY F,
+		    BRC_INFO_LEGAL BIL,
+		    ST_COMP SC,
+		    (SELECT
+		        NO_REQ,
+		        MAX(IMG_URL1) AS IMG_URL1,
+		        MAX(IMG_URL2) AS IMG_URL2,
+		        MAX(IMG_URL3) AS IMG_URL3,
+		        MAX(IMG_URL4) AS IMG_URL4,
+		        MAX(IMG_URL5) AS IMG_URL5,
+		        MAX(IMG_URL6) AS IMG_URL6,
+		        MAX(IMG_URL7) AS IMG_URL7,
+		        MAX(IMG_URL8) AS IMG_URL8,
+		        MAX(IMG_URL9) AS IMG_URL9,
+		        MAX(IMG_URL10) AS IMG_URL10,
+		        MAX(IMG_FILE1) AS IMG_FILE1,
+		        MAX(IMG_FILE2) AS IMG_FILE2,
+		        MAX(IMG_FILE3) AS IMG_FILE3,
+		        MAX(IMG_FILE4) AS IMG_FILE4,
+		        MAX(IMG_FILE5) AS IMG_FILE5,
+		        MAX(IMG_FILE6) AS IMG_FILE6,
+		        MAX(IMG_FILE7) AS IMG_FILE7,
+		        MAX(IMG_FILE8) AS IMG_FILE8,
+		        MAX(IMG_FILE9) AS IMG_FILE9,
+		        MAX(IMG_FILE10) AS IMG_FILE10             
+		    FROM
+		    (
+		        SELECT
+		            NO_REQ,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 1 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL1,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 2 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL2,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 3 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL3,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 4 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL4,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 5 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL5,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 6 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL6,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 7 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL7,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 8 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL8,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 9 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL9,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 10 THEN DS_PATH || NM_FILE ELSE ' ' END AS IMG_URL10,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 1 THEN NM_FILE ELSE ' ' END AS IMG_FILE1,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 2 THEN NM_FILE ELSE ' ' END AS IMG_FILE2,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 3 THEN NM_FILE ELSE ' ' END AS IMG_FILE3,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 4 THEN NM_FILE ELSE ' ' END AS IMG_FILE4,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 5 THEN NM_FILE ELSE ' ' END AS IMG_FILE5,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 6 THEN NM_FILE ELSE ' ' END AS IMG_FILE6,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 7 THEN NM_FILE ELSE ' ' END AS IMG_FILE7,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 8 THEN NM_FILE ELSE ' ' END AS IMG_FILE8,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 9 THEN NM_FILE ELSE ' ' END AS IMG_FILE9,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 10 THEN NM_FILE ELSE ' ' END AS IMG_FILE10
+		        FROM
+		            BRC_FILE    
+		        WHERE
+		            NO_REQ = #{noReq}
+		    )        
+		    GROUP BY
+		        NO_REQ) G        ,
+		    (SELECT
+		        NO_REQ,
+		        MAX(AGENT1_LEVEL) AS AGENT1_LEVEL,
+                MAX(AGENT2_LEVEL) AS AGENT2_LEVEL,
+                MAX(AGENT3_LEVEL) AS AGENT3_LEVEL,
+                MAX(AGENT4_LEVEL) AS AGENT4_LEVEL,
+                MAX(AGENT5_LEVEL) AS AGENT5_LEVEL,
+                MAX(AGENT6_LEVEL) AS AGENT6_LEVEL,
+                MAX(AGENT7_LEVEL) AS AGENT7_LEVEL,
+                MAX(AGENT8_LEVEL) AS AGENT8_LEVEL,
+                MAX(AGENT9_LEVEL) AS AGENT9_LEVEL,
+		        MAX(AGENT1_APP_DATE) AS AGENT1_APP_DATE,
+                MAX(AGENT2_APP_DATE) AS AGENT2_APP_DATE,
+                MAX(AGENT3_APP_DATE) AS AGENT3_APP_DATE,
+                MAX(AGENT4_APP_DATE) AS AGENT4_APP_DATE,
+                MAX(AGENT5_APP_DATE) AS AGENT5_APP_DATE,
+                MAX(AGENT6_APP_DATE) AS AGENT6_APP_DATE,
+                MAX(AGENT7_APP_DATE) AS AGENT7_APP_DATE,
+                MAX(AGENT8_APP_DATE) AS AGENT8_APP_DATE,
+                MAX(AGENT9_APP_DATE) AS AGENT9_APP_DATE,
+                MAX(AGENT1_NAME) AS AGENT1_NAME,
+                MAX(AGENT2_NAME) AS AGENT2_NAME,
+                MAX(AGENT3_NAME) AS AGENT3_NAME,
+                MAX(AGENT4_NAME) AS AGENT4_NAME,
+                MAX(AGENT5_NAME) AS AGENT5_NAME,
+                MAX(AGENT6_NAME) AS AGENT6_NAME,
+                MAX(AGENT7_NAME) AS AGENT7_NAME,
+                MAX(AGENT8_NAME) AS AGENT8_NAME,
+                MAX(AGENT9_NAME) AS AGENT9_NAME,
+                MAX(AGENT1_SSN) AS AGENT1_SSN,
+                MAX(AGENT2_SSN) AS AGENT2_SSN,
+                MAX(AGENT3_SSN) AS AGENT3_SSN,
+                MAX(AGENT4_SSN) AS AGENT4_SSN,
+                MAX(AGENT5_SSN) AS AGENT5_SSN,
+                MAX(AGENT6_SSN) AS AGENT6_SSN,
+                MAX(AGENT7_SSN) AS AGENT7_SSN,
+                MAX(AGENT8_SSN) AS AGENT8_SSN,
+                MAX(AGENT9_SSN) AS AGENT9_SSN,
+                MAX(AGENT1_PH11) AS AGENT1_PH11,
+                MAX(AGENT2_PH11) AS AGENT2_PH11,
+                MAX(AGENT3_PH11) AS AGENT3_PH11,
+                MAX(AGENT4_PH11) AS AGENT4_PH11,
+                MAX(AGENT5_PH11) AS AGENT5_PH11,
+                MAX(AGENT6_PH11) AS AGENT6_PH11,
+                MAX(AGENT7_PH11) AS AGENT7_PH11,
+                MAX(AGENT8_PH11) AS AGENT8_PH11,
+                MAX(AGENT9_PH11) AS AGENT9_PH11,
+                MAX(AGENT1_PH12) AS AGENT1_PH12,
+                MAX(AGENT2_PH12) AS AGENT2_PH12,
+                MAX(AGENT3_PH12) AS AGENT3_PH12,
+                MAX(AGENT4_PH12) AS AGENT4_PH12,
+                MAX(AGENT5_PH12) AS AGENT5_PH12,
+                MAX(AGENT6_PH12) AS AGENT6_PH12,
+                MAX(AGENT7_PH12) AS AGENT7_PH12,
+                MAX(AGENT8_PH12) AS AGENT8_PH12,
+                MAX(AGENT9_PH12) AS AGENT9_PH12,
+                MAX(AGENT1_PH13) AS AGENT1_PH13,
+                MAX(AGENT2_PH13) AS AGENT2_PH13,
+                MAX(AGENT3_PH13) AS AGENT3_PH13,
+                MAX(AGENT4_PH13) AS AGENT4_PH13,
+                MAX(AGENT5_PH13) AS AGENT5_PH13,
+                MAX(AGENT6_PH13) AS AGENT6_PH13,
+                MAX(AGENT7_PH13) AS AGENT7_PH13,
+                MAX(AGENT8_PH13) AS AGENT8_PH13,
+                MAX(AGENT9_PH13) AS AGENT9_PH13
+		    FROM
+		    (
+		        SELECT
+		            NO_REQ,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT1_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT2_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT3_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT4_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT5_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT6_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT7_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT8_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT9_LEVEL,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN DT_SUPPLY ELSE NULL END AS AGENT1_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN DT_SUPPLY ELSE NULL END AS AGENT2_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN DT_SUPPLY ELSE NULL END AS AGENT3_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN DT_SUPPLY ELSE NULL END AS AGENT4_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN DT_SUPPLY ELSE NULL END AS AGENT5_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN DT_SUPPLY ELSE NULL END AS AGENT6_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN DT_SUPPLY ELSE NULL END AS AGENT7_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN DT_SUPPLY ELSE NULL END AS AGENT8_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN DT_SUPPLY ELSE NULL END AS AGENT9_APP_DATE,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN NM_SUPPLY ELSE NULL END AS AGENT1_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN NM_SUPPLY ELSE NULL END AS AGENT2_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN NM_SUPPLY ELSE NULL END AS AGENT3_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN NM_SUPPLY ELSE NULL END AS AGENT4_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN NM_SUPPLY ELSE NULL END AS AGENT5_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN NM_SUPPLY ELSE NULL END AS AGENT6_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN NM_SUPPLY ELSE NULL END AS AGENT7_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN NM_SUPPLY ELSE NULL END AS AGENT8_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN NM_SUPPLY ELSE NULL END AS AGENT9_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT1_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT2_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT3_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT4_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT5_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT6_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT7_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT8_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT9_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN AGENT_PH11 ELSE NULL END AS AGENT1_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN AGENT_PH11 ELSE NULL END AS AGENT2_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN AGENT_PH11 ELSE NULL END AS AGENT3_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN AGENT_PH11 ELSE NULL END AS AGENT4_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN AGENT_PH11 ELSE NULL END AS AGENT5_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN AGENT_PH11 ELSE NULL END AS AGENT6_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN AGENT_PH11 ELSE NULL END AS AGENT7_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN AGENT_PH11 ELSE NULL END AS AGENT8_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN AGENT_PH11 ELSE NULL END AS AGENT9_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN AGENT_PH12 ELSE NULL END AS AGENT1_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN AGENT_PH12 ELSE NULL END AS AGENT2_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN AGENT_PH12 ELSE NULL END AS AGENT3_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN AGENT_PH12 ELSE NULL END AS AGENT4_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN AGENT_PH12 ELSE NULL END AS AGENT5_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN AGENT_PH12 ELSE NULL END AS AGENT6_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN AGENT_PH12 ELSE NULL END AS AGENT7_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN AGENT_PH12 ELSE NULL END AS AGENT8_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN AGENT_PH12 ELSE NULL END AS AGENT9_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN AGENT_PH13 ELSE NULL END AS AGENT1_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN AGENT_PH13 ELSE NULL END AS AGENT2_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN AGENT_PH13 ELSE NULL END AS AGENT3_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN AGENT_PH13 ELSE NULL END AS AGENT4_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN AGENT_PH13 ELSE NULL END AS AGENT5_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN AGENT_PH13 ELSE NULL END AS AGENT6_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN AGENT_PH13 ELSE NULL END AS AGENT7_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN AGENT_PH13 ELSE NULL END AS AGENT8_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN AGENT_PH13 ELSE NULL END AS AGENT9_PH13         
+		        FROM
+		            (
+                    SELECT 
+                        NO_REQ,NO_SUPPLY,TRUNC(TO_DATE(DT_SUPPLY, 'YYYY-MM-DD')) AS DT_SUPPLY,NM_SUPPLY,NO_SUPPLY_LOAN,
+                        CASE WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN '02'
+                                  WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,1,2)
+                                  ELSE SUBSTRB(NO_SUPPLY_TEL,1,3)
+                        END AS AGENT_PH11,
+                        CASE WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN SUBSTRB(NO_SUPPLY_TEL,1,4)
+                                  WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,3,4)
+                                  ELSE SUBSTRB(NO_SUPPLY_TEL,4,4)
+                        END AS AGENT_PH12,
+                        CASE WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN SUBSTRB(NO_SUPPLY_TEL,5,4)
+                                  WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,7,4)
+                                  ELSE SUBSTRB(NO_SUPPLY_TEL,8,4)
+                        END AS AGENT_PH13
+                        FROM  BRC_SUPPLY    
+                        WHERE NO_REQ = #{noReq}
+                        UNION ALL
+                        SELECT
+                            T1.NO_REQ AS NO_REQ, '099' AS NO_SUPPLY, TRUNC(T1.DM_REG) AS DT_SUPPLY, T2.NM_COMP AS NM_SUPPLY, T2.NO_LOAN AS NO_SUPPLY_LOAN,
+                            '02' AS AGENT_PH11,
+                            SUBSTRB(T2.NO_TEL_ARS,1,4) AS AGENT_PH12,
+                            SUBSTRB(T2.NO_TEL_ARS,5,4) AS AGENT_PH13
+                        FROM BRC_LOAN T1, ST_COMP T2
+                        WHERE NO_REQ = #{noReq}
+                        )
+		    )        
+		    GROUP BY
+		        NO_REQ) H                
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = C.NO_REQ
+		    AND
+		    A.NO_REQ = D.NO_REQ           		            
+		    AND
+		    A.NO_REQ = E.NO_REQ(+)
+		    AND
+		    E.NO_SURETY (+) = '001'
+		    AND
+		    A.NO_REQ = F.NO_REQ(+)
+		    AND
+		    F.NO_SURETY (+) = '001'
+		    AND
+		    A.NO_REQ = G.NO_REQ(+)
+		    AND
+		    A.NO_REQ = H.NO_REQ(+)
+		    AND
+		    D.NO_REQ = #{noReq}
+		    AND
+		    D.NO_EX = #{noEx}    
+		    AND 
+		    A.NO_REQ = BIL.NO_REQ(+)
+    </select>	  
+
+</mapper>
+

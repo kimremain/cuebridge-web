@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+  xmlns:lang="http://www.springframework.org/schema/lang"
+  xsi:schemaLocation="http://www.springframework.org/schema/mvc
+  http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+  http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context-4.0.xsd
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+  http://www.springframework.org/schema/tx
+  http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+  http://www.springframework.org/schema/util
+  http://www.springframework.org/schema/util/spring-util-4.0.xsd
+  http://www.springframework.org/schema/jdbc
+  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+  http://www.springframework.org/schema/jee
+  http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+  http://www.springframework.org/schema/lang
+  http://www.springframework.org/schema/lang/spring-lang-4.0.xsd
+  ">
+  
+  <bean id="abstractDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+    <property name="initialSize" value="${jdbc.initialSize}" />
+    <property name="minIdle" value="${jdbc.minIdle}" />
+    <property name="maxIdle" value="${jdbc.maxIdle}" />
+    <property name="maxActive" value="${jdbc.maxActive}" />
+    <property name="testWhileIdle" value="${jdbc.testWhileIdle}" />
+    <property name="testOnBorrow" value="${jdbc.testOnBorrow}" />
+    <property name="testOnReturn" value="${jdbc.testOnReturn}" />
+    <property name="maxWait" value="${jdbc.maxWait}" />
+    <!-- <property name="initSQL" value="ALTER SESSION SET NLS_DATE_FORMAT=&apos;YYYY MM DD HH24:MI:SS&apos;" /> -->
+    <!-- <property name="validationQuery" value="SELECT 1 FROM DUAL" /> -->
+    <property name="validationQuery" value="${jdbc.validationQuery}" />
+    <property name="validationQueryTimeout" value="${jdbc.validationQueryTimeout}" />
+    <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}" />
+    <property name="jdbcInterceptors" value="${jdbc.interceptors}" />
+  </bean>
+  
+  <bean id="dataSource_youi" parent="abstractDataSource" destroy-method="close">
+    <property name="driverClassName" value="${jdbc.driverClassName_youi}" />
+    <property name="url" value="${jdbc.url_youi}" />
+    <property name="username" value="${jdbc.username_youi}" />
+    <property name="password" value="${jdbc.password_youi}" />
+  </bean>  
+  
+  <bean id="dataSource_star" parent="abstractDataSource" destroy-method="close">
+    <property name="driverClassName" value="${jdbc.driverClassName_star}" />
+    <property name="url" value="${jdbc.url_star}" />
+    <property name="username" value="${jdbc.username_star}" />
+    <property name="password" value="${jdbc.password_star}" />
+  </bean>
+  
+  <bean id="dataSource_mill" parent="abstractDataSource" destroy-method="close">
+    <property name="driverClassName" value="${jdbc.driverClassName_mill}" />
+    <property name="url" value="${jdbc.url_mill}" />
+    <property name="username" value="${jdbc.username_mill}" />
+    <property name="password" value="${jdbc.password_mill}" />
+  </bean>
+  
+  <bean id="dataSource_null" parent="abstractDataSource" destroy-method="close">
+    <property name="driverClassName" value="${jdbc.driverClassName_null}" />
+    <property name="url" value="${jdbc.url_null}" />
+    <property name="username" value="${jdbc.username_null}" />
+    <property name="password" value="${jdbc.password_null}" />
+  </bean>  
+  
+  <bean id="dataSourceRouting" class="com.jcuesoft.cuebridge.common.jdbc.RoutingDataSource">
+    <property name="targetDataSources">
+      <map key-type="com.jcuesoft.cuebridge.common.jdbc.DataSourceType">
+      <!--  <map key-type="java.lang.String"> -->
+        <entry key="DATASOURCE_YOUI" value-ref="dataSource_youi" />      
+        <entry key="DATASOURCE_STAR" value-ref="dataSource_star" />
+        <entry key="DATASOURCE_MILL" value-ref="dataSource_mill" />
+        <entry key="DATASOURCE_NULL" value-ref="dataSource_null" />
+      </map>
+    </property>
+    <!-- Default DataSource  -->
+    <property name="defaultTargetDataSource" ref="dataSource_null" />
+  </bean>
+  
+  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg ref="sqlSessionFactory" />
+    <!-- <constructor-arg ref="nlsDateFormatSessionFactory" /> -->
+  </bean>
+  
+  <!-- define the SqlSessionFactory -->
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSourceRouting" />
+    <property name="configLocation" value="classpath:/mybatis/mybatis-config.xml" />
+  </bean>
+
+  <!-- Transaction Manager -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSourceRouting" />
+  </bean>
+
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="*" propagation="SUPPORTS" rollback-for="Exception" />
+      <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception" />
+      <tx:method name="create*" propagation="REQUIRED" rollback-for="Exception" />
+      <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception" />
+      <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception" />
+      <tx:method name="trx*" propagation="REQUIRED" rollback-for="Exception" />
+      <tx:method name="get*" read-only="true" />
+      <tx:method name="find*" read-only="true" />
+      <tx:method name="view*" read-only="true" />
+      <tx:method name="load*" read-only="true" />
+    </tx:attributes>
+  </tx:advice>
+  
+  <bean id="domainNameBasedDatasourceAdvice" class="com.jcuesoft.cuebridge.common.jdbc.aspect.DomainNameBasedDatasourceAdvice"/>
+
+  <aop:config>
+    <aop:pointcut id="serviceMethods" expression="execution(* com.jcuesoft.cuebridge..service.*Service.*(..))" />
+    
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" order="2"/>
+    
+    <aop:aspect id="aspectDataSourceRouting" ref="domainNameBasedDatasourceAdvice" order="1">
+      <aop:around method="determineDatasource" pointcut-ref="serviceMethods" />
+    </aop:aspect>
+  </aop:config>
+  
+  <!-- enable autowire -->
+  <context:annotation-config />
+
+  <!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+</beans>

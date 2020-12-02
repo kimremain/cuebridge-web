@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.BrcLoanInfoDAO">
+
+	<resultMap type="com.jcuesoft.cuebridge.brc.vo.BrcLoanInfoResponseVO"
+		id="brcLoanInfoResult">
+		<!--여신정보 -->
+		<result column="CN_SURETY" property="cnSurety" jdbcType="DECIMAL" />
+		<result column="NO_REQ" property="noReq" jdbcType="VARCHAR" />
+		<result column="CD_PATH" property="cdPath" jdbcType="VARCHAR" />
+		<result column="CD_STATUS" property="cdStatus" jdbcType="VARCHAR" />
+		<result column="CD_PDT" property="cdPdt" jdbcType="VARCHAR" />
+		<result column="DT_CB_AGREE" property="dtCbAgree" jdbcType="VARCHAR" />
+		<result column="AM_CUSTOM" property="amCustom" jdbcType="DECIMAL" />
+		<result column="CD_REJECT" property="cdReject" jdbcType="VARCHAR" />
+		<result column="CD_CANCEL" property="cdCancel" jdbcType="VARCHAR" />
+		<result column="NM_EKEYWORD" property="nmEkeyword" jdbcType="VARCHAR" />
+		<result column="ID_SCREEN" property="idScreen" jdbcType="VARCHAR" />
+		<!-- <result column="CD_AUTH" property="cdAuth" jdbcType="VARCHAR" /> -->
+		<result column="DS_SCREEN" property="dsScreen" jdbcType="VARCHAR" />
+		<result column="DM_PROMISE" property="dmPromise" jdbcType="TIMESTAMP" />
+		<result column="DM_PROMISE_YMD" property="dmPromiseYMD" jdbcType="VARCHAR"  />
+		<result column="DM_PROMISE_HH" property="dmPromiseHH" jdbcType="VARCHAR" />
+		<result column="DM_PROMISE_MI" property="dmPromiseMI" jdbcType="VARCHAR" />
+		<result column="DS_ACCESS_IP" property="dsAccessIp" jdbcType="VARCHAR" />
+		<result column="CD_RECRUIT_GROUP" property="cdRecruitGroup" jdbcType="VARCHAR" />
+		<!--고객기본정보 -->
+		<result column="NO_CUSTOM" property="noCustom" jdbcType="VARCHAR" />
+		<result column="NM_CUSTOM" property="nmCustom" jdbcType="VARCHAR" />
+		<result column="DS_EMAIL" property="dsEmail" jdbcType="VARCHAR" />
+		<result column="CD_MARRY" property="cdMarry" jdbcType="VARCHAR" />
+		<result column="CD_KND_MOBILE" property="cdKndMobile" jdbcType="VARCHAR" />
+		<result column="NO_TEL1_MOBILE" property="noTel1Mobile"
+			jdbcType="VARCHAR" />
+		<result column="NO_TEL2_MOBILE" property="noTel2Mobile"
+			jdbcType="VARCHAR" />
+		<result column="NO_TEL3_MOBILE" property="noTel3Mobile"
+			jdbcType="VARCHAR" />
+		<result column="YN_NICE_SAFEKEY" property="ynNiceSafekey" jdbcType="VARCHAR" />	
+		<result column="DS_NICE_SAFEKEY" property="dsNiceSafekey" jdbcType="VARCHAR" />
+		<result column="CN_SAFEKEY_EXT" property="cnSafekeyExt" jdbcType="DECIMAL" />
+		<result column="DS_COOPERATE" property="dsCooperate" jdbcType="VARCHAR" />
+		<result column="YN_CDT_INQUIRY" property="ynCdtInquiry" jdbcType="VARCHAR" />
+		<!--고객주거정보 -->
+		<result column="NO_POST_REAL_FRONT" property="noPostRealFront" jdbcType="VARCHAR" />
+		<result column="NO_POST_REAL_REAR" property="noPostRealRear" jdbcType="VARCHAR" />
+		<result column="DS_STRT_REAL" property="dsStrtReal" jdbcType="VARCHAR" />
+		<result column="DS_ADDR_REAL" property="dsAddrReal" jdbcType="VARCHAR" />	
+	
+		<!--고객직장정보 -->
+		<result column="CD_JOB_KIND" property="cdJobKind" jdbcType="VARCHAR" />
+		<result column="CD_JOB_ACT" property="cdJobAct" jdbcType="VARCHAR" />
+		<result column="CD_JOB_STATUS" property="cdJobStatus" jdbcType="VARCHAR" />
+		<result column="CD_RANK" property="cdRank" jdbcType="VARCHAR" />
+		<result column="NM_COMP" property="nmComp" jdbcType="VARCHAR" />
+		<result column="NM_DEPT" property="nmDept" jdbcType="VARCHAR" />
+		<result column="DT_REG_JOIN" property="dtRegJoin" jdbcType="VARCHAR" />
+		<result column="AM_PAY_MONTH" property="amPayMonth" jdbcType="VARCHAR" />
+		<result column="NO_MAINTEL1_COMP" property="noMaintel1Comp" jdbcType="VARCHAR" />
+		<result column="NO_MAINTEL2_COMP" property="noMaintel2Comp" jdbcType="VARCHAR" />
+		<result column="NO_MAINTEL3_COMP" property="noMaintel3Comp" jdbcType="VARCHAR" />
+		<!--신용정보 -->
+		<result column="DS_CNT_CB" property="dsCntCb" jdbcType="VARCHAR" />
+		<result column="DS_AMT_CB" property="dsAmtCb" jdbcType="VARCHAR" />
+		<result column="DS_1ST_RANK" property="ds1stRank" jdbcType="VARCHAR" />
+		<result column="DS_2ND_RANK" property="ds2ndRank" jdbcType="VARCHAR" />
+		<result column="DS_PI_RANK" property="dsPiRank" jdbcType="VARCHAR" />
+		<result column="DS_ASS_RANK" property="dsAssRank" jdbcType="VARCHAR" />
+		<result column="CD_TACTIC" property="cdTactic" jdbcType="VARCHAR" />
+		<result column="CD_TACTIC_LIMIT" property="cdTacticLimit" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <resultMap type="com.jcuesoft.cuebridge.brc.vo.BrcLoanInfoResponseVO"
+        id="brcLoanMobilePhone">
+        <result column="NM_CUSTOM"    property="nmCustom" jdbcType="VARCHAR" />
+        <result column="NO_SURETY"      property="noSurety" jdbcType="VARCHAR" />
+        <result column="NO_TEL_MOBILE_ALL" property="noTelMobileAll" jdbcType="VARCHAR" />
+    </resultMap>
+
+	<select id="getBrcLoanInfo" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO"
+		resultMap="brcLoanInfoResult">
+		SELECT
+			(SELECT COUNT(*) FROM BRC_SURETY WHERE NO_REQ = A.NO_REQ) AS CN_SURETY,
+			A.NO_REQ,
+			A.CD_PATH,
+			A.CD_STATUS,
+			(CASE WHEN LENGTHB(B.DT_CB_AGREE) = 8 THEN SUBSTRB(B.DT_CB_AGREE, 1, 4) || '-' || SUBSTRB(B.DT_CB_AGREE, 5, 2) || '-' || SUBSTRB(B.DT_CB_AGREE, 7, 2)
+					 ELSE ' 'END) AS DT_CB_AGREE,
+			A.CD_PDT,
+			CASE WHEN A.AM_CUSTOM = 0 THEN NULL ELSE A.AM_CUSTOM / 10000 END AS AM_CUSTOM,
+			A.CD_REJECT,
+			A.CD_CANCEL,
+			A.NM_EKEYWORD,
+			A.ID_SCREEN,
+			TRIM(A.DS_SCREEN) AS DS_SCREEN,
+			B.DM_PROMISE,
+		    TO_CHAR(B.DM_PROMISE, 'YYYY-MM-DD') AS DM_PROMISE_YMD,
+		    TO_CHAR(B.DM_PROMISE, 'HH24') AS DM_PROMISE_HH,
+		    TO_CHAR(B.DM_PROMISE, 'MI') AS DM_PROMISE_MI,			
+			CASE
+                WHEN LENGTH(B.NO_CUSTOM) > 6 THEN SUBSTRB(B.NO_CUSTOM, 1, 6) || '-' || SUBSTRB(B.NO_CUSTOM, 7, 7) 
+                ELSE   TRIM(B.NO_CUSTOM)
+            END AS NO_CUSTOM,
+			B.NM_CUSTOM,
+			TRIM(B.DS_EMAIL) AS DS_EMAIL,
+			B.CD_MARRY,
+			B.CD_KND_MOBILE,
+			B.YN_NICE_SAFEKEY,
+			B.DS_NICE_SAFEKEY,
+			B.CN_SAFEKEY_EXT,
+			TRIM(B.NO_TEL1_MOBILE) AS NO_TEL1_MOBILE,
+			TRIM(B.NO_TEL2_MOBILE) AS NO_TEL2_MOBILE,
+			TRIM(B.NO_TEL3_MOBILE) AS NO_TEL3_MOBILE,
+			C.CD_JOB_KIND ,
+			C.CD_RANK ,
+			C.CD_JOB_ACT ,
+			C.CD_JOB_STATUS ,
+			TRIM(C.NM_COMP) AS NM_COMP ,
+			TRIM(C.NM_DEPT)  AS NM_DEPT,
+			(CASE WHEN LENGTHB(C.DT_REG_JOIN) = 8 THEN SUBSTRB(C.DT_REG_JOIN, 1, 4) || '-' || SUBSTRB(C.DT_REG_JOIN, 5, 2) || '-' || SUBSTRB(C.DT_REG_JOIN, 7, 2)
+                     ELSE ' ' END) AS DT_REG_JOIN,
+			TRIM(C.AM_PAY_MONTH /10000)  AS AM_PAY_MONTH,
+			TRIM(C.NO_MAINTEL1_COMP) AS NO_MAINTEL1_COMP ,
+			TRIM(C.NO_MAINTEL2_COMP) AS NO_MAINTEL2_COMP ,
+			TRIM(C.NO_MAINTEL3_COMP) AS NO_MAINTEL3_COMP,
+		    D.DS_CNT_CB AS DS_CNT_CB, 
+		    D.DS_AMT_CB AS DS_AMT_CB,
+		    D.DS_1ST_RANK AS DS_1ST_RANK,
+		    D.DS_2ND_RANK AS DS_2ND_RANK,
+		    TO_NUMBER(TRIM(D.DS_PI_RANK)) AS DS_PI_RANK,
+		    D.DS_ASS_RANK AS DS_ASS_RANK,
+		    (CASE 
+		        WHEN D.CD_TACTIC = '1' THEN '승인가능'
+		        WHEN D.CD_TACTIC = '9' THEN '승인불가'
+		        ELSE ' '
+		    END) AS CD_TACTIC		,
+		    (CASE 
+		        WHEN D.CD_TACTIC_LIMIT = '0' THEN '한도없음'
+		        WHEN D.CD_TACTIC_LIMIT = '1' THEN '한도상향'
+		        WHEN D.CD_TACTIC_LIMIT = '2' THEN '한도평준'
+		        WHEN D.CD_TACTIC_LIMIT = '3' THEN '한도하향'
+		        WHEN D.CD_TACTIC_LIMIT = '4' THEN '정밀심사'
+		        WHEN D.CD_TACTIC_LIMIT = '5' THEN '거절'
+		        ELSE ' '
+		    END) AS CD_TACTIC_LIMIT,
+		    TRIM(A.DS_COOPERATE) AS DS_COOPERATE,
+		    B.YN_CDT_INQUIRY,
+		    A.DS_ACCESS_IP,
+		    SUBSTRB(BCH.NO_POST_REAL, 1, 3) AS NO_POST_REAL_FRONT,
+		    SUBSTRB(BCH.NO_POST_REAL, 4, 3) AS NO_POST_REAL_REAR,
+		    BCH.DS_STRT_REAL,
+		    BCH.DS_ADDR_REAL,
+		    A.CD_RECRUIT_GROUP
+		FROM
+			BRC_LOAN A,
+			BRC_CUSTOM B,
+			BRC_CUSTOM_HOME BCH,
+			BRC_CUSTOM_COMPANY C,
+			FR_HSJCSS_MASTER@HSJ D
+		WHERE
+			A.NO_REQ = B.NO_REQ
+			AND
+			A.NO_REQ = C.NO_REQ
+			AND
+			A.NO_REQ = BCH.NO_REQ
+			AND			
+            A.NO_REQ = D.NO_UNIQUE(+)
+			AND
+            D.CD_BIZ_KIND (+)=  'BRG'
+            AND 
+            D.NO_SURETY (+) = ' ' 			
+		<if test="searchNoReq != null and searchNoReq != ''">
+			AND A.NO_REQ = #{searchNoReq}
+		</if>
+	</select>
+
+	<update id="updateBrcLoan" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		UPDATE BRC_LOAN T SET
+		<if test="cdCooperate != null and cdCooperate != ''">
+			T.CD_COOPERATE = #{cdCooperate},
+		</if>
+		<if test="noCooperate != null and noCooperate != ''">
+			T.NO_COOPERATE = #{noCooperate},
+		</if>
+		<if test="cdPath != null and cdPath != ''">
+			T.CD_PATH = #{cdPath},
+		</if>
+		<if test="cdStatus != null and cdStatus != ''">
+			T.CD_STATUS = #{cdStatus},
+		</if>
+		<if test="ynSurety != null and ynSurety != ''">
+			T.YN_SURETY = #{ynSurety},
+		</if>
+		<if test="cdPdt != null and cdPdt != ''">
+			T.CD_PDT = #{cdPdt},
+		</if>
+		<if test="dd != null and dd != ''">
+			T.DD = #{dd},
+		</if>
+		<if test="amCustom != null and amCustom != ''">
+			T.AM_CUSTOM = CASE WHEN #{amCustom} IS NULL OR #{amCustom} = 0 THEN 0 ELSE #{amCustom} * 10000 END ,
+		</if>
+		<if test="amCooperate != null and amCooperate != ''">
+			T.AM_COOPERATE = CASE WHEN #{amCooperate} IS NULL OR #{amCooperate} = 0 THEN 0 ELSE #{amCooperate} * 10000 END ,
+		</if>
+		<if test="amApp != null and amApp != ''">
+			T.AM_APP = CASE WHEN #{amApp} IS NULL OR #{amApp} = 0 THEN 0 ELSE #{amApp} * 10000 END ,
+		</if>
+		<if test="cdUse != null and cdUse != ''">
+			T.CD_USE = #{cdUse},
+		</if>
+		<if test="cdReject != null and cdReject != ''">
+			T.CD_REJECT = #{cdReject},
+		</if>
+		<if test="cdCancel != null and cdCancel != ''">
+            T.CD_CANCEL = #{cdCancel},
+        </if>
+		<if test="cdEchanel != null and cdEchanel != ''">
+			T.CD_ECHANEL = #{cdEchanel},
+		</if>
+		<if test="cdEportal != null and cdEportal != ''">
+			T.CD_EPORTAL = #{cdEportal},
+		</if>
+		<if test="nmEkeyword != null and nmEkeyword != ''">
+			T.NM_EKEYWORD = #{nmEkeyword},
+		</if>
+		<if test="cdEpath != null and cdEpath != ''">
+			T.CD_EPATH = #{cdEpath},
+		</if>		
+		<if test="idReceive != null and idReceive != ''">
+			T.ID_RECEIVE = #{idReceive},
+		</if>
+		<if test="idScreen != null and idScreen != ''">
+			T.ID_SCREEN = #{idScreen},
+		</if>
+		<if test="idAuth != null and idAuth != ''">
+			T.ID_AUTH = #{idAuth},
+		</if>
+		<if test="dsScreen != null and dsScreen != ''">
+			T.DS_SCREEN = #{dsScreen},
+		</if>
+		<if test="cdStatus.equals('71004')"><!--상담완료 상태변경시 상담완료일시 SET -->
+			T.DM_SCREEN = NVL(T.DM_SCREEN, SYSDATE),
+		</if>
+		<if test="cdStatus.equals('71005')"><!--상담종료 상태변경시 결재일시 SET -->
+			T.DM_AUTH = NVL(T.DM_AUTH, SYSDATE),
+		</if>
+		<if test="cdStatus.equals('71007') or cdStatus.equals('71008') or cdStatus.equals('71011') or cdStatus.equals('71012')">
+			T.DM_REJECT = NVL(T.DM_REJECT, SYSDATE),
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			T.ID_UPT = #{idUpt},
+		</if>
+		<if test="dsCooperate != null and dsCooperate != ''">
+			T.DS_COOPERATE = NVL(SUBSTRB(#{dsCooperate}, 1, 2500), ' '),
+		</if>		
+		<if test="cdRecruitGroup != null and cdRecruitGroup != ''">
+			T.CD_RECRUIT_GROUP = #{cdRecruitGroup},
+		</if>		
+		T.DM_UPT = SYSDATE
+		WHERE
+		T.NO_REQ = #{noReq}
+	</update>
+
+	<update id="updateBrcCustom" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		UPDATE BRC_CUSTOM SET
+		<if test="nmCustom != null and nmCustom != ''">
+			NM_CUSTOM = NVL(REPLACE(#{nmCustom,jdbcType=VARCHAR}, ' ', ''), ' '),
+		</if>
+		<if test="noCustom != null and noCustom != ''">
+			NO_CUSTOM = REPLACE(#{noCustom,jdbcType=VARCHAR}, '-', ''),
+		</if>
+		<if test="dtCbAgree != null and dtCbAgree != ''">
+			DT_CB_AGREE = REPLACE(#{dtCbAgree}, '-', ''),
+		</if>		
+		<if test="dmPromise != null and dmPromise != ''">
+			DM_PROMISE = TO_DATE(#{dmPromise}, 'YYYY-MM-DDHH24MI'),
+		</if>	
+		<if test="dmPromise == ''">
+            DM_PROMISE = NULL,
+        </if>       	
+		<if test="cdBank != null and cdBank != ''">
+			CD_BANK = #{cdBank,jdbcType=VARCHAR},
+		</if>
+		<if test="noBankAct != null and noBankAct != ''">
+			NO_BANK_ACT = #{noBankAct,jdbcType=VARCHAR},
+		</if>
+		<if test="dsEmail != null and dsEmail != ''">
+			DS_EMAIL = #{dsEmail,jdbcType=VARCHAR},
+		</if>
+		<if test="cdMarry != null and cdMarry != ''">
+			CD_MARRY = #{cdMarry,jdbcType=VARCHAR},
+		</if>
+		<if test="cdKndMobile != null and cdKndMobile != ''">
+			CD_KND_MOBILE = #{cdKndMobile,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel1Mobile != null and noTel1Mobile != ''">
+			NO_TEL1_MOBILE = #{noTel1Mobile,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel2Mobile != null and noTel2Mobile != ''">
+			NO_TEL2_MOBILE = #{noTel2Mobile,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel3Mobile != null and noTel3Mobile != ''">
+			NO_TEL3_MOBILE = #{noTel3Mobile,jdbcType=VARCHAR},
+		</if>
+		<if test="ynAuthMobile != null and ynAuthMobile != ''">
+			YN_AUTH_MOBILE = #{ynAuthMobile,jdbcType=VARCHAR},
+		</if>
+		<if test="ynNiceSafekey != null and ynNiceSafekey != ''">
+            YN_NICE_SAFEKEY = #{ynNiceSafekey,jdbcType=VARCHAR},
+        </if>
+		<if test="cdKndEtc != null and cdKndEtc != ''">
+			CD_KND_ETC = #{cdKndEtc,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel1Etc1 != null and noTel1Etc1 != ''">
+			NO_TEL1_ETC1 = #{noTel1Etc1,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel2Etc1 != null and noTel2Etc1 != ''">
+			NO_TEL2_ETC1 = #{noTel2Etc1,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel3Etc1 != null and noTel3Etc1 != ''">
+			NO_TEL3_ETC1 = #{noTel3Etc1,jdbcType=VARCHAR},
+		</if>
+		<if test="ynAuthEtc != null and ynAuthEtc != ''">
+			YN_AUTH_ETC = #{ynAuthEtc,jdbcType=VARCHAR},
+		</if>
+		<if test="noFax1 != null and noFax1 != ''">
+			NO_FAX1 = #{noFax1,jdbcType=VARCHAR},
+		</if>
+		<if test="noFax2 != null and noFax2 != ''">
+			NO_FAX2 = #{noFax2,jdbcType=VARCHAR},
+		</if>
+		<if test="noFax3 != null and noFax3 != ''">
+			NO_FAX3 = #{noFax3,jdbcType=VARCHAR},
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			ID_UPT = #{idUpt,jdbcType=VARCHAR},
+		</if>
+		<if test="ynCdtInquiry != null and ynCdtInquiry != ''" >
+			YN_CDT_INQUIRY = #{ynCdtInquiry,jdbcType=VARCHAR},
+		</if>		
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+	</update>
+	
+	<update id="updateBrcCustomHome" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		UPDATE BRC_CUSTOM_HOME SET
+		<if test="noPostRealFront != null and noPostRealFront != '' and noPostRealRear != null and noPostRealRear != ''" >
+			NO_POST_REAL = #{noPostRealFront,jdbcType=VARCHAR} || #{noPostRealRear,jdbcType=VARCHAR},
+		</if>
+		<if test="dsStrtReal != null and dsStrtReal != ''" >
+			DS_STRT_REAL = #{dsStrtReal,jdbcType=VARCHAR},
+		</if>
+		<if test="dsAddrReal != null and dsAddrReal != ''" >
+			DS_ADDR_REAL = #{dsAddrReal,jdbcType=VARCHAR},
+		</if>
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+	</update>	
+
+
+	<update id="updateBrcCustomCompany" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		UPDATE BRC_CUSTOM_COMPANY SET
+		<if test="cdJobKind != null and cdJobKind != ''">
+			CD_JOB_KIND = #{cdJobKind,jdbcType=VARCHAR},
+		</if>
+		<if test="cdRank != null and cdRank != ''">
+			CD_RANK = #{cdRank,jdbcType=VARCHAR},
+		</if>
+		<if test="cdJobAct != null and cdJobAct != ''">
+			CD_JOB_ACT = #{cdJobAct,jdbcType=VARCHAR},
+		</if>
+		<if test="cdJobStatus != null and cdJobStatus != ''">
+			CD_JOB_STATUS = #{cdJobStatus,jdbcType=VARCHAR},
+		</if>
+		<if test="nmComp != null and nmComp != ''">
+			NM_COMP = #{nmComp,jdbcType=VARCHAR},
+		</if>
+		<if test="nmDept != null and nmDept != ''">
+			NM_DEPT = #{nmDept,jdbcType=VARCHAR},
+		</if>
+		<if test="dtRegJoin != null and dtRegJoin != ''">
+			DT_REG_JOIN = NVL(REPLACE(#{dtRegJoin}, '-', ''),' '),
+		</if>
+		<if test="ddPay != null and ddPay != ''">
+			DD_PAY = #{ddPay,jdbcType=VARCHAR},
+		</if>
+		<if test="amPayMonth != null and amPayMonth != ''">
+		    AM_PAY_MONTH = CASE WHEN #{amPayMonth} IS NULL OR #{amPayMonth} = 0 THEN 0 ELSE #{amPayMonth} * 10000 END ,
+		</if>
+		<if test="noPostComp != null and noPostComp != ''">
+			NO_POST_COMP = #{noPostComp,jdbcType=VARCHAR},
+		</if>
+		<if test="dsStrtComp != null and dsStrtComp != ''">
+			DS_STRT_COMP = #{dsStrtComp,jdbcType=VARCHAR},
+		</if>
+		<if test="dsAddrComp != null and dsAddrComp != ''">
+			DS_ADDR_COMP = #{dsAddrComp,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel1Comp != null and noTel1Comp != ''">
+			NO_TEL1_COMP = #{noTel1Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel2Comp != null and noTel2Comp != ''">
+			NO_TEL2_COMP = #{noTel2Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noTel3Comp != null and noTel3Comp != ''">
+			NO_TEL3_COMP = #{noTel3Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noExtComp != null and noExtComp != ''">
+			NO_EXT_COMP = #{noExtComp,jdbcType=VARCHAR},
+		</if>
+		<if test="noMaintel1Comp != null and noMaintel1Comp != ''">
+			NO_MAINTEL1_COMP = #{noMaintel1Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noMaintel2Comp != null and noMaintel2Comp != ''">
+			NO_MAINTEL2_COMP = #{noMaintel2Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="noMaintel3Comp != null and noMaintel3Comp != ''">
+			NO_MAINTEL3_COMP = #{noMaintel3Comp,jdbcType=VARCHAR},
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			ID_UPT = #{idUpt,jdbcType=VARCHAR},
+		</if>
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+	</update>
+	
+	<update id="updateBrcCustomHash" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		UPDATE BRC_CUSTOM_HASH SET
+		<if test="noCustom != null and noCustom != ''">
+			NO_CUSTOM_HASH = SHA512_HASH(REPLACE(#{noCustom,jdbcType=VARCHAR}, '-', '')),
+		</if>
+		<if test="noTel1Mobile != null and noTel1Mobile != ''">
+			NO_TEL_MOBILE_HASH = SHA512_HASH(#{noTel1Mobile,jdbcType=VARCHAR}||#{noTel2Mobile,jdbcType=VARCHAR}||#{noTel3Mobile,jdbcType=VARCHAR}),
+		</if>
+		<if test="idUpt != null and idUpt != ''">
+			ID_UPT = #{idUpt,jdbcType=VARCHAR},
+		</if>
+		DM_UPT = SYSDATE
+		WHERE
+		NO_REQ = #{noReq}
+	</update>	
+
+    <select id="getBrcLoanMobilePhone" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO"
+        resultMap="brcLoanMobilePhone">
+        (
+        SELECT   
+            NM_CUSTOM
+            , '' AS NO_SURETY 
+            , NO_TEL1_MOBILE||NO_TEL2_MOBILE||NO_TEL3_MOBILE  AS NO_TEL_MOBILE_ALL
+        FROM 
+            BRC_CUSTOM 
+        WHERE NO_REQ = #{searchNoReq}
+        )
+        UNION ALL
+        (
+        SELECT   
+            NM_CUSTOM
+            , NO_SURETY
+            , NO_TEL1_MOBILE||NO_TEL2_MOBILE||NO_TEL3_MOBILE AS NO_TEL_MOBILE_ALL
+        FROM 
+            BRC_SURETY
+        WHERE NO_REQ = #{searchNoReq}
+        )
+    </select>
+    
+</mapper>
+
+
+

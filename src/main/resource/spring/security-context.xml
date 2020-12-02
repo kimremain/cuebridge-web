@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+          
+	<http pattern="/css/**" security="none"/>
+	<http pattern="/js/**" security="none"/>
+	<http pattern="/images/**" security="none"/>
+	<http pattern="/favicon.ico" security="none"/>
+	<http pattern="/error/**" security="none"/>          
+	<http pattern="/auth/login" security="none"/>
+	<http pattern="/auth/loginValidate" security="none"/>
+
+    <http auto-config='true' use-expressions="true">    
+		<!--사용자 관리-->
+		<intercept-url pattern="/st/user/**" access="hasAnyRole('72199','72103')"/>
+		<!--사용자 권한관리-->
+		<intercept-url pattern="/st/permission/**" access="hasAnyRole('72199')"/>
+		<!--사용자 로그-->
+		<intercept-url pattern="/st/userlog/**" access="hasAnyRole('72199')"/>
+		<!--거래처정보-->
+		<intercept-url pattern="/st/customer/**" access="hasAnyRole('72199')"/>
+		<!--대출과목관리-->
+		<intercept-url pattern="/st/pdt/**" access="hasAnyRole('72199')"/>
+		<!--그룹코드관리-->
+		<intercept-url pattern="/st/groupcode/**" access="hasAnyRole('72199')"/>
+		<!--코드관리-->
+		<intercept-url pattern="/st/code/**" access="hasAnyRole('72199')"/>
+		<!--시스템주요설정-->
+		<intercept-url pattern="/st/setting/**" access="hasAnyRole('72199')"/>
+		<!--프로그램 관리-->
+		<intercept-url pattern="/st/program/**" access="hasAnyRole('72199')"/>
+		<!--SMS 발송내역-->
+		<intercept-url pattern="/st/smssend/**" access="hasAnyRole('72199','72103')"/>
+		<!--접수내역-->
+		<intercept-url pattern="/brc/loan/**" access="hasAnyRole('72199','72103','72102')"/>
+		<!--접수보증인내역-->
+		<intercept-url pattern="/brc/surety/**" access="hasAnyRole('72199','72103','72102')"/>
+		<!--약속자리스트-->
+		<intercept-url pattern="/brc/promise/**" access="hasAnyRole('72199','72103','72102')"/>
+		<!--스탭별리스트-->
+		<intercept-url pattern="/brc/loanall/**" access="hasAnyRole('72199','72103','72102')"/>
+		<!--데이터추출-->
+		<intercept-url pattern="/brc/excel/**" access="hasAnyRole('72199','72103')"/>
+		<!--IVR미스콜-->
+		<intercept-url pattern="/brc/misscall/**" access="hasAnyRole('72199','72103')"/>
+		<!--대출심사현황-->
+		<intercept-url pattern="/bex/master/**" access="hasAnyRole('72199','72103','72102')"/>
+		<!--심사기표보정-->
+		<intercept-url pattern="/bex/syncscreen/**" access="hasAnyRole('72199','72103')"/>
+		<!--연계검사 팝업-->
+		<intercept-url pattern="/brc/search/**" access="isAuthenticated()"/>
+		<!--신규등록 팝업-->
+		<intercept-url pattern="/brc/loanregist/**" access="isAuthenticated()"/>
+		<!--주의 전화번호-->
+		<intercept-url pattern="/st/noticetel/**" access="isAuthenticated()"/>
+		<!--파일리소스 다운로드-->
+		<intercept-url pattern="/common/file/**" access="isAuthenticated()"/>
+		<!--이미지파일 뷰어-->
+		<intercept-url pattern="/common/imageview/**" access="isAuthenticated()"/>
+		<!--재접수 기능-->
+		<intercept-url pattern="/brc/loancopy/**" access="isAuthenticated()"/>
+		<!--린커스 통화메모-->
+		<intercept-url pattern="/brc/lincuscontact/**" access="isAuthenticated()"/>
+		<!--첨부파일 관리-->
+		<intercept-url pattern="/brc/attach/**" access="isAuthenticated()"/>
+		<!--실행현황메모 팝업-->
+		<intercept-url pattern="/bex/contact/**" access="isAuthenticated()"/>
+		<!--메모이력-->
+		<intercept-url pattern="/brc/contact/**" access="isAuthenticated()"/>
+		<!--문자발송-->
+		<intercept-url pattern="/brc/contact/sendsms/**" access="isAuthenticated()"/>
+		<!--웹팩스/MMS 리스트-->
+		<intercept-url pattern="/brc/imagelist/**" access="isAuthenticated()"/>
+		<!--비대면 관리대장-->
+		<intercept-url pattern="/brc/loantm/**" access="isAuthenticated()"/>
+    	
+        <form-login login-page="/auth/login"
+                    username-parameter="idUser"
+                    password-parameter="dsPwd"    
+                    login-processing-url="/auth/loginProcess"
+                    authentication-success-handler-ref="customLoginSuccessHandler"
+                    authentication-failure-url="/auth/login"
+                    />
+		<!-- <logout logout-success-url="/auth/login" invalidate-session="true" delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE" /> -->
+		
+        <!-- <session-management session-fixation-protection="migrateSession"/> -->
+        <!-- <session-management session-fixation-protection="none"/> -->
+<!--         <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+            <concurrency-control max-sessions="1" expired-url="/error/expired/select"/>
+        </session-management> -->
+    </http>
+    <authentication-manager>
+        <authentication-provider ref="customAuthenticationProvider"/>
+    </authentication-manager>
+     
+    <beans:bean id="customAuthenticationProvider" class="com.jcuesoft.cuebridge.auth.provider.CustomAuthenticationProvider">
+     	<!-- <beans:property name="postOnly" value="false"/> -->
+    </beans:bean>
+    <beans:bean id="customLoginSuccessHandler" class="com.jcuesoft.cuebridge.auth.provider.CustomLoginSuccessHandler"></beans:bean>
+	<!-- Role Level  -->
+<!-- 	<beans:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+	<beans:property name="hierarchy">
+	<beans:value>    
+		72199 > 72103
+		72103 > 72102
+		72102 > 72101
+	</beans:value>
+	</beans:property> 
+	</beans:bean> -->
+
+</beans:beans>
+
+

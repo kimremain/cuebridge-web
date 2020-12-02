@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.stUser">
+
+	<resultMap id="StUserResultMap" type="com.jcuesoft.cuebridge.st.vo.StUserResponseVO">
+		<id column="NO" property="no" jdbcType="DECIMAL" />
+		<result column="ID_USER" property="idUser" jdbcType="VARCHAR" />
+		<result column="NM_USER" property="nmUser" jdbcType="VARCHAR" />
+		<result column="DS_PWD" property="dsPwd" jdbcType="VARCHAR" />
+		<result column="CD_TEAM" property="cdTeam" jdbcType="VARCHAR" />
+		<result column="CD_PART" property="cdPart" jdbcType="VARCHAR" />
+		<result column="CD_RANK" property="cdRank" jdbcType="VARCHAR" />
+		<result column="YN_RESIGN" property="ynResign" jdbcType="VARCHAR" />
+		<result column="NO_HP" property="noHp" jdbcType="VARCHAR" />
+		<result column="DS_EMAIL" property="dsEmail" jdbcType="VARCHAR" />
+		<result column="DS_IP" property="dsIp" jdbcType="VARCHAR" />
+		<result column="YN_ADMIN" property="ynAdmin" jdbcType="VARCHAR" />
+		<result column="YN_SCREEN" property="ynScreen" jdbcType="VARCHAR" />
+		<result column="YN_CONFIRM" property="ynConfirm" jdbcType="VARCHAR" />
+		<result column="YN_BATCH" property="ynBatch" jdbcType="VARCHAR" />
+		<result column="YN_RECEIVER" property="ynReceiver" jdbcType="VARCHAR" />
+		<result column="YN_PRINT" property="ynPrint" jdbcType="VARCHAR" />
+		<result column="YN_ROLE" property="ynRole" jdbcType="VARCHAR" />
+		<result column="ID_ROLE" property="idRole" jdbcType="VARCHAR" />
+		<result column="DM_REG" property="dmReg" jdbcType="TIMESTAMP" />
+		<result column="ID_REG" property="idReg" jdbcType="VARCHAR" />
+		<result column="DM_UPT" property="dmUpt" jdbcType="TIMESTAMP" />
+		<result column="ID_UPT" property="idUpt" jdbcType="VARCHAR" />
+		<result column="CN_SCREEN_MAX" property="cnScreenMax" jdbcType="VARCHAR" />
+		<result column="CD_SCREEN_RATIO" property="cdScreenRatio" jdbcType="VARCHAR" />
+		<result column="YN_SCREEN_ASSIGN" property="ynScreenAssign" jdbcType="VARCHAR" />
+		<result column="CD_ROLE_APPLY" property="cdRoleApply" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getStUserList" parameterType="com.jcuesoft.cuebridge.st.vo.StUserRequestVO"
+		resultMap="StUserResultMap">
+		SELECT
+		    NO, 
+		    ID_USER, 
+		    NM_USER, 
+		    DS_PWD, 
+			(SELECT
+			GET_NM_TEAM(CD_TEAM) FROM DUAL) AS CD_TEAM,		    
+			(SELECT
+			GET_NM_CD(CD_PART) FROM DUAL) AS CD_PART,		 			
+		    CD_RANK, 
+		    YN_RESIGN, 
+		    NO_HP, 
+		    DS_EMAIL, 
+		    DS_IP, 
+		    YN_ADMIN, 
+		    YN_SCREEN, 
+		    YN_CONFIRM, 
+		    YN_BATCH, 
+		    YN_RECEIVER, 
+		    YN_PRINT, 
+		    YN_ROLE, 
+		    ID_ROLE, 
+		    DM_REG, 
+		    ID_REG, 
+		    DM_UPT, 
+		    ID_UPT,
+		    CN_SCREEN_MAX,
+			(SELECT
+			GET_NM_CD(CD_SCREEN_RATIO) FROM DUAL) AS CD_SCREEN_RATIO,		    
+		    YN_SCREEN_ASSIGN,
+		    CD_ROLE_APPLY
+		FROM
+			ST_USER
+		WHERE 1=1
+		<if test="searchIdUser != null and searchIdUser != ''">
+            AND ID_USER = #{searchIdUser}
+        </if>
+		<if test="searchNmUser != null and searchNmUser != ''">
+			AND NM_USER LIKE  '%'||#{searchNmUser}||'%'  
+		</if>
+		<if test="searchCdTeam != null and searchCdTeam != ''">
+			AND CD_TEAM = #{searchCdTeam}
+		</if>		
+		<if test="searchYnResign != null and searchYnResign != ''">
+            AND YN_RESIGN = #{searchYnResign}
+        </if>     
+        <if test="searchYnScreen != null and searchYnScreen != ''">
+            AND YN_SCREEN = #{searchYnScreen}
+        </if>   
+        <if test="searchYnConfirm != null and searchYnConfirm != ''">
+            AND YN_CONFIRM = #{searchYnConfirm}
+        </if>   
+        <if test="searchYnScreenAssign != null and searchYnScreenAssign != ''">
+            AND YN_SCREEN_ASSIGN = #{searchYnScreenAssign}
+        </if>              
+		ORDER BY
+		NO DESC
+	</select>
+	
+	<select id="getStUserOne" parameterType="com.jcuesoft.cuebridge.st.vo.StUserRequestVO"
+		resultMap="StUserResultMap">
+		SELECT
+		    NO, 
+		    ID_USER, 
+		    NM_USER, 
+		    DS_PWD, 
+			CD_TEAM,		    
+		    CD_PART, 
+		    CD_RANK, 
+		    YN_RESIGN, 
+		    NO_HP, 
+		    DS_EMAIL, 
+		    DS_IP, 
+		    YN_ADMIN, 
+		    YN_SCREEN, 
+		    YN_CONFIRM, 
+		    YN_BATCH, 
+		    YN_RECEIVER, 
+		    YN_PRINT, 
+		    YN_ROLE, 
+		    ID_ROLE, 
+		    DM_REG, 
+		    ID_REG, 
+		    DM_UPT, 
+		    ID_UPT,
+		    CN_SCREEN_MAX,
+		    CD_SCREEN_RATIO,
+		    YN_SCREEN_ASSIGN,
+		    CD_ROLE_APPLY
+		FROM
+			ST_USER
+		WHERE 1=1
+		<if test="searchNo != null and searchNo != ''">
+			AND NO = #{searchNo}
+		</if>		
+	</select>	
+	
+	<update id="updateStUser" parameterType="com.jcuesoft.cuebridge.st.vo.StUserRequestVO">
+		UPDATE ST_USER SET
+	      <if test="nmUser != null" >
+	        NM_USER = #{nmUser},
+	      </if>
+	      <if test="dsPwd != null" >
+	        DS_PWD = #{dsPwd},
+	      </if>
+	      <if test="cdTeam != null" >
+	        CD_TEAM = #{cdTeam},
+	      </if>
+	      <if test="cdPart != null" >
+	        CD_PART = #{cdPart},
+	      </if>
+	      <if test="cdRank != null" >
+	        CD_RANK = #{cdRank},
+	      </if>
+	      <if test="ynResign != null" >
+	        YN_RESIGN = #{ynResign},
+	      </if>
+	      <if test="noHp != null" >
+	        NO_HP = #{noHp},
+	      </if>	
+	      <if test="dsEmail != null" >
+	        DS_EMAIL = #{dsEmail},
+	      </if>
+	      <if test="dsIp != null" >
+	        DS_IP = #{dsIp},
+	      </if>
+	      <if test="ynAdmin != null" >
+	        YN_ADMIN = #{ynAdmin},
+	      </if>
+	      <if test="ynScreen != null" >
+	        YN_SCREEN = #{ynScreen},
+	      </if>
+	      <if test="ynConfirm != null" >
+	        YN_CONFIRM = #{ynConfirm},
+	      </if>
+	      <if test="ynBatch != null" >
+	        YN_BATCH = #{ynBatch},
+	      </if>
+	      <if test="ynReceiver != null" >
+	        YN_RECEIVER = #{ynReceiver},
+	      </if>
+	      <if test="ynPrint != null" >
+	        YN_PRINT = #{ynPrint},
+	      </if>
+	      <if test="ynRole != null" >
+	        YN_ROLE = #{ynRole},
+	      </if>
+	      <if test="idRole != null" >
+	        ID_ROLE = #{idRole},
+	      </if>
+	       <if test="cnScreenMax != null" >
+            CN_SCREEN_MAX = #{cnScreenMax},
+          </if>
+	       <if test="cdScreenRatio != null" >
+            CD_SCREEN_RATIO = #{cdScreenRatio},
+          </if>
+	       <if test="ynScreenAssign != null" >
+            YN_SCREEN_ASSIGN = #{ynScreenAssign},
+          </if>                    
+	      <if test="cdRoleApply != null" >
+	        CD_ROLE_APPLY = #{cdRoleApply},
+	      </if>
+	      <if test="idUpt != null" >
+	        ID_UPT = #{idUpt},
+	      </if>	      
+		    DM_UPT = SYSDATE 
+		WHERE
+		    NO = #{no}      
+	</update>	
+
+</mapper>

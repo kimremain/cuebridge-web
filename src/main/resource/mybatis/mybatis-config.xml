@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis/mybatis-3-config.dtd">
+<configuration>
+
+  <!-- <DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+    <!DOCTYPE configuration SYSTEM " "> -->
+
+
+  <settings>
+    <setting name="jdbcTypeForNull" value="NULL"/>
+    <!-- <setting name="logImpl" value="LOG4J" /> -->
+    <setting name="cacheEnabled" value="true" />
+    <!-- <setting name="lazyLoadingEnabled" value="true" /> -->
+    <setting name="multipleResultSetsEnabled" value="true" />
+    <setting name="useColumnLabel" value="true" />
+    <setting name="useGeneratedKeys" value="false" />
+    <setting name="defaultExecutorType" value="REUSE" />
+    <setting name="defaultStatementTimeout" value="600" />
+  </settings>
+
+  <plugins>
+    <plugin interceptor="com.jcuesoft.cuebridge.common.pagination.OffsetLimitInterceptor">
+      <property name="dialectClass" value="com.jcuesoft.cuebridge.common.pagination.support.OracleDialect" />
+      <property name="asyncTotalCount" value="true"/>
+    </plugin>
+    
+    <!-- <plugin interceptor="com.jcuesoft.cuebridge.common.pagination.DefaultParameterHandler"/> -->
+  </plugins>
+  
+  <mappers>    
+    <mapper resource="mybatis/mapper/AuthDAO.xml" />
+    <mapper resource="mybatis/mapper/CommonCacheDAO.xml" />
+    <mapper resource="mybatis/mapper/CommonBizDAO.xml" />
+    <mapper resource="mybatis/mapper/StProgramDAO.xml" />
+    <mapper resource="mybatis/mapper/StPdtDAO.xml" />
+    <mapper resource="mybatis/mapper/StPermissionDAO.xml" />
+    <mapper resource="mybatis/mapper/StCustomerDAO.xml" />
+    <mapper resource="mybatis/mapper/StUserDAO.xml" />
+    <mapper resource="mybatis/mapper/StUserLogDAO.xml" />
+    <mapper resource="mybatis/mapper/StGroupCodeDAO.xml" />
+    <mapper resource="mybatis/mapper/StCodeDAO.xml" />
+    <mapper resource="mybatis/mapper/StSettingDAO.xml" />
+    <mapper resource="mybatis/mapper/StNoticeTelDAO.xml" />
+    <mapper resource="mybatis/mapper/StSmssendDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcSuretyDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcLoanDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcSearchDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcLoanInfoDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcLoanAllDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcFileDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcImageListDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcSmsDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcContactDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcPromiseDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcMisscallDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcExcelReportDAO.xml" />
+    <mapper resource="mybatis/mapper/BexMasterDAO.xml" />
+    <mapper resource="mybatis/mapper/BexContactDAO.xml" />
+    <mapper resource="mybatis/mapper/BexToUpsDAO.xml" />
+    <mapper resource="mybatis/mapper/BexToActCashDAO.xml" />
+    <mapper resource="mybatis/mapper/BexToAdvanceDAO.xml" />
+    <mapper resource="mybatis/mapper/BexToA1DAO.xml" />
+    <mapper resource="mybatis/mapper/BexToBridgeDAO.xml" />
+    <mapper resource="mybatis/mapper/BexToTaekangDAO.xml" />
+    <mapper resource="mybatis/mapper/BexToSanwaDAO.xml" />
+    <mapper resource="mybatis/mapper/BrcReAppDAO.xml" />
+  </mappers>
+</configuration>

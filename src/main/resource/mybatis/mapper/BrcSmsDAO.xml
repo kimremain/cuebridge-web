@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.sms">
+
+	 <resultMap id="brcSmsMessageResult"
+        type="com.jcuesoft.cuebridge.brc.vo.BrcSmsResponseVO">
+        <result property="no"  column="NO" />
+        <result property="smsDiv"  column="SMS_DIV" />
+        <result property="message" column="MESSAGE" />
+        <result property="shortMessage" column="SHORT_MESSAGE" />
+        <result property="noTelForMms" column="NO_TEL_FOR_MMS" />
+    </resultMap>
+    
+    <resultMap id="brcSmsnNumberResult"
+        type="com.jcuesoft.cuebridge.brc.vo.BrcSmsResponseVO">
+        <result property="sendPhone"  column="SEND_PHONE" />
+        <result property="sendTeamCode"  column="SEND_TEAM_CODE" />
+    </resultMap>
+
+    <select id="getSmsMessage" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSmsRequestVO"
+        resultMap="brcSmsMessageResult">
+        SELECT
+            NO 
+            , SMS_DIV
+            , MESSAGE 
+            , SUBSTRB(MESSAGE,1,30)  AS SHORT_MESSAGE
+        FROM 
+            SMS_MSG@UPS 
+        WHERE 
+            SMS_DIV = #{searchDiv} 
+        ORDER BY 
+            NO ASC 
+    </select>
+    
+    <select id="getSmsMessageOne" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSmsRequestVO"
+        resultMap="brcSmsMessageResult">
+        SELECT
+            MESSAGE 
+        FROM 
+            SMS_MSG@UPS 
+        WHERE  
+            NO = #{searchSmsNo}
+    </select>
+    
+    
+    <!-- 신규추진부,접수1팀  -->
+    <select id="getSendNumber" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSmsRequestVO"
+        resultMap="brcSmsnNumberResult">
+       SELECT   
+            CASE 
+                WHEN CODE = 'Y1004' THEN 1
+                WHEN CODE = 'S1010' THEN 1
+                WHEN CODE = 'M1010' THEN 1  
+                ELSE 2 
+            END AS SORT_GBN,       
+            PH11||PH12||PH13 AS SEND_PHONE 
+            , CODE   AS SEND_TEAM_CODE
+       FROM 
+            BRANCH@ERP A 
+       WHERE 
+            CODE
+             IN
+             <foreach collection="searchRcvNo" item="item" index="index" separator="," open="(" close=")">
+                 #{item}
+             </foreach>
+        UNION ALL
+        SELECT
+            3 AS SORT_GBN,
+            NO_SMS_RCV AS SEND_PHONE,
+            ' ' AS SEND_TEAM_CODE
+        FROM
+            ST_COMP            
+        ORDER BY
+            SORT_GBN                
+    </select>
+    
+     <select id="getSmsSeq" resultType="String">
+        SELECT
+              SC_TRAN_SEQ.NEXTVAL
+        FROM
+            DUAL
+    </select>
+    
+     <select id="getMmsSeq" resultType="String">
+        SELECT
+              MMS_MSG_SEQ.NEXTVAL
+        FROM
+            DUAL
+    </select>        
+    
+    <insert id="insertSms" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSmsRequestVO">
+		INSERT INTO SC_TRAN
+		(
+		    TR_NUM ,
+		    TR_SENDDATE , 
+		    TR_SENDSTAT ,
+		    TR_MSGTYPE ,
+		    TR_PHONE ,
+		    TR_CALLBACK , 
+		    TR_MSG,
+		    TR_ETC1
+		) 
+		VALUES 
+		(
+		    #{seq} , 
+		    SYSDATE, 
+		    '0', 
+		    '0', 
+		    #{rcvPhnId} ,
+		    #{sndPhnId} ,
+		    #{sndMsg} ,
+		    #{noReq} 
+		)
+    </insert>    
+    
+    <insert id="insertMms" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcSmsRequestVO">
+		INSERT INTO MMS_MSG 
+		(
+		    MSGKEY, 
+		    SUBJECT, 
+		    PHONE, 
+		    CALLBACK, 
+		    STATUS, 
+		    REQDATE, 
+		    MSG, 
+		    TYPE,
+		    ETC1
+		)
+		VALUES
+		(
+		    #{seq},
+		    null, 
+		    #{rcvPhnId} ,
+		    #{sndPhnId} ,
+		    '0', 
+		    SYSDATE,
+		    #{sndMsg} ,		     
+		    '0',
+		    #{noReq}    
+		)
+    </insert>     
+    
+	<select id="getMmsInfo" resultMap="brcSmsMessageResult">
+        SELECT
+            NO,
+            (SELECT NO_SMS_RCV FROM ST_COMP WHERE ROWNUM <![CDATA[<= ]]>  1) AS NO_TEL_FOR_MMS 
+        FROM 
+            SMS_MSG@UPS 
+        WHERE  
+            SMS_DIV = '17501'
+        	AND
+        	MESSAGE LIKE '[서류안내]서류 첨부하여 문자발송부탁드립니다%' 
+        	AND
+            ROWNUM <![CDATA[<= ]]>  1
+    </select>     
+
+</mapper>
+    

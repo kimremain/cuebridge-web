@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.StUserLogDAO">
+
+  <resultMap id="StUserLogResultMap" type="com.jcuesoft.cuebridge.st.vo.StUserLogResponseVO">
+    <id column="NO" property="no" jdbcType="DECIMAL" />
+    <result column="ID_USER" property="idUser" jdbcType="VARCHAR" />
+    <result column="NO_SEQ" property="noSeq" jdbcType="VARCHAR" />
+    <result column="NO_REQ" property="noReq" jdbcType="VARCHAR" />
+    <result column="NM_USER" property="nmUser" jdbcType="VARCHAR" />
+    <result column="DS_PGM" property="dsPgm" jdbcType="VARCHAR" />
+    <result column="CD_USER_ACTION" property="cdUserAction" jdbcType="VARCHAR" />
+    <result column="DS_REMK" property="dsRemk" jdbcType="VARCHAR" />
+    <result column="DM_REG" property="dmReg"/>
+    <result column="ID_REG" property="idReg" jdbcType="VARCHAR" />
+    <result column="DM_UPT" property="dmUpt" />
+    <result column="ID_UPT" property="idUpt" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getStUserLogPageList" parameterType="org.springframework.data.domain.Pageable" resultMap="StUserLogResultMap">
+      SELECT
+        NO,
+        ID_USER,
+        ID_USER || '-' || NO NO_SEQ,
+        NO_REQ,
+        (SELECT GET_NM_USER(ID_USER) FROM DUAL) AS NM_USER,
+        (SELECT DS_PGM FROM ST_PGM WHERE DS_PGM_ID = A.DS_PGM_ID) DS_PGM,
+        (SELECT GET_NM_CD(CD_USER_ACTION) FROM DUAL) AS CD_USER_ACTION,
+        DS_REMK,
+        DM_REG
+    FROM
+        ST_USER_LOG A
+    WHERE 1=1
+    <if test="searchDmRegFrom != null and searchDmRegFrom != ''">
+      AND DM_REG <![CDATA[>=]]>
+      TO_DATE(#{searchDmRegFrom},'YYYY-MM-DD')
+    </if>
+    <if test="searchDmRegTo != null and searchDmRegTo != ''">
+      AND DM_REG <![CDATA[<]]>
+      TO_DATE(#{searchDmRegTo}, 'YYYY-MM-DD') + 1
+    </if>
+    <if test="searchIdUser != null and searchIdUser != ''">
+      AND ID_USER = #{searchIdUser}
+    </if>
+    <if test="searchDsPgmId != null and searchDsPgmId != ''">
+      AND DS_PGM_ID = #{searchDsPgmId}
+    </if>
+     <if test="searchCdUserAction != null and searchCdUserAction != ''">
+        AND CD_USER_ACTION = #{searchCdUserAction}
+    </if>
+     ORDER BY NO DESC 
+  </select>
+    
+  <insert id="insertStUserLog" parameterType="com.jcuesoft.cuebridge.st.vo.StUserLogRequestVO">
+    INSERT INTO ST_USER_LOG (
+    NO
+    ,ID_USER
+    ,NO_SEQ
+    ,NO_REQ
+    ,DS_PGM_ID
+    ,CD_USER_ACTION
+    ,DS_REMK
+    ,DM_REG
+    ,ID_REG
+    ,ID_UPT
+    ) VALUES (
+    ST_USER_LOG_SEQ.NEXTVAL
+    ,NVL(#{idUser}, ' ')
+    <!-- 모델링 설계 미스하여 비지니스일련번호 삽입 제외하고 유저아이디+시퀀스로 대체한다 -->
+	<!--     ,NVL((SELECT MAX(NO_SEQ)+1 FROM ST_USER_LOG WHERE ID_USER = #{idUser}), 1) -->
+    ,NVL(#{idUser}, ' ')
+    ,NVL(#{noReq}, ' ')
+    ,NVL((SELECT DS_PGM_ID FROM ST_PGM WHERE DS_URL=#{dsUrl}), ' ')
+    ,NVL(#{cdUserAction}, ' ')
+    ,NVL(#{dsRemk}, ' ')
+    ,SYSDATE
+    ,NVL(#{idUser}, ' ')
+    ,' '
+    )
+  </insert>
+
+</mapper>

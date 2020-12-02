@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexToA1DAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.bex.vo.BexToA1VO" id="bexToA1Result">
+    	<result property="ds_url" column="ds_url" />
+		<result property="pro_code" column="pro_code" />
+		<result property="com_code" column="com_code" />
+		<result property="cooperate_code" column="cooperate_code" />
+		
+		<result property="info_coll_path" column="info_coll_path" />
+		<result property="coll_m1" column="coll_m1" />
+		<result property="coll_m1_memo99" column="coll_m1_memo99" />
+		<result property="coll_a1" column="coll_a1" />
+		<result property="coll_a1_memo1" column="coll_a1_memo1" />
+		<result property="coll_a1_memo99" column="coll_a1_memo99" />
+		<result property="coll_a2" column="coll_a2" />
+		<result property="coll_a2_memo99" column="coll_a2_memo99" />
+		<result property="coll_date" column="coll_date" />
+		<result property="coll_agent_name" column="coll_agent_name" />
+		<result property="coll_ceo_name" column="coll_ceo_name" />
+		<result property="coll_manager_name" column="coll_manager_name" />
+		
+		<result property="name" column="name" />
+		<result property="ssn11" column="ssn11" />
+		<result property="ssn12" column="ssn12" />
+		<result property="ph11" column="ph11" />
+		<result property="ph12" column="ph12" />
+		<result property="ph13" column="ph13" />
+		<result property="ph21" column="ph21" />
+		<result property="ph22" column="ph22" />
+		<result property="ph23" column="ph23" />		
+				
+		<result property="app_money" column="app_money" />
+		
+		<result property="job_class" column="job_class" />
+		<result property="A_com_name" column="A_com_name" />
+
+		<result property="A_ph31" column="A_ph31" />
+		<result property="A_ph32" column="A_ph32" />
+		<result property="A_ph33" column="A_ph33" />
+		<result property="A_ph51" column="A_ph51" />
+		<result property="A_ph52" column="A_ph52" />
+		<result property="A_ph53" column="A_ph53" />
+		<result property="A_com_part" column="A_com_part" />
+		<result property="A_worker_term_year" column="A_worker_term_year" />
+		<result property="A_worker_term_month" column="A_worker_term_month" />
+		<result property="A_pay" column="A_pay" />
+		<result property="img_url1" column="img_url1" />
+		<result property="img_url2" column="img_url2" />
+		<result property="img_url3" column="img_url3" />
+		
+		<result property="img_type1" column="img_type1" />
+		<result property="img_type2" column="img_type2" />
+		<result property="img_type3" column="img_type3" />
+		<result property="memo" column="memo" />
+		<result property="G1_name" column="G1_name" />
+		<result property="G1_ssn11" column="G1_ssn11" />
+		<result property="G1_ssn12" column="G1_ssn12" />
+		<result property="G1_ph21" column="G1_ph21" />
+		<result property="G1_ph22" column="G1_ph22" />
+		<result property="G1_ph23" column="G1_ph23" />
+		<result property="agent_level" column="agent_level" />
+		<result property="agent_app_date" column="agent_app_date" />
+		<result property="agent_name" column="agent_name" />
+		<result property="agent_ssn" column="agent_ssn" />
+		<result property="agent_assn" column="agent_assn" />
+		<result property="agent_ph11" column="agent_ph11" />
+		<result property="agent_ph12" column="agent_ph12" />
+		<result property="agent_ph13" column="agent_ph13" />
+
+    </resultMap>
+    
+    <select id="getBexToA1" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexToA1Result">
+        SELECT
+            (SELECT DS_URL FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS ds_url,
+		    CASE 
+		        WHEN (SELECT CD_SALES FROM ST_PDT WHERE CD_PDT = A.CD_PDT) = '72002' THEN '10842' 
+		        WHEN (SELECT CD_SALES FROM ST_PDT WHERE CD_PDT = A.CD_PDT) = '72004' THEN '10848'
+		        ELSE '10813' 
+		    END  AS pro_code,
+            <!-- CASE WHEN A.CD_PDT IN ('21856', '21857', '21883', '21888', '21889', '21895' ,'21816', '21817', '21818') THEN '10842' ELSE '10813' END AS pro_code, -->
+            (SELECT DS_ID FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS com_code,      
+            D.NO_COOPERATE AS cooperate_code,
+            CASE WHEN BIL.CD_INFO_COLLECT IS NULL THEN 'A'
+                     WHEN BIL.CD_INFO_COLLECT = '71601' THEN 'A'
+                     WHEN BIL.CD_INFO_COLLECT = '71602' THEN 'B'
+                     ELSE 'A'
+            END AS info_coll_path,                 
+            CASE
+                WHEN BIL.CD_INFO_COLLECT = '71602' THEN ' ' 
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71401' THEN '1' 
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71402' THEN '2' 
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71403' THEN '3' 
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71404' THEN '4'
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST = '71405' THEN '5' 
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CONTACT_CUST IS NOT NULL THEN '99' 
+                WHEN A.CD_PATH IN ('70401', '70402') THEN '2'
+                WHEN A.CD_PATH IN ('70403', '70404') THEN '1'
+                ELSE '99'
+            END AS coll_m1,
+            BIL.DS_CONTACT_CUST AS coll_m1_memo99,
+            CASE
+            	WHEN BIL.CD_INFO_COLLECT = '71601' THEN ' ' 
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CONTACT_AGENT = '71801' THEN '1' 
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CONTACT_AGENT = '71899' THEN '99' 
+                WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CONTACT_AGENT IS NOT NULL THEN '99'       	
+				ELSE ' ' 
+			END AS coll_a1,        
+            ' ' AS coll_a1_memo1, 									
+			' ' AS coll_a1_memo99,
+            CASE
+            	WHEN BIL.CD_INFO_COLLECT = '71601' THEN ' ' 
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71701' THEN '1'
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71702' THEN '2' 
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71703' THEN '3' 
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71704' THEN '4' 
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71705' THEN '5'  
+            	WHEN BIL.CD_INFO_COLLECT = '71602' AND BIL.CD_CALL_AGENT = '71799' THEN '99' 
+                WHEN BIL.CD_INFO_COLLECT = '71601' AND BIL.CD_CALL_AGENT IS NOT NULL THEN '99'       	
+				ELSE ' ' 
+			END AS coll_a2, 				                 
+			BIL.DS_CONTACT_AGENT AS  coll_a2_memo99,
+            NVL(TO_CHAR(TO_DATE(BIL.DT_AGENT, 'YYYYMMDD'), 'YYYY-MM-DD'), TO_CHAR(A.DM_REG, 'YYYY-MM-DD')) AS coll_date,
+            NVL(BIL.NM_AGENT, SC.NM_COMP) AS coll_agent_name,
+            NVL(BIL.NM_AGENT_CEO, SC.NM_CEO) AS coll_ceo_name,
+            NVL(BIL.NM_AGENT_MANAGER, (SELECT NM_USER FROM ST_USER WHERE ID_USER = A.ID_SCREEN)) AS coll_manager_name, 
+            B.NM_CUSTOM AS name,
+            SUBSTRB(B.NO_CUSTOM, 1, 6) AS ssn11,
+            SUBSTRB(B.NO_CUSTOM, 7, 1) AS ssn12,              
+            ' ' AS ph11,
+            ' ' AS ph12,
+            ' ' AS ph13,                            
+            B.NO_TEL1_MOBILE AS ph21,
+            B.NO_TEL2_MOBILE AS ph22,
+            B.NO_TEL3_MOBILE AS ph23,
+            NVL(A.AM_CUSTOM, 0) / 10000 AS app_money,
+            'A' AS job_class,
+            C.NM_COMP AS A_com_name,
+            C.NO_MAINTEL1_COMP AS A_ph31,
+            C.NO_MAINTEL2_COMP AS A_ph32,
+            C.NO_MAINTEL3_COMP AS A_ph33,
+            ' ' AS A_ph51,
+            ' ' AS A_ph52,
+            ' ' AS A_ph53,
+            C.NM_DEPT AS A_com_part,
+            SUBSTRB(C.DT_REG_JOIN, 1, 4) AS A_worker_term_year,
+            SUBSTRB(C.DT_REG_JOIN, 5, 2) AS A_worker_term_month,
+            C.AM_PAY_MONTH / 10000 AS A_pay,
+            NVL(G.URL_ATTACH_FILE1, ' ') AS img_url1,
+            NVL(G.URL_ATTACH_FILE2, ' ') AS img_url2,
+            NVL(G.URL_ATTACH_FILE3, ' ') AS img_url3,
+            ' ' AS img_type1,
+            ' ' AS img_type2,
+            ' ' AS img_type3,
+            A.DS_COOPERATE AS memo,
+            NVL(E.NM_CUSTOM, ' ') AS G1_name,
+            SUBSTRB(E.NO_CUSTOM, 1, 6) AS G1_ssn11,
+            SUBSTRB(E.NO_CUSTOM, 7, 1) AS G1_ssn12,
+            E.NO_TEL1_MOBILE as G1_ph21,
+            E.NO_TEL2_MOBILE as G1_ph22,
+            E.NO_TEL3_MOBILE as G1_ph23,
+            NVL(BSP.agent_level, 1) AS agent_level,
+            NVL(BSP.agent_app_date, TO_CHAR(SYSDATE, 'YYYY-MM-DD')) AS agent_app_date,
+            NVL(BSP.agent_name, SC.NM_COMP) AS agent_name,
+            NVL(BSP.agent_ssn, SC.NO_LOAN) AS agent_ssn,
+            NVL(BSP.agent_ph11, NVL(SUBSTRB(SC.NO_TEL_ARS, 1, 4), ' ')) AS agent_ph11,
+            NVL(BSP.agent_ph12, NVL(SUBSTRB(SC.NO_TEL_ARS, 5, 4), ' ')) AS agent_ph12,
+            NVL(BSP.agent_ph13, NVL(SUBSTRB(SC.NO_TEL_ARS, 9, 4), ' ')) AS agent_ph13,
+            NVL(BSP.agent_assn, SC.NO_SOCIETY) AS agent_assn
+        FROM
+            BRC_LOAN A,
+            BRC_CUSTOM B,
+            BRC_CUSTOM_COMPANY C,
+            BEX_MASTER D,
+            BRC_SURETY E,
+            BRC_SURETY_COMPANY F,
+            BRC_INFO_LEGAL BIL,
+            ST_COMP SC,            
+            (SELECT
+                NO_REQ,
+                MAX(URL_ATTACH_FILE1) AS URL_ATTACH_FILE1,
+                MAX(URL_ATTACH_FILE2) AS URL_ATTACH_FILE2,
+                MAX(URL_ATTACH_FILE3) AS URL_ATTACH_FILE3,
+                MAX(URL_ATTACH_FILE4) AS URL_ATTACH_FILE4,
+                MAX(URL_ATTACH_FILE5) AS URL_ATTACH_FILE5,
+                MAX(URL_ATTACH_FILE6) AS URL_ATTACH_FILE6,
+                MAX(URL_ATTACH_FILE7) AS URL_ATTACH_FILE7,
+                MAX(URL_ATTACH_FILE8) AS URL_ATTACH_FILE8,
+                MAX(URL_ATTACH_FILE9) AS URL_ATTACH_FILE9,
+                MAX(URL_ATTACH_FILE10) AS URL_ATTACH_FILE10
+            FROM
+            (
+                SELECT
+                    NO_REQ,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 1 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE1,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 2 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE2,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 3 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE3,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 4 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE4,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 5 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE5,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 6 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE6,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 7 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE7,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 8 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE8,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 9 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE9,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_IMG) = 10 THEN DS_PATH || NM_FILE ELSE ' ' END AS URL_ATTACH_FILE10
+                FROM
+                    BRC_FILE    
+                WHERE
+                    NO_REQ = #{noReq}
+            )        
+            GROUP BY
+                NO_REQ) G        ,
+            (
+            SELECT 
+               MAX(NO_REQ) AS NO_REQ,
+               RTRIM (XMLAGG (XMLELEMENT (E, TO_NUMBER(NO_SUPPLY) || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || (TO_NUMBER(MAX(NO_SUPPLY))+1) agent_level,
+               RTRIM (XMLAGG (XMLELEMENT (E, TO_CHAR(TO_DATE(DT_SUPPLY, 'YYYYMMDD'), 'YYYY-MM-DD') || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || TO_CHAR(SYSDATE, 'YYYY-MM-DD') agent_app_date,
+               RTRIM (XMLAGG (XMLELEMENT (E, NM_SUPPLY || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NM_COMP) agent_name,
+               RTRIM (XMLAGG (XMLELEMENT (E, NO_SUPPLY_LOAN || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NO_LOAN) agent_ssn,
+               RTRIM (XMLAGG (XMLELEMENT (E, NO_SUPPLY_SOCIETY || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || MAX(C.NO_SOCIETY) agent_assn,
+               RTRIM (XMLAGG (XMLELEMENT (E, NVL(SUBSTRB(NO_SUPPLY_TEL, 1, 4), ' ') || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || NVL(SUBSTRB(MAX(C.NO_TEL_ARS), 1, 4), ' ') agent_ph11,
+               RTRIM (XMLAGG (XMLELEMENT (E, NVL(SUBSTRB(NO_SUPPLY_TEL, 5, 4), ' ') || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || NVL(SUBSTRB(MAX(C.NO_TEL_ARS), 5, 4), ' ') agent_ph12,
+               RTRIM (XMLAGG (XMLELEMENT (E, NVL(SUBSTRB(NO_SUPPLY_TEL, 9, 4), ' ') || ',') ORDER BY NO_SUPPLY).EXTRACT ('//text()'), ',') || ',' || NVL(SUBSTRB(MAX(C.NO_TEL_ARS), 9, 4), ' ') agent_ph13
+            FROM 
+               BRC_SUPPLY,
+               ST_COMP C
+            WHERE   
+                NO_REQ = #{noReq}
+            GROUP BY 
+               NO_REQ            
+            ) BSP                
+        WHERE
+            A.NO_REQ = B.NO_REQ
+            AND
+            A.NO_REQ = C.NO_REQ
+            AND
+            A.NO_REQ = D.NO_REQ
+            AND
+            A.NO_REQ = E.NO_REQ(+)
+            AND
+            E.NO_SURETY (+) = '001'
+            AND
+            A.NO_REQ = F.NO_REQ(+)
+            AND
+            F.NO_SURETY (+) = '001'
+            AND
+            A.NO_REQ = G.NO_REQ(+)
+            AND 
+            A.NO_REQ = BIL.NO_REQ(+)
+            AND 
+            A.NO_REQ = BSP.NO_REQ(+)
+            AND
+            D.NO_REQ = #{noReq}
+		    AND
+		    D.NO_EX = #{noEx}
+    </select>	  
+
+</mapper>
+

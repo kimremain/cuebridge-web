@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.common.dao.CommonCacheDAO">
+
+	<cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true" />
+
+	<resultMap id="codeResult" type="com.jcuesoft.cuebridge.common.vo.CodeVO">
+		<result property="code" column="cd" />
+		<result property="text" column="nm_cd" />
+	</resultMap>
+
+	<resultMap id="StSetupResultMap" type="com.jcuesoft.cuebridge.st.vo.StSetupVO">
+		<result column="YN_DAILY_BATCH" jdbcType="VARCHAR" property="ynDailyBatch" />
+		<result column="YN_ONLINE_BATCH" jdbcType="VARCHAR" property="ynOnlineBatch" />
+		<result column="YN_USER_MSG" jdbcType="VARCHAR" property="ynUserMsg" />
+		<result column="DS_NICE_CD" jdbcType="VARCHAR" property="dsNiceCd" />
+		<result column="DS_NICE_TCP_ID" jdbcType="VARCHAR" property="dsNiceTcpId" />
+		<result column="DS_NICE_FTP_ID" jdbcType="VARCHAR" property="dsNiceFtpId" />
+		<result column="DS_NICE_FTP_PWD" jdbcType="VARCHAR" property="dsNiceFtpPwd" />
+		<result column="DS_NAS_IMG_PATH" jdbcType="VARCHAR" property="dsNasImgPath" />
+		<result column="DS_NAS_WAV_PATH" jdbcType="VARCHAR" property="dsNasWavPath" />
+		<result column="DM_REG" jdbcType="TIMESTAMP" property="dmReg" />
+		<result column="ID_REG" jdbcType="VARCHAR" property="idReg" />
+		<result column="DM_UPT" jdbcType="TIMESTAMP" property="dmUpt" />
+		<result column="ID_UPT" jdbcType="VARCHAR" property="idUpt" />
+	</resultMap>
+
+	<resultMap id="StCompResultMap" type="com.jcuesoft.cuebridge.st.vo.StCompVO">
+		<result column="NM_COMP" jdbcType="VARCHAR" property="nmComp" />
+		<result column="NM_COMP_SHORT" jdbcType="VARCHAR" property="nmCompShort" />
+		<result column="NM_COMP_ENG" jdbcType="VARCHAR" property="nmCompEng" />
+		<result column="NM_COMP_SHORT_ENG" jdbcType="VARCHAR" property="nmCompShortEng" />
+		<result column="NM_CEO" jdbcType="VARCHAR" property="nmCeo" />
+		<result column="NO_BUSINESS" jdbcType="VARCHAR" property="noBusiness" />
+		<result column="DS_HOMEPAGE" jdbcType="VARCHAR" property="dsHomepage" />
+		<result column="NO_TEL_ARS" jdbcType="VARCHAR" property="noTelArs" />
+		<result column="NO_TEL1" jdbcType="VARCHAR" property="noTel1" />
+		<result column="NO_TEL2" jdbcType="VARCHAR" property="noTel2" />
+		<result column="NO_TEL3" jdbcType="VARCHAR" property="noTel3" />
+		<result column="NO_TEL1_FAX" jdbcType="VARCHAR" property="noTel1Fax" />
+		<result column="NO_TEL2_FAX" jdbcType="VARCHAR" property="noTel2Fax" />
+		<result column="NO_TEL3_FAX" jdbcType="VARCHAR" property="noTel3Fax" />
+		<result column="NO_POST" jdbcType="VARCHAR" property="noPost" />
+		<result column="DS_STRT" jdbcType="VARCHAR" property="dsStrt" />
+		<result column="DS_ADDR" jdbcType="VARCHAR" property="dsAddr" />
+		<result column="NO_TEL1_BRCH" jdbcType="VARCHAR" property="noTel1Brch" />
+		<result column="NO_TEL2_BRCH" jdbcType="VARCHAR" property="noTel2Brch" />
+		<result column="NO_TEL3_BRCH" jdbcType="VARCHAR" property="noTel3Brch" />
+		<result column="NO_TEL1_BRCH_FAX" jdbcType="VARCHAR" property="noTel1BrchFax" />
+		<result column="NO_TEL2_BRCH_FAX" jdbcType="VARCHAR" property="noTel2BrchFax" />
+		<result column="NO_TEL3_BRCH_FAX" jdbcType="VARCHAR" property="noTel3BrchFax" />
+		<result column="NO_POST_BRCH" jdbcType="VARCHAR" property="noPostBrch" />
+		<result column="DS_STRT_BRCH" jdbcType="VARCHAR" property="dsStrtBrch" />
+		<result column="DS_ADDR_BRCH" jdbcType="VARCHAR" property="dsAddrBrch" />
+		<result column="DM_REG" jdbcType="TIMESTAMP" property="dmReg" />
+		<result column="ID_REG" jdbcType="VARCHAR" property="idReg" />
+		<result column="DM_UPT" jdbcType="TIMESTAMP" property="dmUpt" />
+		<result column="ID_UPT" jdbcType="VARCHAR" property="idUpt" />
+	</resultMap>
+
+
+	<select id="getStSetupOne" resultMap="StSetupResultMap" useCache="false">
+		SELECT
+		YN_DAILY_BATCH ,
+		YN_ONLINE_BATCH ,
+		YN_USER_MSG ,
+		DS_NICE_CD ,
+		DS_NICE_TCP_ID ,
+		DS_NICE_FTP_ID ,
+		DS_NICE_FTP_PWD ,
+		DS_NAS_IMG_PATH ,
+		DS_NAS_WAV_PATH ,
+		DM_REG ,
+		ID_REG ,
+		DM_UPT ,
+		ID_UPT
+		FROM
+		ST_SETUP
+		WHERE ROWNUM <![CDATA[<=1]]>
+	</select>
+	
+	<select id="getDsNasImgPath" resultType="String" useCache="false">
+		SELECT
+		DS_NAS_IMG_PATH 
+		FROM
+		ST_SETUP
+		WHERE ROWNUM <![CDATA[<=1]]>
+	</select>
+
+	<select id="getStCompOne" resultMap="StCompResultMap" useCache="false">
+		SELECT
+			NM_COMP ,
+			NM_COMP_SHORT,
+			NM_COMP_ENG ,
+			NM_COMP_SHORT_ENG,
+			NM_CEO ,
+			NO_BUSINESS ,
+			DS_HOMEPAGE ,
+			NO_TEL_ARS ,
+			NO_TEL1 ,
+			NO_TEL2 ,
+			NO_TEL3 ,
+			NO_TEL1_FAX ,
+			NO_TEL2_FAX ,
+			NO_TEL3_FAX ,
+			NO_POST ,
+			DS_STRT ,
+			DS_ADDR ,
+			NO_TEL1_BRCH ,
+			NO_TEL2_BRCH ,
+			NO_TEL3_BRCH ,
+			NO_TEL1_BRCH_FAX,
+			NO_TEL2_BRCH_FAX ,
+			NO_TEL3_BRCH_FAX ,
+			NO_POST_BRCH ,
+			DS_STRT_BRCH ,
+			DS_ADDR_BRCH ,
+			DM_REG ,
+			ID_REG ,
+			DM_UPT ,
+			ID_UPT
+		FROM
+		ST_COMP
+		WHERE ROWNUM <![CDATA[<=1]]>
+	</select>
+
+	<select id="getStCodeList" parameterType="String" resultMap="codeResult"
+		useCache="false">
+		SELECT
+		CD
+		,NM_CD
+		FROM
+		ST_CODE
+		WHERE
+		CD_GROUP = #{cdGroup}
+		AND
+		YN_USE = 'Y'
+		ORDER BY
+		TO_NUMBER(NO_ORDER) ASC
+	</select>
+	
+	<select id="getStCodeListWithBlank" parameterType="String" resultMap="codeResult"
+		useCache="false">
+		SELECT
+		CD
+		,NM_CD
+        ,TO_NUMBER(NO_ORDER) AS NO_ORDER
+		FROM
+		ST_CODE
+		WHERE
+		CD_GROUP = #{cdGroup}
+		AND
+		YN_USE = 'Y'
+        UNION ALL
+		SELECT
+		' ' AS CD
+		,'미입력' NM_CD
+        ,98 AS NO_ORDER
+		FROM
+		DUAL
+		ORDER BY
+		NO_ORDER ASC
+	</select>	
+
+	<select id="getStPdtList" resultMap="codeResult" useCache="false">
+		SELECT
+		CD_PDT AS CD
+		,NM_PDT AS NM_CD
+		FROM
+		ST_PDT
+		WHERE
+		YN_USE = 'Y'
+		<!-- AND CD_COOPERATE = '70302' -->
+		ORDER BY
+		NM_CD ASC
+	</select>
+	
+	<select id="getStPgmList" resultMap="codeResult" useCache="false">
+        SELECT
+        DS_PGM_ID AS CD
+        ,DS_PGM AS NM_CD
+        FROM
+        ST_PGM
+        ORDER BY
+        DS_PGM ASC
+    </select>
+
+	<select id="getStTeamList" resultMap="codeResult" useCache="false">
+		SELECT
+		CD_TEAM AS CD,
+		NM_TEAM AS NM_CD
+		FROM
+		ST_TEAM
+		WHERE
+		YN_CLOSE = 'N'
+		ORDER BY
+		NO_ORDER ASC
+	</select>
+    
+    <select id="getStUserList" resultMap="codeResult" useCache="false">
+       SELECT
+        ID_USER AS CD,
+        NM_USER AS NM_CD
+        FROM
+        ST_USER
+        WHERE
+        YN_RESIGN = 'N'
+        ORDER BY
+        NM_USER ASC
+    </select>    
+    
+	<select id="getStUserListScreen" resultMap="codeResult" useCache="false">
+       SELECT
+        ID_USER AS CD,
+        NM_USER AS NM_CD
+        FROM
+        ST_USER
+        WHERE
+        YN_RESIGN = 'N'
+        AND YN_SCREEN = 'Y'
+        ORDER BY
+        NM_USER ASC
+    </select>    
+
+	<select id="getEmailList" resultMap="codeResult" useCache="false">
+		SELECT '@naver.com' AS CD, '@naver.com' AS NM_CD FROM DUAL UNION ALL
+		SELECT '@hanmail.net' AS CD, '@hanmail.net' AS NM_CD FROM DUAL UNION
+		ALL
+		SELECT '@daum.net' AS CD, '@daum.net' AS NM_CD FROM DUAL UNION ALL
+		SELECT '@nate.com' AS CD, '@nate.com' AS NM_CD FROM DUAL UNION ALL
+		SELECT '@yahoo.co.kr' AS CD, '@yahoo.co.kr' AS NM_CD FROM DUAL UNION
+		ALL
+		SELECT '@yahoo.com' AS CD, '@yahoo.com' AS NM_CD FROM DUAL UNION
+		ALL
+		SELECT '@hotmail.com' AS CD, '@hotmail.com' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '@msn.com' AS CD, '@msn.com' AS NM_CD FROM DUAL UNION
+		ALL
+		SELECT '@gmail.com' AS CD, '@gmail.com' AS NM_CD FROM DUAL UNION
+		ALL
+		SELECT '@lycos.co.kr' AS CD, '@lycos.co.kr' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '@korea.com' AS CD, '@korea.com' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '@empal.com' AS CD, '@empal.com' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '@hanmir.com' AS CD, '@hanmir.com' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '@dreamwiz.com' AS CD, '@dreamwiz.com' AS NM_CD FROM
+		DUAL UNION ALL
+		SELECT '@cyworld.com' AS CD, '@cyworld.com' AS NM_CD
+		FROM DUAL UNION ALL
+		SELECT '@paran.com' AS CD, '@paran.com' AS NM_CD
+		FROM DUAL UNION ALL
+		SELECT '@sayclub.com' AS CD, '@sayclub.com' AS
+		NM_CD FROM DUAL UNION ALL
+		SELECT '@empas.com' AS CD, '@empas.com' AS
+		NM_CD FROM DUAL UNION ALL
+		SELECT '@hananet.net' AS CD, '@hananet.net'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '@netian.com' AS CD, '@netian.com'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '@freechal.com' AS CD,
+		'@freechal.com' AS NM_CD FROM DUAL
+	</select>
+
+	<select id="getHHList" resultMap="codeResult" useCache="false">
+		SELECT
+		'07' AS CD, '07' AS NM_CD FROM DUAL UNION ALL
+		SELECT '08' AS CD, '08'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '09' AS CD, '09' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '10' AS CD, '10' AS NM_CD FROM DUAL
+        UNION ALL
+		SELECT '11' AS CD, '11' AS NM_CD FROM DUAL UNION ALL
+		SELECT
+		'12' AS CD, '12' AS NM_CD FROM DUAL UNION ALL
+		SELECT '13' AS CD, '13'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '14' AS CD, '14' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '15' AS CD, '15' AS NM_CD FROM DUAL UNION ALL
+		SELECT
+		'16' AS CD, '16' AS NM_CD FROM DUAL UNION ALL
+		SELECT '17' AS CD, '17'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '18' AS CD, '18' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '19' AS CD, '19' AS NM_CD FROM DUAL UNION ALL
+		SELECT
+		'20' AS CD, '20' AS NM_CD FROM DUAL UNION ALL
+		SELECT '21' AS CD, '21'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '22' AS CD, '22' AS NM_CD FROM DUAL
+	</select>
+
+	<select id="getMIList" resultMap="codeResult" useCache="false">
+		SELECT
+		'05' AS CD, '05' AS NM_CD FROM DUAL UNION ALL
+		SELECT '10' AS CD, '10'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '15' AS CD, '15' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '20' AS CD, '20' AS NM_CD FROM DUAL UNION ALL
+		SELECT
+		'25' AS CD, '25' AS NM_CD FROM DUAL UNION ALL
+		SELECT '30' AS CD, '30'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '35' AS CD, '35' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '40' AS CD, '40' AS NM_CD FROM DUAL UNION ALL
+		SELECT
+		'45' AS CD, '45' AS NM_CD FROM DUAL UNION ALL
+		SELECT '50' AS CD, '50'
+		AS NM_CD FROM DUAL UNION ALL
+		SELECT '55' AS CD, '55' AS NM_CD FROM DUAL
+		UNION ALL
+		SELECT '00' AS CD, '00' AS NM_CD FROM DUAL
+	</select>
+
+</mapper>

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.contact">
+
+	<resultMap id="brcContactResult"
+		type="com.jcuesoft.cuebridge.brc.vo.BrcContactResponseVO">
+		<result property="no" column="NO" />
+		<result property="noReq" column="NO_REQ" />
+		<result property="noContactSeq" column="NO_CONTACT_SEQ" />
+		<result property="cdCallKind" column="CD_CALL_KIND" />
+		<result property="cdCaller" column="CD_CALLER" />
+		<result property="cdCallLocal" column="CD_CALL_LOCAL" />
+		<result property="ynImportant" column="YN_IMPORTANT" />
+		<result property="dmPromise" column="DM_PROMISE" />
+		<result property="ynRecord" column="YN_RECORD" />
+		<result property="noRecord" column="NO_RECORD" />
+		<result property="dsMemo" column="DS_MEMO" />
+		<result property="dmReg" column="DM_REG" />
+		<result property="idReg" column="ID_REG" />
+		<result property="dmUpt" column="DM_UPT" />
+		<result property="idUpt" column="ID_UPT" />
+	</resultMap>
+	
+	   <resultMap id="brcContactSmsResult"
+        type="com.jcuesoft.cuebridge.brc.vo.BrcContactResponseVO">
+        <result property="no" column="NO" />
+        <result property="noReq" column="NO_REQ" />
+        <result property="noContactSeq" column="NO_CONTACT_SEQ" />
+        <result property="dsMemo" column="DS_MEMO" />
+        <result property="dmReg" column="DM_REG" />
+        <result property="idReg" column="ID_REG" />
+        
+        <result property="rcvPhnId" column="RCV_PHN_ID" />
+        <result property="sndPhnId" column="SND_PHN_ID" />
+        <result property="nmResult" column="NM_RESULT" />
+        </resultMap>
+	
+	
+	
+	    
+
+
+	<select id="getContactList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO"
+		resultMap="brcContactResult">
+		SELECT
+			NO no        
+			, NO_REQ 
+			, NO_CONTACT_SEQ 
+			, CD_CONTACT 
+			, CD_CALL_KIND 
+			, CD_CALLER 
+			, CD_CALL_LOCAL 
+			, YN_IMPORTANT 
+			, DM_PROMISE 
+			, YN_RECORD 
+			, NO_RECORD   
+			, REPLACE(DS_MEMO , CHR(13) || CHR(10) , '<![CDATA[<br>]]>') DS_MEMO 
+			, DM_REG
+			, ID_REG 
+			, (SELECT GET_NM_USER(ID_REG) FROM DUAL)  nmReg
+			, DM_UPT 
+			, ID_UPT 
+		FROM
+		    BRC_CONTACT
+		WHERE 
+            NO_REQ = #{searchNoReq}
+            <if test="cdContact != null and cdContact != ''">
+            AND CD_CONTACT = #{cdContact}
+            </if>
+		ORDER BY
+		NO DESC
+	</select>
+	
+	<select id="getContactSmsList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO"
+        resultMap="brcContactSmsResult">
+		SELECT
+		     NO NO        
+		     , NO_REQ 
+		     , NO_CONTACT_SEQ 
+		     , REPLACE(DS_MEMO , CHR(13) || CHR(10) , '<![CDATA[<BR>]]>') DS_MEMO 
+		     , DM_REG 
+		     , ID_REG 
+		     , NO_CONTACT_MODEL
+		     , (SELECT GET_NM_USER(ID_REG) FROM DUAL)  NMREG
+		     , CASE 
+                WHEN BC.CD_ETC1 = 'LINCUS_SMS' THEN (SELECT RCV_PHN_ID FROM TBL_SMS@ERP WHERE CMP_MSG_ID = BC.NO_CONTACT_MODEL)
+                WHEN BC.CD_ETC1 = 'LG_MMS' THEN NVL((SELECT PHONE FROM MMS_LOG WHERE MSGKEY = BC.NO_CONTACT_MODEL AND ETC1 = BC.NO_REQ),
+                														(SELECT PHONE FROM MMS_MSG WHERE MSGKEY = BC.NO_CONTACT_MODEL AND ETC1 = BC.NO_REQ))
+                WHEN BC.CD_ETC1 = 'LG_SMS' THEN NVL((SELECT TR_PHONE FROM SC_LOG WHERE TR_NUM = BC.NO_CONTACT_MODEL AND TR_ETC1 = BC.NO_REQ),
+                														(SELECT TR_PHONE FROM SC_TRAN WHERE TR_NUM = BC.NO_CONTACT_MODEL AND TR_ETC1 = BC.NO_REQ))
+		       END AS RCV_PHN_ID     
+		     , CASE 
+                WHEN BC.CD_ETC1 = 'LINCUS_SMS' THEN (SELECT SND_PHN_ID FROM TBL_SMS@ERP WHERE CMP_MSG_ID = BC.NO_CONTACT_MODEL)
+                WHEN BC.CD_ETC1 = 'LG_MMS' THEN NVL((SELECT CALLBACK FROM MMS_LOG WHERE MSGKEY = BC.NO_CONTACT_MODEL AND ETC1 = BC.NO_REQ),
+                														(SELECT CALLBACK FROM MMS_MSG WHERE MSGKEY = BC.NO_CONTACT_MODEL AND ETC1 = BC.NO_REQ))
+                WHEN BC.CD_ETC1 = 'LG_SMS' THEN NVL((SELECT TR_CALLBACK FROM SC_LOG WHERE TR_NUM = BC.NO_CONTACT_MODEL AND TR_ETC1 = BC.NO_REQ),
+                														(SELECT TR_CALLBACK FROM SC_TRAN WHERE TR_NUM = BC.NO_CONTACT_MODEL AND TR_ETC1 = BC.NO_REQ))
+		       END AS SND_PHN_ID
+		     , CASE 
+                WHEN BC.CD_ETC1 = 'LINCUS_SMS' THEN NULL
+                WHEN BC.CD_ETC1 = 'LG_MMS' THEN NVL((SELECT SUBSTRB(NM_CD, 1, 40) FROM ST_CODE_SMS 
+		        														    WHERE CD_KIND = 'LGMMS' AND CD = (SELECT RSLT FROM MMS_LOG 
+																															            WHERE MSGKEY = BC.NO_CONTACT_MODEL 
+																															            AND ETC1 = BC.NO_REQ)), '발송대기중')
+                WHEN BC.CD_ETC1 = 'LG_SMS' THEN NVL((SELECT SUBSTRB(NM_CD, 1, 40) FROM ST_CODE_SMS 
+		        														    WHERE CD_KIND = 'LGSMS' AND CD = (SELECT TR_RSLTSTAT FROM SC_LOG 
+																															            WHERE TR_NUM = BC.NO_CONTACT_MODEL 
+																															            AND TR_ETC1 = BC.NO_REQ)), '발송대기중')
+		       END AS NM_RESULT                
+		FROM
+		    BRC_CONTACT BC
+		WHERE 
+		    NO_REQ = #{searchNoReq}
+		    AND 
+		    CD_CONTACT =  '71202' 
+		    AND  
+		    NO_CONTACT_MODEL > '0'      
+		ORDER BY 
+		    NO DESC        
+    </select>
+	
+	<select id="getContactListForTooltip" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO"
+		resultMap="brcContactResult">
+		SELECT
+			NO no        
+			, NO_REQ 
+			, DS_MEMO 
+		FROM
+		    BRC_CONTACT
+        WHERE 
+            NO_REQ IN (SELECT
+                           NO_REQ
+                       FROM
+                           BRC_LOAN
+<!--                        WHERE
+                           ID_SCREEN = #{idReg} -->
+                           )
+		ORDER BY
+		NO DESC
+	</select>	
+	
+	<select id="getContactReqList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO"
+        resultMap="brcContactResult">
+        SELECT
+            NO no        
+            , NO_REQ 
+            , NO_CONTACT_SEQ 
+            , REPLACE(DS_MEMO , CHR(13) || CHR(10) , '<![CDATA[<br>]]>') DS_MEMO 
+            , DM_REG
+            , ID_REG 
+            , (SELECT GET_NM_USER(ID_REG) FROM DUAL)  nmReg
+            , DM_UPT 
+            , ID_UPT 
+        FROM
+            BRC_CONTACT
+		WHERE        
+		        NO_REQ in
+		        <foreach collection="searchContactNoReq" item="item" index="index" separator="," open="(" close=")">
+		            #{item}
+		        </foreach>
+		        <if test="cdContact != null and cdContact != ''">
+	            AND CD_CONTACT = #{cdContact}
+	            </if>
+	    ORDER BY
+             NO DESC
+    </select>
+
+	<select id="getContactOne" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO"
+		resultMap="brcContactResult">
+		SELECT
+            NO no        
+            , NO_REQ noReq
+            , NO_CONTACT_SEQ noContactSeq
+            , CD_CALL_KIND cdCallKind
+            , CD_CALLER cdCaller
+            , CD_CALL_LOCAL cdCallLocal
+            , YN_IMPORTANT ynImportant
+            , DM_PROMISE dmPromise
+            , YN_RECORD ynRecord
+            , NO_RECORD noRecord  
+            , DS_MEMO dsMemo
+            , DM_REG dmReg
+            , ID_REG idReg
+            , DM_UPT dmUpt
+            , ID_UPT idUpt
+        FROM
+            BRC_CONTACT
+        WHERE 
+            NO = #{no}
+	</select>
+
+	<insert id="insertContact" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO">
+		INSERT INTO BRC_CONTACT (
+			NO
+			, NO_REQ
+			, NO_CONTACT_SEQ
+			, NO_CONTACT_MODEL
+			, CD_CONTACT
+			, CD_CALL_KIND
+			, CD_CALLER
+			, CD_CALL_LOCAL
+			, YN_IMPORTANT 
+	        , DM_PROMISE
+	        , YN_RECORD 
+	        , NO_RECORD   
+	        , DS_MEMO 
+			, DM_REG
+			, ID_REG
+			, CD_ETC1			
+		) VALUES (
+			BRC_CONTACT_SEQ.nextval
+			, #{noReq}
+			, (select  LPAD(nvl(max(NO_CONTACT_SEQ)+1,1),5,'0') from BRC_CONTACT where NO_REQ = #{noReq} )
+			, #{noContactModel}
+			, #{cdContact}
+			, NVL(#{cdCallKind}, ' ') 
+			, NVL(#{cdCaller}, ' ')
+			, NVL(#{cdCallLocal}, ' ')
+			, NVL(#{ynImportant}, 'N')
+			 ,#{dmPromise}
+			, NVL(#{ynRecord}, 'N')
+			, NVL(#{noRecord}, ' ')
+			, #{dsMemo}
+			, sysdate
+			, #{idReg}
+			, NVL(#{cdEtc1}, ' ')					
+		)
+	</insert>
+	
+	<insert id="insertLincusCommunication" parameterType="com.jcuesoft.cuebridge.common.vo.LincusCommunicationVO">
+       INSERT INTO COMMUNICATION_${tableNumber}@${dbLink}
+       (
+            NO
+            , MEMBER_LIST_NO
+            , COMMUNICATION_CODE
+            , MEMO
+            , SAVE_TIME
+            , SAVE_STATUS
+            , WORKER_ID
+       )
+       VALUES   
+       (
+            COMMUNICATION_${tableNumber}_NO_SEQ.NEXTVAL@${dbLink}
+            , #{memberListNo}
+            , #{communicationCode}
+            , #{memo}
+            , DATE_TO_TIME@${dbLink}(SYSDATE)
+            , #{saveStatus}
+            , #{workerId}
+       )
+    </insert>
+	
+	
+    
+    <update id="updateContact" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO">
+        UPDATE BRC_CONTACT SET
+        DS_MEMO = #{dsMemo}
+        ,DM_UPT = SYSDATE
+        ,ID_UPT = #{idUpt}
+        where
+        NO = #{no}
+    </update>
+    
+     <update id="updateContactDate" parameterType="String">
+        UPDATE BRC_LOAN SET
+            DM_CONTACT = SYSDATE
+        WHERE
+            NO_REQ = #{noReq}
+    </update>
+    
+    
+	<delete id="deleteContact" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcContactRequestVO">
+		DELETE BRC_CONTACT WHERE NO = #{no}
+	</delete>
+
+	
+
+</mapper>
+    

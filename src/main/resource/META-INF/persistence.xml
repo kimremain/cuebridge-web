@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="bridge_youi" transaction-type="RESOURCE_LOCAL">
+		<properties>
+            <property name="datanucleus.NontransactionalRead" value="true"/>
+            <property name="datanucleus.NontransactionalWrite" value="true"/>
+            <property name="datanucleus.ConnectionURL" value="appengine"/>
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.1.1.28:1521:BRG"/>
+            <property name="javax.persistence.jdbc.user" value="bridge_youi"/>
+            <property name="javax.persistence.jdbc.password" value="jcu2soft1115"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+			<!-- Configure connection pool. -->
+            <property name="eclipselink.connection-pool.default.initial" value="3" />
+            <property name="eclipselink.connection-pool.default.min" value="3" />
+            <property name="eclipselink.connection-pool.default.max" value="5" />            
+        </properties>
+	</persistence-unit>
+	<persistence-unit name="bridge_star" transaction-type="RESOURCE_LOCAL">
+		<properties>
+            <property name="datanucleus.NontransactionalRead" value="true"/>
+            <property name="datanucleus.NontransactionalWrite" value="true"/>
+            <property name="datanucleus.ConnectionURL" value="appengine"/>
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.1.1.28:1521:BRG"/>
+            <property name="javax.persistence.jdbc.user" value="bridge_star"/>
+            <property name="javax.persistence.jdbc.password" value="jcu2soft1115"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+			<!-- Configure connection pool. -->
+            <property name="eclipselink.connection-pool.default.initial" value="3" />
+            <property name="eclipselink.connection-pool.default.min" value="3" />
+            <property name="eclipselink.connection-pool.default.max" value="5" />            
+        </properties>
+	</persistence-unit>
+	<persistence-unit name="bridge_mill" transaction-type="RESOURCE_LOCAL">
+		<properties>
+            <property name="datanucleus.NontransactionalRead" value="true"/>
+            <property name="datanucleus.NontransactionalWrite" value="true"/>
+            <property name="datanucleus.ConnectionURL" value="appengine"/>
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.1.1.28:1521:BRG"/>
+            <property name="javax.persistence.jdbc.user" value="bridge_mill"/>
+            <property name="javax.persistence.jdbc.password" value="jcu2soft1115"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+			<!-- Configure connection pool. -->
+            <property name="eclipselink.connection-pool.default.initial" value="3" />
+            <property name="eclipselink.connection-pool.default.min" value="3" />
+            <property name="eclipselink.connection-pool.default.max" value="5" />            
+        </properties>
+	</persistence-unit>
+	<persistence-unit name="test_star" transaction-type="RESOURCE_LOCAL">
+		<properties>
+            <property name="datanucleus.NontransactionalRead" value="true"/>
+            <property name="datanucleus.NontransactionalWrite" value="true"/>
+            <property name="datanucleus.ConnectionURL" value="appengine"/>
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@10.1.1.28:1521:BRG"/>
+            <property name="javax.persistence.jdbc.user" value="test_star"/>
+            <property name="javax.persistence.jdbc.password" value="jcu2soft1115"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+			<!-- Configure connection pool. -->
+            <property name="eclipselink.connection-pool.default.initial" value="1" />
+            <property name="eclipselink.connection-pool.default.min" value="1" />
+            <property name="eclipselink.connection-pool.default.max" value="5" />            
+        </properties>
+	</persistence-unit>	
+</persistence>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.customer">
+
+	<resultMap id="customerResult"
+		type="com.jcuesoft.cuebridge.st.vo.StCustomerResponseVO">
+		<result property="no" column="NO" />
+		<result property="cdCooperate" column="CD_COOPERATE" />
+		<result property="nmCustomer" column="NM_CUSTOMER" />
+		<result property="dsUrl" column="DS_URL" />
+		<result property="ynUse" column="YN_USE" />
+		<result property="dmReg" column="DM_REG" />
+		<result property="idReg" column="ID_REG" />
+		<result property="dmUpt" column="DM_UPT" />
+		<result property="idUpt" column="ID_UPT" />
+	</resultMap>
+
+	<select id="getStCustomerList" parameterType="com.jcuesoft.cuebridge.st.vo.StCustomerRequestVO"
+		resultMap="customerResult">
+		SELECT
+		NO no
+		, CD_COOPERATE cdCooperate
+		, NM_CUSTOMER nmCustomer
+		, DS_URL dsUrl
+		, YN_USE ynUse
+		, DM_REG dmReg
+		, (SELECT GET_NM_USER(ID_REG) FROM DUAL) AS idReg
+		, DM_UPT dmUpt
+		, (SELECT GET_NM_USER(ID_UPT) FROM DUAL) AS idUpt
+		FROM
+		ST_CUSTOMER
+		<if test="searchDmUpt != null and searchDmUpt != ''">
+			where DM_UPT between #{searchDmUpt} and
+			TO_DATE(#{searchDmUpt},'YYYY-MM-DD')+1
+		</if>
+		ORDER BY
+		NO DESC
+	</select>
+
+	<select id="getStCustomerOne" parameterType="com.jcuesoft.cuebridge.st.vo.StCustomerRequestVO"
+		resultMap="customerResult">
+		SELECT
+		NO no
+		, CD_COOPERATE cdCooperate
+		, NM_CUSTOMER nmCustomer
+		, DS_URL dsUrl
+		, YN_USE ynUse
+		, DM_REG dmReg
+        , (SELECT GET_NM_USER(ID_REG) FROM DUAL) AS idReg
+        , DM_UPT dmUpt
+        , (SELECT GET_NM_USER(ID_UPT) FROM DUAL) AS idUpt
+		FROM
+		ST_CUSTOMER
+		WHERE
+		NO = #{no}
+	</select>
+
+	<insert id="insert" parameterType="com.jcuesoft.cuebridge.st.vo.StCustomerRequestVO">
+		INSERT INTO ST_CUSTOMER (
+		NO
+		, CD_COOPERATE
+		, NM_CUSTOMER
+		, DS_URL
+		, YN_USE
+		, DM_REG
+		, ID_REG
+		) VALUES (
+		ST_CUSTOMER_SEQ.nextval
+		, (select nvl(max(CD_COOPERATE),1000) + 100 from ST_CUSTOMER)
+		, #{nmCustomer}
+		, NVL(#{dsUrl}, ' ') 
+		, NVL(#{dsUrl}, 'N') 
+		, sysdate
+		, #{idReg}
+		)
+	</insert>
+
+	<delete id="delete" parameterType="com.jcuesoft.cuebridge.st.vo.StCustomerRequestVO">
+		DELETE ST_CUSTOMER WHERE NO =
+		#{no}
+	</delete>
+
+	<update id="update" parameterType="com.jcuesoft.cuebridge.st.vo.StCustomerRequestVO">
+		UPDATE ST_CUSTOMER SET
+		NM_CUSTOMER = #{nmCustomer}
+		,DS_URL =  NVL(#{dsUrl}, ' ') 
+		,YN_USE = #{ynUse}
+		,DM_UPT = sysdate
+		,ID_UPT = #{idUpt}
+		where
+		NO = #{no}
+	</update>
+
+</mapper>
+    

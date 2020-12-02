@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.groupcode">
+
+	<resultMap id="groupCodeResult"
+		type="com.jcuesoft.cuebridge.st.vo.StGroupCodeResponseVO">
+		<result property="no" column="NO" />
+		<result property="cdGroup" column="CD_GROUP" />
+		<result property="nmGroup" column="NM_GROUP" />
+		<result property="cdParentGroup" column="CD_PARENT_GROUP" />
+		<result property="dmReg" column="DM_REG" />
+		<result property="idReg" column="ID_REG" />
+		<result property="dmUpt" column="DM_UPT" />
+		<result property="idUpt" column="ID_UPT" />
+	</resultMap>
+
+	<select id="getGroupCodeList" parameterType="com.jcuesoft.cuebridge.st.vo.StGroupCodeRequestVO"
+		resultMap="groupCodeResult">
+		SELECT
+		NO no
+		, CD_GROUP cdGroup
+		, NM_GROUP nmGroup
+		, CD_PARENT_GROUP cdParentGroup
+		, DM_REG dmReg
+		, ID_REG idReg
+		, DM_UPT dmUpt
+		, ID_UPT idUpt
+		FROM
+		ST_GROUP_CODE
+		ORDER BY
+		CD_GROUP DESC
+	</select>
+
+	<select id="getGroupCodeOne" parameterType="com.jcuesoft.cuebridge.st.vo.StGroupCodeRequestVO"
+		resultMap="groupCodeResult">
+		SELECT
+		NO no
+		, CD_GROUP cdGroup
+		, NM_GROUP nmGroup
+		, CD_PARENT_GROUP cdParentGroup
+		, DM_REG dmReg
+		, ID_REG idReg
+		, DM_UPT dmUpt
+		, ID_UPT idUpt
+		FROM
+		ST_GROUP_CODE
+		WHERE
+		CD_GROUP = #{cdGroup}
+	</select>
+
+	<insert id="insertGroupCode" parameterType="com.jcuesoft.cuebridge.st.vo.StGroupCodeRequestVO">
+		INSERT INTO ST_GROUP_CODE (
+		NO
+		, CD_GROUP
+		, NM_GROUP
+		, CD_PARENT_GROUP
+		, DM_REG
+		, ID_REG
+		) VALUES (
+		ST_GROUP_CODE_SEQ.nextval
+		, #{cdGroup}
+		, #{nmGroup}
+		, NVL(#{cdParentGroup}, ' ')  
+		, sysdate
+		, #{idReg}
+		)
+	</insert>
+
+	<update id="updateGroupCode" parameterType="com.jcuesoft.cuebridge.st.vo.StGroupCodeRequestVO">
+		UPDATE ST_GROUP_CODE SET
+		NM_GROUP = #{nmGroup}
+		,DM_UPT = sysdate
+		,ID_UPT = #{idUpt}
+		where
+		CD_GROUP = #{cdGroup}
+	</update>
+
+	<delete id="deleteGroupCode" parameterType="com.jcuesoft.cuebridge.st.vo.StGroupCodeRequestVO">
+		DELETE ST_GROUP_CODE WHERE NO = #{no}
+	</delete>
+
+
+
+</mapper>
+    

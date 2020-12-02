@@ -1,0 +1,23 @@
+apply plugin: "java"
+apply plugin: 'war'
+compileJava.options.encoding = 'UTF-8'
+webAppDirName = 'WebContent'
+
+sourceSets {
+	main {
+		java { srcDir 'src/main/java' }
+		resources { srcDir 'src/main/resource' }
+	}
+}
+
+dependencies {
+    compile fileTree("WebContent/WEB-INF/lib")
+    compile fileTree("/project/was/apache-tomcat-current/lib")
+}
+
+war {
+	archiveName = "cuebridge-web.war"
+	destinationDir = file("$buildDir")
+	exclude 'WEB-INF/lib/**'
+	exclude 'WEB-INF/classes/**'    
+}

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexToBridgeDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.bex.vo.BexToBridgeVO" id="bexToBridgeResult">
+    	<result property="ds_url_server" column="ds_url_server" />
+		<result property="cd_cooperate" column="cd_cooperate" />
+		<result property="no_cooperate" column="no_cooperate" />
+		<result property="cd_path" column="cd_path" />
+		<result property="yn_surety" column="yn_surety" />
+		<result property="cd_pdt" column="cd_pdt" />
+		<result property="dd" column="dd" />
+		<result property="am_custom" column="am_custom" />
+		<result property="cd_use" column="cd_use" />
+		<result property="cd_echanel" column="cd_echanel" />
+		<result property="cd_eportal" column="cd_eportal" />
+		<result property="nm_ekeyword" column="nm_ekeyword" />
+		<result property="cd_epath" column="cd_epath" />
+		<result property="ds_receive" column="ds_receive" />
+		<result property="ds_memo" column="ds_memo" />
+		<result property="ds_url" column="ds_url" />
+		<result property="no_supply" column="no_supply" />
+		<result property="dt_supply" column="dt_supply" />
+		<result property="nm_supply" column="nm_supply" />
+		<result property="no_supply_loan" column="no_supply_loan" />
+		<result property="no_supply_society" column="no_supply_society" />
+		<result property="no_supply_tel" column="no_supply_tel" />
+		<result property="cd_info_collect" column="cd_info_collect" />
+		<result property="cd_contact_cust" column="cd_contact_cust" />
+		<result property="ds_contact_cust" column="ds_contact_cust" />
+		<result property="cd_contact_agent" column="cd_contact_agent" />
+		<result property="nm_contact_agent" column="nm_contact_agent" />
+		<result property="ds_contact_agent" column="ds_contact_agent" />
+		<result property="cd_call_agent" column="cd_call_agent" />
+		<result property="dt_agent" column="dt_agent" />
+		<result property="nm_agent" column="nm_agent" />		
+		<result property="nm_agent_ceo" column="nm_agent_ceo" />
+		<result property="nm_agent_manager" column="nm_agent_manager" />
+		<result property="nm_custom" column="nm_custom" />
+		<result property="no_custom" column="no_custom" />
+		<result property="cd_bank" column="cd_bank" />
+		<result property="no_bank_act" column="no_bank_act" />
+		<result property="ds_email" column="ds_email" />
+		<result property="cd_marry" column="cd_marry" />
+		<result property="cd_knd_mobile" column="cd_knd_mobile" />
+		<result property="no_tel1_mobile" column="no_tel1_mobile" />
+		<result property="no_tel2_mobile" column="no_tel2_mobile" />
+		<result property="no_tel3_mobile" column="no_tel3_mobile" />
+		<result property="no_fax1" column="no_fax1" />
+		<result property="no_fax2" column="no_fax2" />
+		<result property="no_fax3" column="no_fax3" />
+		<result property="yn_nice_safekey" column="yn_nice_safekey" />
+		<result property="ds_nice_safekey" column="ds_nice_safekey" />
+		<result property="ds_nice_safekey_ext" column="ds_nice_safekey_ext" />
+		<result property="cd_recruit_group" column="CD_RECRUIT_GROUP" />
+		<result property="cd_job_kind" column="cd_job_kind" />
+		<result property="cd_rank" column="cd_rank" />
+		<result property="cd_job_act" column="cd_job_act" />
+		<result property="cd_job_status" column="cd_job_status" />
+		<result property="nm_comp" column="nm_comp" />
+		<result property="nm_dept" column="nm_dept" />
+		<result property="dt_reg_join" column="dt_reg_join" />
+		<result property="dd_pay" column="dd_pay" />
+		<result property="am_pay_month" column="am_pay_month" />
+		<result property="no_post_comp" column="no_post_comp" />
+		<result property="ds_strt_comp" column="ds_strt_comp" />
+		<result property="ds_addr_comp" column="ds_addr_comp" />
+		<result property="no_maintel1_comp" column="no_maintel1_comp" />
+		<result property="no_maintel2_comp" column="no_maintel2_comp" />
+		<result property="no_maintel3_comp" column="no_maintel3_comp" />
+		<result property="dt_reg_home" column="dt_reg_home" />
+		<result property="am_deposit_home" column="am_deposit_home" />
+		<result property="am_rent_home" column="am_rent_home" />
+		<result property="no_post_home" column="no_post_home" />
+		<result property="ds_strt_home" column="ds_strt_home" />
+		<result property="ds_addr_home" column="ds_addr_home" />
+		<result property="no_tel1_home" column="no_tel1_home" />
+		<result property="no_tel2_home" column="no_tel2_home" />
+		<result property="no_tel3_home" column="no_tel3_home" />
+		<result property="no_post_cert" column="no_post_cert" />
+		<result property="ds_strt_cert" column="ds_strt_cert" />
+		<result property="ds_addr_cert" column="ds_addr_cert" />
+		<result property="no_post_real" column="no_post_real" />
+		<result property="ds_strt_real" column="ds_strt_real" />
+		<result property="ds_addr_real" column="ds_addr_real" />
+		<result property="s_nm_custom" column="s_nm_custom" />
+		<result property="s_no_custom" column="s_no_custom" />
+		<result property="s_ds_email" column="s_ds_email" />
+		<result property="s_cd_marry" column="s_cd_marry" />
+		<result property="s_cd_knd_mobile" column="s_cd_knd_mobile" />
+		<result property="s_no_tel1_mobile" column="s_no_tel1_mobile" />
+		<result property="s_no_tel2_mobile" column="s_no_tel2_mobile" />
+		<result property="s_no_tel3_mobile" column="s_no_tel3_mobile" />
+		<result property="s_no_fax1" column="s_no_fax1" />
+		<result property="s_no_fax2" column="s_no_fax2" />
+		<result property="s_no_fax3" column="s_no_fax3" />
+		<result property="s_yn_nice_safekey" column="s_yn_nice_safekey" />
+		<result property="s_ds_nice_safekey" column="s_ds_nice_safekey" />
+		<result property="s_ds_nice_safekey_ext" column="s_ds_nice_safekey_ext" />
+		<result property="s_cd_job_kind" column="s_cd_job_kind" />
+		<result property="s_cd_rank" column="s_cd_rank" />
+		<result property="s_cd_job_act" column="s_cd_job_act" />
+		<result property="s_cd_job_status" column="s_cd_job_status" />
+		<result property="s_nm_comp" column="s_nm_comp" />
+		<result property="s_nm_dept" column="s_nm_dept" />
+		<result property="s_dt_reg_join" column="s_dt_reg_join" />
+		<result property="s_dd_pay" column="s_dd_pay" />
+		<result property="s_am_pay_month" column="s_am_pay_month" />
+		<result property="s_no_post_comp" column="s_no_post_comp" />
+		<result property="s_ds_strt_comp" column="s_ds_strt_comp" />
+		<result property="s_ds_addr_comp" column="s_ds_addr_comp" />
+		<result property="s_no_maintel1_comp" column="s_no_maintel1_comp" />
+		<result property="s_no_maintel2_comp" column="s_no_maintel2_comp" />
+		<result property="s_no_maintel3_comp" column="s_no_maintel3_comp" />
+		<result property="s_dt_reg_home" column="s_dt_reg_home" />
+		<result property="s_am_deposit_home" column="s_am_deposit_home" />
+		<result property="s_am_rent_home" column="s_am_rent_home" />
+		<result property="s_no_post_home" column="s_no_post_home" />
+		<result property="s_ds_strt_home" column="s_ds_strt_home" />
+		<result property="s_ds_addr_home" column="s_ds_addr_home" />
+		<result property="s_no_tel1_home" column="s_no_tel1_home" />
+		<result property="s_no_tel2_home" column="s_no_tel2_home" />
+		<result property="s_no_tel3_home" column="s_no_tel3_home" />
+		<result property="s_no_post_cert" column="s_no_post_cert" />
+		<result property="s_ds_strt_cert" column="s_ds_strt_cert" />
+		<result property="s_ds_addr_cert" column="s_ds_addr_cert" />
+		<result property="s_no_post_real" column="s_no_post_real" />
+		<result property="s_ds_strt_real" column="s_ds_strt_real" />
+		<result property="s_ds_addr_real" column="s_ds_addr_real" />
+		<result property="no_cooperate" column="no_cooperate" />
+		<result property="cd_result" column="cd_result" />
+		<result property="ds_result" column="ds_result" />
+		<result property="ds_screen" column="ds_screen" />
+		<result property="ds_cooperate" column="ds_cooperate" />
+		<result property="dm_cooperate" column="dm_cooperate" />
+		<result property="am_cooperate" column="am_cooperate" />
+		<result property="nm_pdt" column="nm_pdt" />
+    </resultMap>
+    
+	
+    <select id="getBexToBridge" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexToBridgeResult">
+        SELECT
+        	(SELECT DS_URL FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS ds_url_server,
+            (SELECT CD_COOPERATE_BRIDGE FROM ST_COMP) AS cd_cooperate,
+            BM.NO_COOPERATE AS 	no_cooperate,
+            '70405' AS	cd_path,
+            BL.YN_SURETY	AS yn_surety,
+<!--             CASE
+                WHEN #{cdCooperate} = '70306' AND BL.CD_PDT IN ('21857','21883','21895') THEN '21857'
+                WHEN #{cdCooperate} = '70306' AND BL.CD_PDT IN ('21856','21888','21889') THEN '21856'
+                WHEN #{cdCooperate} = '70306' AND BL.CD_PDT IN ('21810','21869','21894') THEN '21810'
+                WHEN #{cdCooperate} = '70306' AND BL.CD_PDT IN ('21858','21885','21886') THEN '21858'
+                WHEN #{cdCooperate} = '70306' AND BL.CD_PDT IN ('21860','21884','21896') THEN '21860'
+                WHEN #{cdCooperate} = '70307' AND BL.CD_PDT IN ('21857','21883','21895') THEN '21883'
+                WHEN #{cdCooperate} = '70307' AND BL.CD_PDT IN ('21856','21888','21889') THEN '21888'
+                WHEN #{cdCooperate} = '70307' AND BL.CD_PDT IN ('21810','21869','21894') THEN '21869'
+                WHEN #{cdCooperate} = '70307' AND BL.CD_PDT IN ('21858','21885','21886') THEN '21885'
+                WHEN #{cdCooperate} = '70307' AND BL.CD_PDT IN ('21860','21884','21896') THEN '21884'
+                WHEN #{cdCooperate} = '70308' AND BL.CD_PDT IN ('21857','21883','21895') THEN '21895'
+                WHEN #{cdCooperate} = '70308' AND BL.CD_PDT IN ('21856','21888','21889') THEN '21889'
+                WHEN #{cdCooperate} = '70308' AND BL.CD_PDT IN ('21810','21869','21894') THEN '21894'
+                WHEN #{cdCooperate} = '70308' AND BL.CD_PDT IN ('21858','21885','21886') THEN '21886'
+                WHEN #{cdCooperate} = '70308' AND BL.CD_PDT IN ('21860','21884','21896') THEN '21896'
+                ELSE ' '
+            END AS cd_pdt, -->
+            BL.CD_PDT AS cd_pdt,
+            BL.DD	AS dd,
+            BL.AM_CUSTOM AS am_custom,
+            BL.CD_USE AS	cd_use,
+            BL.CD_ECHANEL AS cd_echanel,
+            BL.CD_EPORTAL AS cd_eportal,
+            BL.NM_EKEYWORD AS nm_ekeyword,
+            BL.CD_EPATH AS	cd_epath,
+            BL.DS_COOPERATE AS ds_receive,
+            BCT.DS_MEMO	ds_memo,
+            BF.DS_URL AS ds_url,
+<!--             NVL(BSP.NO_SUPPLY,'001') AS	no_supply,
+            NVL(BSP.DT_SUPPLY,TO_CHAR(SYSDATE, 'YYYYMMDD')) AS	 dt_supply,
+            NVL(BSP.NM_SUPPLY, SC.NM_COMP) AS	nm_supply,
+            NVL(BSP.NO_SUPPLY_LOAN, SC.NO_LOAN) AS	no_supply_loan,
+            NVL(BSP.NO_SUPPLY_SOCIETY, SC.NO_SOCIETY) AS	no_supply_society,
+            NVL(BSP.NO_SUPPLY_TEL, SC.NO_TEL_ARS) AS	no_supply_tel     ,
+            정보적법수집
+            NVL(BIL.CD_INFO_COLLECT, '71601') AS cd_info_collect,
+            CASE 
+            	WHEN BIL.CD_CONTACT_CUST IS NOT NULL THEN BIL.CD_CONTACT_CUST
+                WHEN BL.CD_PATH IN ('70403', '70404') THEN '71401'            	
+                ELSE '71402'
+            END AS cd_contact_cust,
+            NVL(BIL.DS_CONTACT_CUST, ' ') AS ds_contact_cust,
+            NVL(BIL.CD_CONTACT_AGENT, ' ') AS cd_contact_agent,
+            NVL(BIL.NM_CONTACT_AGENT, ' ') AS nm_contact_agent,
+            NVL(BIL.DS_CONTACT_AGENT, ' ') AS ds_contact_agent,
+            NVL(BIL.CD_CALL_AGENT, ' ') AS cd_call_agent,
+            NVL(BIL.DT_AGENT, TO_CHAR(BL.DM_REG, 'YYYYMMDD')) AS dt_agent,
+			NVL(BIL.NM_AGENT, SC.NM_COMP) AS nm_agent,
+			NVL(BIL.NM_AGENT_CEO, SC.NM_CEO) AS nm_agent_ceo,
+			NVL(BIL.NM_AGENT_MANAGER, (SELECT NM_USER FROM ST_USER WHERE ID_USER = BL.ID_SCREEN)) AS nm_agent_manager,
+             -->
+            BC.NM_CUSTOM AS	nm_custom,
+            SUBSTRB(BC.NO_CUSTOM, 1, 7) AS	no_custom,
+            BC.CD_BANK AS	cd_bank,
+            BC.NO_BANK_ACT AS	no_bank_act,
+            BC.DS_EMAIL AS	ds_email,
+            BC.CD_MARRY AS	cd_marry            ,
+            BC.CD_KND_MOBILE AS 	cd_knd_mobile,
+            BC.NO_TEL1_MOBILE AS	no_tel1_mobile,
+            BC.NO_TEL2_MOBILE AS	no_tel2_mobile,
+            BC.NO_TEL3_MOBILE AS	no_tel3_mobile,
+            BC.NO_FAX1 AS	no_fax1,
+            BC.NO_FAX2 AS	no_fax2,
+            BC.NO_FAX3 AS	no_fax3,
+            BC.YN_NICE_SAFEKEY AS	yn_nice_safekey,
+            BC.DS_NICE_SAFEKEY AS	ds_nice_safekey,
+            ' ' AS	ds_nice_safekey_ext,
+            BL.CD_RECRUIT_GROUP   AS	cd_recruit_group,            
+            BCC.CD_JOB_KIND AS	cd_job_kind,
+            BCC.CD_RANK AS	cd_rank,
+            BCC.CD_JOB_ACT AS	cd_job_act,
+            BCC.CD_JOB_STATUS AS	cd_job_status,
+            BCC.NM_COMP AS	nm_comp,
+            BCC.NM_DEPT AS	nm_dept,
+            BCC.DT_REG_JOIN AS	dt_reg_join,
+            BCC.DD_PAY AS	dd_pay,
+            BCC.AM_PAY_MONTH AS	am_pay_month,
+            BCC.NO_POST_COMP AS	no_post_comp,
+            BCC.DS_STRT_COMP AS	ds_strt_comp,
+            BCC.DS_ADDR_COMP AS	ds_addr_comp,
+            BCC.NO_MAINTEL1_COMP AS	no_maintel1_comp,
+            BCC.NO_MAINTEL2_COMP AS	no_maintel2_comp,
+            BCC.NO_MAINTEL3_COMP AS	no_maintel3_comp            ,
+            BCH.DT_REG_HOME AS	dt_reg_home,
+            BCH.AM_DEPOSIT_HOME AS	am_deposit_home,
+            BCH.AM_RENT_HOME AS	am_rent_home,
+            BCH.NO_POST_HOME AS	no_post_home,
+            BCH.DS_STRT_HOME AS	ds_strt_home,
+            BCH.DS_ADDR_HOME AS	ds_addr_home,
+            BCH.NO_TEL1_HOME AS	 no_tel1_home,
+            BCH.NO_TEL2_HOME AS	 no_tel2_home,
+            BCH.NO_TEL3_HOME AS	 no_tel3_home,
+            BCH.NO_POST_CERT AS	 no_post_cert,
+            BCH.DS_STRT_CERT AS	 ds_strt_cert,
+            BCH.DS_ADDR_CERT AS	 ds_addr_cert,
+            BCH.NO_POST_REAL AS	 no_post_real,
+            BCH.DS_STRT_REAL AS	ds_strt_real,
+            BCH.DS_ADDR_REAL AS	ds_addr_real            ,
+            BS.nm_custom AS	s_nm_custom,
+            SUBSTRB(BS.NO_CUSTOM, 1, 7) AS	s_no_custom,            
+            BS.DS_EMAIL AS	S_ds_email,
+            BS.CD_MARRY AS	S_cd_marry,
+            BS.CD_KND_MOBILE AS	s_cd_knd_mobile,
+            BS.NO_TEL1_MOBILE AS	s_no_tel1_mobile,
+            BS.NO_TEL2_MOBILE AS	s_no_tel2_mobile,
+            BS.NO_TEL3_MOBILE AS	s_no_tel3_mobile,
+            BS.NO_FAX1 AS	s_no_fax1,
+            BS.NO_FAX2 AS	s_no_fax2,
+            BS.NO_FAX3 AS	s_no_fax3,
+            BS.YN_NICE_SAFEKEY AS	s_yn_nice_safekey,
+            BS.DS_NICE_SAFEKEY AS	s_ds_nice_safekey,
+            ' ' AS	s_ds_nice_safekey_ext            ,
+            BSC.CD_JOB_KIND AS	s_cd_job_kind,
+            BSC.CD_RANK AS	s_cd_rank,
+            BSC.CD_JOB_ACT AS	s_cd_job_act,
+            BSC.CD_JOB_STATUS AS	s_cd_job_status,
+            BSC.NM_COMP AS	s_nm_comp,
+            BSC.NM_DEPT AS	s_nm_dept,
+            BSC.DT_REG_JOIN AS	s_dt_reg_join,
+            BSC.DD_PAY AS	s_dd_pay,
+            BSC.AM_PAY_MONTH AS	s_am_pay_month,
+            BSC.NO_POST_COMP AS	s_no_post_comp,
+            BSC.DS_STRT_COMP AS	s_ds_strt_comp,
+            BSC.DS_ADDR_COMP AS	s_ds_addr_comp,
+            BSC.NO_MAINTEL1_COMP AS	s_no_maintel1_comp,
+            BSC.NO_MAINTEL2_COMP AS	s_no_maintel2_comp,
+            BSC.NO_MAINTEL3_COMP AS	s_no_maintel3_comp           ,
+            BSH.dt_reg_home AS	s_dt_reg_home,
+            BSH.am_deposit_home AS	s_am_deposit_home,
+            BSH.am_rent_home AS	s_am_rent_home,
+            BSH.no_post_home AS	s_no_post_home,
+            BSH.ds_strt_home AS	s_ds_strt_home,
+            BSH.ds_addr_home AS	s_ds_addr_home,
+            BSH.no_tel1_home AS	s_no_tel1_home,
+            BSH.no_tel2_home AS	s_no_tel2_home,
+            BSH.no_tel3_home AS	s_no_tel3_home,
+            BSH.no_post_cert AS	s_no_post_cert,
+            BSH.ds_strt_cert AS	s_ds_strt_cert,
+            BSH.ds_addr_cert AS	s_ds_addr_cert,
+            BSH.no_post_real AS	s_no_post_real,
+            BSH.ds_strt_real AS	s_ds_strt_real,
+            BSH.ds_addr_real   AS	s_ds_addr_real
+		FROM
+            ST_COMP SC,
+		    BRC_LOAN BL,
+		    BRC_CUSTOM BC,
+		    BRC_CUSTOM_COMPANY BCC,
+            BRC_CUSTOM_HOME BCH,
+		    BEX_MASTER BM,
+		    BRC_SURETY BS,
+		    BRC_SURETY_COMPANY BSC,
+            BRC_SURETY_HOME BSH,
+            (
+            SELECT 
+               NO_REQ,
+               RTRIM (XMLAGG (XMLELEMENT (E, '['||TO_CHAR(DM_REG, 'YYYY-MM-DD HH24:MI:SS')||']'||CHR(13)||DS_MEMO || '||') ORDER BY NO).EXTRACT ('//text()'), '||') DS_MEMO
+            FROM 
+               BRC_CONTACT
+            WHERE   
+                NO_REQ = #{noReq}
+            GROUP BY 
+               NO_REQ
+            ) BCT,
+		    (
+            SELECT 
+               NO_REQ,
+               RTRIM (XMLAGG (XMLELEMENT (E, DS_PATH||NM_FILE || '||') ORDER BY NO).EXTRACT ('//text()'), '||') DS_URL
+            FROM 
+               BRC_FILE
+            WHERE   
+                NO_REQ = #{noReq}
+            GROUP BY 
+               NO_REQ            
+            ) BF
+	 WHERE 
+	 	BL.NO_REQ = BC.NO_REQ
+		AND 
+		BL.NO_REQ = BCC.NO_REQ
+		AND 
+		BL.NO_REQ = BCH.NO_REQ
+		AND 
+		BL.NO_REQ = BM.NO_REQ
+		AND 
+		BL.NO_REQ = BS.NO_REQ(+)
+		AND 
+		BL.NO_REQ = BSC.NO_REQ(+)
+		AND 
+		BL.NO_REQ = BSH.NO_REQ(+)	
+		AND 
+		BS.NO_SURETY(+) = '001'
+		AND 
+		BSC.NO_SURETY(+) = '001'
+		AND 
+		BSH.NO_SURETY(+) = '001'
+		AND 
+		BL.NO_REQ = BCT.NO_REQ(+)
+		AND 
+		BL.NO_REQ = BF.NO_REQ(+)   
+		AND 
+		BM.NO_REQ = #{noReq}
+		AND 
+		BM.NO_EX = #{noEx}   
+    </select>	  
+
+</mapper>
+

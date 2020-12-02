@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.BrcImageListDAO">
+
+	<resultMap id="brcImageListResult" type="com.jcuesoft.cuebridge.brc.vo.BrcImageListResponseVO">
+		<result property="noReq" column="NO_REQ" />
+		<result property="noRcvTel" column="NO_RCV_TEL" />
+		<result property="dmRcv" column="DM_RCV" />
+		<result property="dsMsg" column="DS_MSG" />
+		<result property="dsFile" column="DS_FILE" />
+		<result column="DS_FILE_BASE64" property="dsFileBase64" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getMmsList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcImageListRequestVO" resultMap="brcImageListResult">
+		SELECT
+			#{noReq} AS NO_REQ,
+		    NO_RCV_TEL,    
+		    DM_RCV,    
+		    DS_MSG,
+		    CASE
+		        WHEN NO_SORT = 1 THEN FILELOC1
+		        WHEN NO_SORT = 2 THEN FILELOC2
+		        WHEN NO_SORT = 3 THEN FILELOC3
+		        WHEN NO_SORT = 4 THEN FILELOC4
+		        WHEN NO_SORT = 5 THEN FILELOC5
+		        ELSE  ''
+		    END AS DS_FILE,
+		    CASE
+		        WHEN NO_SORT = 1 THEN BASE64_ENCODE(FILELOC1)
+		        WHEN NO_SORT = 2 THEN BASE64_ENCODE(FILELOC2)
+		        WHEN NO_SORT = 3 THEN BASE64_ENCODE(FILELOC3)
+		        WHEN NO_SORT = 4 THEN BASE64_ENCODE(FILELOC4)
+		        WHEN NO_SORT = 5 THEN BASE64_ENCODE(FILELOC5)
+		        ELSE  ''
+		    END AS DS_FILE_BASE64		                        
+		FROM
+		(
+		    SELECT
+		        ROW_NUMBER() OVER(PARTITION BY MSEQ ORDER BY MSEQ) NO_SORT,
+		        A.MSEQ,
+		        A.FILECNT,
+		        A.OAADDR AS NO_RCV_TEL,
+		        A.INSERT_TIME AS DM_RCV,
+		        A.TEXT AS DS_MSG,
+		        A.FILELOC1,
+		        A.FILELOC2,
+		        A.FILELOC3,
+		        A.FILELOC4,
+		        A.FILELOC5
+		    FROM
+		        SMS_RCV@ERP A,
+		        (SELECT LEVEL FROM DUAL    
+		        CONNECT BY LEVEL <![CDATA[<=]]> 5) B
+		    WHERE
+		        A.DIV = 'BRIDGE'
+		        AND
+		        A.OAADDR IN (SELECT NO_TEL1_MOBILE || NO_TEL2_MOBILE || NO_TEL3_MOBILE FROM BRC_CUSTOM WHERE NO_REQ = #{searchParam}
+		                               UNION ALL
+		                               SELECT NO_TEL1_MOBILE || NO_TEL2_MOBILE || NO_TEL3_MOBILE FROM BRC_SURETY WHERE NO_REQ = #{searchParam})
+		)
+		WHERE
+		    1=1
+		    AND NOT
+		    (FILECNT = 0 AND NO_SORT > 1)
+		    AND NOT
+		    (FILECNT > 0 AND NO_SORT > FILECNT) 
+		ORDER BY
+		    DM_RCV DESC, MSEQ , NO_SORT
+	</select>
+	
+	<select id="getFaxList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcImageListRequestVO" resultMap="brcImageListResult">
+		SELECT
+			#{noReq} AS NO_REQ,		
+		    W.NO_RCV_TEL,
+		    W.DM_RCV,
+		    W.DS_MSG,
+		    W.DS_FILE,
+		    CASE WHEN LENGTHB(W.DS_FILE) > 1 THEN BASE64_ENCODE(W.DS_FILE) ELSE '' END AS DS_FILE_BASE64
+		FROM
+		(
+		    SELECT 
+		        A.CALL_SND_NUM AS NO_RCV_TEL,
+		        TIME_TO_ABS@ERP(A.RECV_TIME) AS DM_RCV,
+		        '' AS DS_MSG,
+		        A.PATH || '/' || A.FILE_NAME AS DS_FILE
+		    FROM 
+		        FAX_RCV@ERP A
+		    WHERE
+		        CALL_RCV_NUM = #{searchParam}
+		        AND
+		        SAVE_TIME >= DATE_TO_TIME@ERP(SYSDATE-8)
+		    ORDER BY
+		        SAVE_TIME DESC
+		) W
+		WHERE
+		    ROWNUM <![CDATA[<=]]> 37
+	</select>	
+</mapper>
+

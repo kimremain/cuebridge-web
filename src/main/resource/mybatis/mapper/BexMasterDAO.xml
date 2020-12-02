@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexMasterDAO">
+
+    <resultMap id="bexMasterResult"
+        type="com.jcuesoft.cuebridge.bex.vo.BexMasterResponseVO">
+         <!-- BEX_MASTER -->
+        <result property="no" column="NO" />
+        <result property="noReq" column="NO_REQ" />
+        <result property="noEx" column="NO_EX" />
+        <result property="ynPartnerAct" column="YN_PARTNER_ACT" /> 
+        <result property="cdCooperatePartner" column="CD_COOPERATE_PARTNER" />        
+        <result property="cdCooperate" column="CD_COOPERATE" />
+        <result property="noCooperate" column="NO_COOPERATE" />
+        <result property="noCooperateAct" column="NO_COOPERATE_ACT" />
+        <result property="cdScreen" column="CD_SCREEN" />
+        <result property="cdPdt" column="CD_PDT" />
+        <result property="amApp" column="AM_APP" />
+        <result property="amCooperateExpect" column="AM_COOPERATE_EXPECT" />        
+        <result property="amCooperate" column="AM_COOPERATE" />
+        <result property="dmCooperate" column="DM_COOPERATE" />
+        <result property="dsCooperate" column="DS_COOPERATE" />
+        <result property="dmReg" column="DM_REG" />
+        <result property="idReg" column="ID_REG" />
+        <result property="dmUpt" column="DM_UPT" />
+        <result property="idUpt" column="ID_UPT" />
+        <result property="contactCnt" column="CONTACT_CNT" />
+        
+        <!-- BEX_LOAN or ETC -->
+        <result property="noCustomHash"    column="NO_CUSTOM_HASH"    />        
+        <result property="nmPdt" column="NM_PDT" /> <!--접수상품명-->
+        <result property="nmBexPdt" column="NM_BEX_PDT" /> <!--심사상품명-->
+        <result property="cdPath" column="CD_PATH" /> <!--접수경로-->
+        <result property="nmCustom" column="NM_CUSTOM" /><!--고객성명-->
+        <result property="noCustom" column="NO_CUSTOM" /><!--고객생년월일-->
+        <result property="idScreen" column="ID_SCREEN" /> <!--상담자ID-->
+        <result property="nmIdScreen" column="NM_ID_SCREEN" /> <!--상담자ID-->
+        <result property="nmScreen" column="NM_SCREEN" /><!--심사상태명-->
+        <result property="nmScreenPath" column="NM_SCREEN_PATH" /><!--심사경로-->
+        <result property="dmReceive" column="DM_RECEIVE" /><!--상담자완료일시-->
+        <result property="dmScreen" column="DM_SCREEN" /><!--상담자완료일시-->
+        <result property="amApp" column="AM_APP" />         <!--신청금액-->
+    </resultMap>
+    
+    <!-- 해당일 기준 실행이력을 출력 -->
+    <select id="getExListAll" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO"
+        resultMap="bexMasterResult">
+        SELECT
+            (SELECT NM_PDT FROM ST_PDT WHERE CD_PDT = A.CD_PDT AND CD_COOPERATE = (SELECT CD_COOPERATE_GROUP FROM ST_COMP)) NM_PDT
+            , BC.NM_CUSTOM 
+            , SUBSTRB(BC.NO_CUSTOM, 1, 6) AS NO_CUSTOM         
+            , ( SELECT GET_NM_USER(A.ID_SCREEN) FROM DUAL) ID_SCREEN 
+            , A.DM_SCREEN 
+            , (SELECT GET_NM_CD(A.CD_PATH ) FROM DUAL) AS   CD_PATH  
+            , A.DM_RECEIVE
+            , B.AM_APP / 10000 AS AM_APP          
+            , B.NO_REQ          
+            , BCH.NO_CUSTOM_HASH                
+            , B.NO_EX           
+            , B.YN_PARTNER_ACT   
+            , (SELECT GET_NM_CD(B.CD_COOPERATE_PARTNER  ) FROM DUAL) AS   CD_COOPERATE_PARTNER                      
+            , (SELECT GET_NM_CD(B.CD_COOPERATE  ) FROM DUAL) AS   CD_COOPERATE  
+            , B.AM_COOPERATE / 10000 AS AM_COOPERATE
+            , B.AM_COOPERATE_EXPECT / 10000 AS AM_COOPERATE_EXPECT
+            , (SELECT NM_PDT FROM ST_PDT WHERE CD_PDT = B.CD_PDT AND CD_COOPERATE = B.CD_COOPERATE) AS NM_BEX_PDT 
+            , B.NM_SCREEN
+            , B.NM_SCREEN_PATH
+            , B.DS_COOPERATE  
+            , B.DM_COOPERATE
+            , B.DM_REG  
+            , B.DM_UPT
+            , (SELECT COUNT(NO) FROM BEX_CONTACT WHERE NO_REQ = B.NO_REQ AND NO_EX = B.NO_EX) AS CONTACT_CNT
+        FROM
+            BRC_LOAN A ,BEX_MASTER B, BRC_CUSTOM_HASH BCH, BRC_CUSTOM BC
+        WHERE 
+            A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = BC.NO_REQ
+		    AND
+		    A.NO_REQ = BCH.NO_REQ(+)            
+            <if test=" searchNoReq != null and searchNoReq != '' ">
+            AND A.NO_REQ = #{searchNoReq}
+            </if>		    
+            <if test=" searchDmRegStart != null and searchDmRegStart != '' and searchDmRegEnd != null and searchDmRegEnd != '' ">
+            AND B.DM_REG <![CDATA[ >= ]]> #{searchDmRegStart} AND B.DM_REG <![CDATA[ < ]]>TO_DATE(#{searchDmRegEnd},'YYYY-MM-DD')+1
+			</if>
+            <if test=" searchDmCooperteStart != null and searchDmCooperteStart != '' and searchDmCooperteEnd != null and searchDmCooperteEnd != '' ">
+            AND B.DM_UPT <![CDATA[ >= ]]> #{searchDmCooperteStart} and B.DM_UPT <![CDATA[ < ]]> TO_DATE(#{searchDmCooperteEnd},'YYYY-MM-DD')+1
+            </if>
+            <if test=" searchCdPath != null and searchCdPath != '' ">
+            AND A.CD_PATH = #{searchCdPath}
+            </if>
+            <if test=" searchCdCooperate != null and searchCdCooperate != '' ">
+            AND B.CD_COOPERATE = #{searchCdCooperate}
+            </if>
+            
+        ORDER BY
+            B.NO_REQ DESC , B.NO_EX ASC
+    </select>
+    
+    <select id="getBexMasterList" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexMasterResult">    
+		SELECT
+		      A.NM_CUSTOM 
+            , B.AM_APP / 10000 AS AM_APP          
+            , B.NO_REQ       
+            , B.NO_EX           
+            , B.YN_PARTNER_ACT   
+            , (SELECT GET_NM_CD(B.CD_COOPERATE_PARTNER  ) FROM DUAL) AS   CD_COOPERATE_PARTNER              
+            , (SELECT GET_NM_CD(B.CD_COOPERATE  ) FROM DUAL) AS   CD_COOPERATE  
+            , B.AM_COOPERATE_EXPECT / 10000 AS AM_COOPERATE_EXPECT
+            , B.AM_COOPERATE / 10000 AS AM_COOPERATE            
+            , (SELECT GET_NM_PDT(B.CD_PDT) FROM DUAL) AS CD_PDT
+            , B.NM_SCREEN
+            , B.NM_SCREEN_PATH
+            , B.DS_COOPERATE  
+            , B.DM_COOPERATE
+            , B.DM_REG  
+            , B.DM_UPT
+            , (SELECT COUNT(NO) FROM BEX_CONTACT WHERE NO_REQ = B.NO_REQ AND NO_EX = B.NO_EX) AS CONTACT_CNT
+		FROM
+		    BRC_CUSTOM A,
+		    BEX_MASTER B
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    B.NO_REQ = #{noReq}
+		ORDER BY
+		    B.DM_REG DESC    
+    </select>
+    
+    <select id="getBexMasterOne" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexMasterResult">    
+		SELECT
+		    NO                  ,
+		    NO_REQ              ,
+		    NO_EX               ,
+		    CD_COOPERATE        ,
+		    NO_COOPERATE        ,
+		    NO_COOPERATE_ACT    ,
+		    NM_SCREEN_PATH      ,
+		    <!-- DM_COOPERATE        , -->
+		    CASE 
+		        WHEN TRIM(DM_COOPERATE) IS NOT NULL THEN SUBSTRB(DM_COOPERATE, 1, 4) 
+		                                                                                        || '-' || SUBSTRB(DM_COOPERATE, 5, 2) 
+		                                                                                        || '-' || SUBSTRB(DM_COOPERATE, 7, 2)
+		                                                                                        || ' ' || SUBSTRB(DM_COOPERATE, 9, 2)
+		                                                                                        || ':' || SUBSTRB(DM_COOPERATE,11, 2)
+		                                                                                        || ':' || SUBSTRB(DM_COOPERATE,13, 2)
+		        ELSE ' '
+		    END AS DM_COOPERATE,
+		    CASE WHEN AM_COOPERATE > 0 THEN AM_COOPERATE / 10000 ELSE 0 END AS AM_COOPERATE       ,
+		    DS_COOPERATE        ,
+		    NM_SCREEN           ,
+		    AM_APP              ,
+		    CD_PDT              ,
+		    DM_REG              ,
+		    ID_REG              ,
+		    DM_UPT              ,
+		    ID_UPT              ,
+		    AM_COOPERATE_EXPECT ,
+		    YN_PARTNER_ACT      
+		    CD_COOPERATE_PARTNER
+		FROM
+		    BEX_MASTER
+		WHERE
+		    NO_REQ = #{noReq}
+		    AND		
+		    NO_EX = #{noEx}
+    </select>    
+    
+    
+    <insert id="insertBexMaster" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO">
+		INSERT INTO BEX_MASTER 
+		(
+		    NO, 
+		    NO_REQ, 
+		    NO_EX, 
+		    CD_COOPERATE, 
+		    NO_COOPERATE, 
+		    NO_COOPERATE_ACT, 
+		    NM_SCREEN_PATH, 
+		    DM_COOPERATE, 
+		    AM_COOPERATE, 
+		    DS_COOPERATE, 
+		    NM_SCREEN, 
+		    AM_APP, 
+		    CD_PDT, 
+		    DM_REG, 
+		    ID_REG
+		)
+		VALUES 
+		(
+		    BEX_MASTER_SEQ.NEXTVAL, 
+		    #{noReq,jdbcType=VARCHAR}, 
+		    #{noEx,jdbcType=VARCHAR},
+		    #{cdCooperate,jdbcType=VARCHAR}, 
+		    #{noReq,jdbcType=VARCHAR} || '-' || #{noEx,jdbcType=VARCHAR} ,  
+		    NVL(#{noCooperateAct,jdbcType=VARCHAR}, ' '), 
+		    NVL(#{nmScreenPath,jdbcType=VARCHAR}, ' '), 
+		    NVL(#{dmCooperate,jdbcType=VARCHAR}, NULL), 
+		    NVL(#{amCooperate,jdbcType=DECIMAL}, '0'), 
+		    '최초실행 by system', 
+		    <!-- NVL(#{nmScreen,jdbcType=VARCHAR}, ' '),  -->
+		    '접수',
+		    (SELECT AM_CUSTOM FROM BRC_LOAN WHERE NO_REQ = #{noReq,jdbcType=VARCHAR}), 
+		    NVL(#{cdPdt,jdbcType=VARCHAR}, ' '), 
+		    SYSDATE, 
+		    NVL(#{idReg,jdbcType=VARCHAR}, ' ')
+		)
+    </insert>
+    
+    <insert id="insertBexContact" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO">
+		INSERT INTO BEX_CONTACT                                                                                 
+		(
+		    NO            ,
+		    NO_REQ        ,
+		    NO_EX         ,
+		    NO_CONTACT_SEQ,
+		    DS_COOPERATE  ,
+		    NM_SCREEN  ,		    
+		    DM_REG        ,
+		    ID_REG        
+		)
+		VALUES
+		(
+		    BEX_CONTACT_SEQ.NEXTVAL            ,
+		    #{noReq,jdbcType=VARCHAR}        ,
+		    #{noEx,jdbcType=VARCHAR}         ,
+		    (SELECT LPAD(NVL(MAX(NO_CONTACT_SEQ), '0')+1, 3, '0')
+		    FROM BEX_CONTACT
+		    WHERE NO_REQ = #{noReq,jdbcType=VARCHAR} AND NO_EX = #{noEx,jdbcType=VARCHAR}) , 
+		    SUBSTRB(NVL(#{dsCooperate,jdbcType=VARCHAR}, ' '), 1, 200)         ,
+		    NVL(#{nmScreen,jdbcType=VARCHAR}, ' ')         ,
+		    SYSDATE        ,
+		    NVL(#{idReg,jdbcType=VARCHAR}, ' ')
+		)
+    </insert>
+       
+    
+    <update id="updateBexMaster" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO">
+		UPDATE BEX_MASTER SET 
+		<if test="nmScreen != null and nmScreen != ''">
+			NM_SCREEN = #{nmScreen,jdbcType=VARCHAR},
+		</if>		
+		<if test="nmScreenPath != null and nmScreenPath != ''">
+			NM_SCREEN_PATH = #{nmScreenPath,jdbcType=VARCHAR},
+		</if>
+		<if test="dmCooperate != null and dmCooperate != ''">
+			DM_COOPERATE = #{dmCooperate,jdbcType=VARCHAR},
+			<!-- DM_COOPERATE = REPLACE(REPLACE(REPLACE(#{dmCooperate,jdbcType=VARCHAR}, '-', ''), ':'), ' ', '')", -->
+		</if>
+		<if test="amCooperate != null">
+			AM_COOPERATE = #{amCooperate,jdbcType=DECIMAL},
+		</if>
+		<if test="dsCooperate != null and dsCooperate != ''">
+			DS_COOPERATE = #{dsCooperate,jdbcType=VARCHAR},
+		</if>
+		<if test="cdPdt != null and cdPdt != ''">
+			CD_PDT = #{cdPdt,jdbcType=VARCHAR},
+		</if>
+		<if test="amCooperateExpect != null and amCooperateExpect != ''">
+			AM_COOPERATE_EXPECT = #{amCooperateExpect,jdbcType=DECIMAL},
+		</if>
+		<if test="idReg != null and idReg != ''">
+			ID_UPT = #{idReg,jdbcType=VARCHAR},
+		</if>
+		    DM_UPT = SYSDATE
+		WHERE 
+		    NO_REQ = #{noReq,jdbcType=VARCHAR}
+		    AND
+		    NO_EX = #{noEx,jdbcType=VARCHAR} 
+    </update>
+    
+
+    
+    <update id="updateBexContact" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO">
+
+    </update>    
+    
+
+
+</mapper>
+      

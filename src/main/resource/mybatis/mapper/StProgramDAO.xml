@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.StProgramDAO">
+
+	<resultMap id="programResult" type="com.jcuesoft.cuebridge.st.vo.StProgramResponseVO">
+		<result property="no"      column="no"        />
+		<result property="dsPgmId" column="ds_pgm_id" />
+		<result property="dsPgm"   column="ds_pgm"    />
+		<result property="dsUrl"   column="ds_url"    />
+		<result property="cdOnoff" column="cd_onoff"  />
+		<result property="ynAdmin" column="yn_admin"  />
+		<result property="ynApply" column="yn_apply"  />
+		<result property="dsHelp"  column="ds_help"   />
+		<result property="dmReg"   column="dm_reg"    />
+		<result property="idReg"   column="id_reg"    />
+		<result property="dmUpt"   column="dm_upt"    />
+		<result property="idUpt"   column="id_upt"    />
+	</resultMap>
+
+	<select id="getProgramList" parameterType="com.jcuesoft.cuebridge.st.vo.StProgramRequestVO" resultMap="programResult">
+		SELECT 
+			 NO
+			,DS_PGM_ID 
+			,DS_PGM    
+			,DS_URL    
+			,(SELECT GET_NM_CD(CD_ONOFF) FROM DUAL ) AS CD_ONOFF  
+			,YN_ADMIN  
+			,YN_APPLY  
+			,DS_HELP   
+			,DM_REG    
+			, (SELECT  GET_NM_USER(ID_REG) FROM DUAL)  AS ID_REG    
+			,DM_UPT    
+			, (SELECT  GET_NM_USER(ID_UPT) FROM DUAL)  AS ID_UPT
+		FROM 
+		    ST_PGM
+		WHERE 
+            1=1
+		<if test="searchDsPgm != null and searchDsPgm != ''">
+			AND DS_PGM LIKE '%'||#{searchDsPgm}||'%'
+		</if>
+		ORDER BY 
+            DS_PGM_ID  ASC
+	</select>
+
+	<select id="getProgramOne" parameterType="com.jcuesoft.cuebridge.st.vo.StProgramRequestVO" resultMap="programResult">
+        SELECT 
+             NO
+            ,DS_PGM_ID 
+            ,DS_PGM    
+            ,DS_URL    
+            ,CD_ONOFF  
+            ,YN_ADMIN  
+            ,YN_APPLY  
+            ,DS_HELP   
+            , DM_REG    
+            , (SELECT  GET_NM_USER(ID_REG) FROM DUAL)  ID_REG    
+            , DM_UPT    
+            , (SELECT  GET_NM_USER(ID_UPT) FROM DUAL)  ID_UPT  
+        FROM 
+            ST_PGM
+        WHERE
+            NO = #{no}
+	</select>
+
+	<insert id="insertProgram" parameterType="com.jcuesoft.cuebridge.st.vo.StProgramRequestVO">
+		INSERT INTO ST_PGM (
+			 NO
+			,DS_PGM_ID
+			,DS_PGM
+			,DS_URL
+			,CD_ONOFF
+			,YN_ADMIN
+			,YN_APPLY
+			,DS_HELP
+			,DM_REG
+			,ID_REG
+			,ID_UPT
+		) VALUES (
+			 ST_PGM_SEQ.NEXTVAL
+			,NVL(#{dsPgmId}, ' ')
+			,NVL(#{dsPgm}, ' ')
+			,NVL(#{dsUrl}, ' ')
+			,NVL(#{cdOnoff}, ' ')
+			,NVL(#{ynAdmin}, ' ')
+			,NVL(#{ynApply}, ' ')
+			,NVL(#{dsHelp}, ' ')
+			,SYSDATE
+			,NVL(#{idReg}, ' ')
+			,' '
+		)
+	</insert>
+
+	<delete id="deleteProgram" parameterType="com.jcuesoft.cuebridge.st.vo.StProgramRequestVO">
+		DELETE
+            ST_PGM
+		WHERE
+            NO = #{no}
+	</delete>
+
+	<update id="updateProgram" parameterType="com.jcuesoft.cuebridge.st.vo.StProgramRequestVO">
+		UPDATE
+            ST_PGM
+		SET
+			 DS_PGM   = NVL(#{dsPgm}, ' ')
+			,DS_URL   = NVL(#{dsUrl}, ' ')
+			,CD_ONOFF = NVL(#{cdOnoff}, ' ')
+			,YN_ADMIN = NVL(#{ynAdmin}, ' ')
+			,YN_APPLY = NVL(#{ynApply}, ' ')
+			,DS_HELP  = NVL(#{dsHelp}, ' ')
+			,DM_UPT   = SYSDATE
+			,ID_UPT   = NVL(#{idUpt}, ' ')
+		WHERE
+            NO = #{no}
+	</update>
+
+</mapper>
+    

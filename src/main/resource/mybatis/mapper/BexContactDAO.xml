@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.contact">
+
+    <resultMap id="bexContactResult"
+        type="com.jcuesoft.cuebridge.bex.vo.BexContactResponseVO">
+        <result property="no" column="NO" />
+        <result property="noReq" column="NO_REQ" />
+        <result property="noEx" column="NO_EX" />
+        <result property="nmScreen" column="NM_SCREEN" />
+        <result property="noContactSeq" column="NO_CONTACT_SEQ" />
+        <result property="dsCooperate" column="DS_COOPERATE" />
+        <result property="dmReg" column="DM_REG" />
+        <result property="idReg" column="ID_REG" />
+        <result property="dmUpt" column="DM_UPT" />
+        <result property="idUpt" column="ID_UPT" />
+       
+    </resultMap>
+    
+    <select id="getExContact" parameterType="com.jcuesoft.cuebridge.bex.vo.BexContactRequestVO"
+        resultMap="bexContactResult">
+            SELECT 
+			    NM_SCREEN
+			    , DS_COOPERATE  
+			    , DM_REG        
+			FROM
+			    BEX_CONTACT A
+	       WHERE 
+	           NO_REQ = #{searchNoReq}
+	           AND NO_EX = #{searchNoEx}
+	       ORDER BY
+               NO DESC
+    </select>
+
+</mapper>
+      

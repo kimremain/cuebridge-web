@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.BrcLoanDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.brc.vo.BrcLoanResponseVO" id="brcLoanLeftResult">
+        <result property="noReq"    column="NO_REQ"    />
+        <result property="cdStatus" column="CD_STATUS" />
+        <result property="nmCustom" column="NM_CUSTOM" />
+        <result property="cdPath"   column="CD_PATH"   />
+        <result property="cdPathFlag"   column="CD_PATH_FLAG"   />
+        <result property="dmPromise"   column="DM_PROMISE"   />
+        <result property="dsMemo"   column="DS_MEMO"   />
+    </resultMap>
+    
+    <resultMap type="com.jcuesoft.cuebridge.brc.vo.BrcLoanResponseVO" id="brcLoanListResult">
+        <result property="noReq"    column="NO_REQ"    />
+        <result property="nmCustom" column="NM_CUSTOM" />     
+        <result property="noTelMobile" column="NO_TEL_MOBILE" />
+        <result property="idReceive" column="ID_RECEIVE" />
+        <result property="idScreen" column="ID_SCREEN" />
+        <result property="dmPromise" column="DM_PROMISE" />
+        <result property="dmContact" column="DM_CONTACT" />
+        <result property="cdPath"   column="CD_PATH"   />
+        <result property="cdEpath"   column="CD_EPATH"   />
+        <result property="amCustom"   column="AM_CUSTOM"   />
+        <result property="cdStatus" column="CD_STATUS" />
+        <result property="nmStatus" column="NM_STATUS" />
+    </resultMap>    
+    
+    <resultMap type="com.jcuesoft.cuebridge.brc.vo.BrcLoanCountVO" id="brcLoanCountResult">
+    	<result property="cnt71001"    column="CNT71001"    />
+    	<result property="cnt71002"    column="CNT71002"    />
+    	<result property="cnt71003"    column="CNT71003"    />
+    	<result property="cnt71004"    column="CNT71004"    />
+    	<result property="cnt71005"    column="CNT71005"    />
+    	<result property="cnt71006"    column="CNT71006"    />
+    	<result property="cnt71007"    column="CNT71007"    />
+    	<result property="cnt71008"    column="CNT71008"    />
+    	<result property="cnt71009"    column="CNT71009"    />
+    	<result property="cnt71010"    column="CNT71010"    />
+    	<result property="cnt71011"    column="CNT71011"    />
+    	<result property="cnt71012"    column="CNT71012"    />
+    	<result property="cnt71013"    column="CNT71013"    />
+    </resultMap>
+    
+    <resultMap type="com.jcuesoft.cuebridge.ups.vo.MemberListInoutTmVO" id="memberListInoutTmResult">
+    	<result property="seq"    column="SEQ"    />
+    	<result property="nmCustom"    column="NM_CUSTOM"    />
+    	<result property="erpNo"    column="ERP_NO"    />
+    	<result property="upsNo"    column="UPS_NO"    />
+    	<result property="noReq"    column="NO_REQ"    />
+    	<result property="dtmReg"    column="DTM_REG"    />
+    	<result property="idReg"    column="ID_REG"    />
+    	<result property="dtAgreeInfo"    column="DT_AGREE_INFO"    />
+    	<result property="cdInout"    column="CD_INOUT"    />
+    	<result property="cdKind"    column="CD_KIND"    />
+    </resultMap>    
+    
+    <select id="getBrcLoanLeftList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO" resultMap="brcLoanLeftResult">
+        SELECT
+             BL.NO_REQ
+            , BL.CD_STATUS
+            , BC.NM_CUSTOM
+            , CD_PATH
+            , CASE 
+                 WHEN BL.CD_PATH='70404' THEN 'I'
+                 ELSE 'H' 
+               END AS CD_PATH_FLAG
+             ,  TO_CHAR(BC.DM_PROMISE,'MM-DD HH24:MI')  AS DM_PROMISE 
+        FROM
+             BRC_LOAN BL
+            ,BRC_CUSTOM BC
+        WHERE
+            BL.NO_REQ = BC.NO_REQ
+            AND BL.CD_STATUS IN(71002,71003,71004,71006,71010)  
+	        AND ID_SCREEN = #{leftSearchId} 
+	    ORDER BY
+	        BL.NO ASC
+    </select>
+    
+    <select id="getBrcLoanList" parameterType="org.springframework.data.domain.Pageable" resultMap="brcLoanListResult">
+		SELECT
+		    A.NO_REQ,
+		    A.DM_RECEIVE,
+		    B.NM_CUSTOM,
+		    B.NO_TEL1_MOBILE || '-' || B.NO_TEL2_MOBILE || '-' || B.NO_TEL3_MOBILE AS NO_TEL_MOBILE,
+		    (SELECT
+		    GET_NM_USER(ID_RECEIVE) FROM DUAL) AS ID_RECEIVE,    		  
+		    (SELECT
+		    GET_NM_USER(ID_SCREEN) FROM DUAL) AS ID_SCREEN,  		      
+		    B.DM_PROMISE,
+		    A.DM_CONTACT,
+		    (SELECT GET_NM_CD(A.CD_PATH) FROM DUAL) AS CD_PATH,
+		    (SELECT GET_NM_CD(A.CD_EPATH) FROM DUAL) AS CD_EPATH,    		    
+		    A.AM_CUSTOM / 10000 AS AM_CUSTOM,
+		    CD_STATUS,
+		    (SELECT
+		    GET_NM_CD(CD_STATUS) FROM DUAL) AS NM_STATUS		    
+		FROM
+		    BRC_LOAN A,
+		    BRC_CUSTOM B
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND ID_SCREEN = #{idReg} 
+			<if test="searchCdStatus != null and searchCdStatus != '' and searchCdStatus != 'all' ">
+				AND A.CD_STATUS = #{searchCdStatus}
+			</if>		    
+			<if test="searchNmCustom != null and searchNmCustom != ''">
+				AND B.NM_CUSTOM LIKE #{searchNmCustom,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="searchNoCustom != null and searchNoCustom != ''">
+				AND B.NO_CUSTOM LIKE TRIM(REPLACE(#{searchNoCustom,jdbcType=VARCHAR}, '-', '')) || '%'
+			</if>
+			<if test="searchNoTelMobile != null and searchNoTelMobile != ''">
+				AND B.NO_TEL1_MOBILE||B.NO_TEL2_MOBILE||B.NO_TEL3_MOBILE = TRIM(REPLACE(#{searchNoTelMobile,jdbcType=VARCHAR}, '-', ''))
+			</if>								    
+    </select>
+    
+    <select id="getMemberListInoutTmList" parameterType="com.jcuesoft.cuebridge.ups.vo.MemberListInoutTmVO" resultMap="memberListInoutTmResult">
+		SELECT
+		    A.DT_CONTACT || A.SEQ AS SEQ,
+		    B.NM_CUSTOM ,
+		    A.ERP_NO,
+		    A.UPS_NO,
+		    B.NO_REQ,
+		    TO_CHAR(A.DTM_REG, 'YYYY-MM-DD HH24:MI:SS') AS DTM_REG,
+		    (SELECT NAME FROM MEMBER@ERP WHERE ID = A.ID_REG AND ROWNUM <![CDATA[<=]]> 1) AS ID_REG,
+		    SUBSTRB(A.DT_AGREE_INFO, 1, 4) ||'-' || SUBSTRB(A.DT_AGREE_INFO, 5, 2) || '-' || SUBSTRB(A.DT_AGREE_INFO, 7, 2) AS DT_AGREE_INFO,		    
+		    A.CD_INOUT,
+		    (SELECT TITLE FROM CONFIG_VALUE@ERP WHERE CODE = A.CD_KIND AND ROWNUM <![CDATA[<=]]> 1 ) AS CD_KIND
+		FROM
+		    MEMBER_LIST_INOUT_TM@ERP A,
+		    BRC_CUSTOM B
+		WHERE
+		    A.BRG_NO = B.NO_REQ
+		    AND
+		    A.BRG_NO = #{noReq}
+		    AND
+		    B.NO_REQ = #{noReq}		    
+		ORDER BY
+		    A.SEQ DESC
+    </select>    
+    
+    <select id="getBrcLoanCount" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO" resultMap="brcLoanCountResult">
+	SELECT
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71002'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71002,
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71003'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71003,
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71004'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71004,
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71006'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71006,
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71009'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71009,
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71010'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71010,
+	    (SELECT COUNT(*) FROM BRC_LOAN WHERE CD_STATUS = '71013'
+	    AND ID_SCREEN = #{idReg}
+	    ) AS CNT71013	    
+	FROM
+	    DUAL
+    </select>
+    
+    
+    <select id="getBrcContactLeftList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO" resultMap="brcLoanLeftResult">
+        SELECT
+             NO_REQ
+            ,DS_MEMO
+        FROM
+            BRC_CONTACT
+        WHERE 
+            NO_REQ IN (SELECT
+                           NO_REQ
+                       FROM
+                           BRC_LOAN
+                        WHERE
+                           ID_SCREEN = #{idReg}
+                           AND
+                           CD_STATUS IN(71002,71003,71004,71006,71010) 
+                           )
+        ORDER BY
+            NO ASC
+    </select>
+
+    <insert id="insertBrcLoan" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		INSERT INTO BRC_LOAN (
+             NO          
+            ,NO_REQ      
+            ,CD_COOPERATE
+            ,NO_COOPERATE
+            ,CD_PATH     
+            ,CD_STATUS   
+            ,YN_SURETY   
+            ,CD_PDT      
+            ,DD          
+            ,AM_CUSTOM   
+            ,AM_COOPERATE
+            ,AM_APP      
+            ,CD_USE      
+            ,CD_REJECT   
+            ,CD_ECHANEL  
+            ,CD_EPORTAL  
+            ,NM_EKEYWORD 
+            ,CD_EPATH    
+            ,ID_RECEIVE  
+            ,ID_SCREEN   
+            ,ID_AUTH     
+            ,DS_RECEIVE  
+            ,DS_SCREEN   
+            ,DM_RECEIVE 
+            ,DM_REG      
+            ,ID_REG
+		) VALUES (
+			 BRC_LOAN_SEQ.NEXTVAL
+			,#{noReq}            
+			,NVL(#{cdCooperate}, ' ')                
+			,NVL(#{noCooperate}, ' ')                
+			,NVL(#{cdPath}, ' ')         
+			,(CASE WHEN (SELECT COUNT(*) FROM ST_USER WHERE ID_USER = #{idScreen} AND YN_SCREEN = 'Y') > 0 THEN '71002' ELSE '71001' END)			
+			<!-- ,NVL(#{cdStatus}, '71001') -->               
+			,NVL(#{ynSurety}, 'N')                            
+			,NVL(#{cdPdt}, ' ')            
+			,NVL(#{dd}, ' ')               
+			,(CASE WHEN #{amCustom} IS NULL OR #{amCustom} = 0 THEN 0 ELSE #{amCustom} * 10000 END)
+			,(CASE WHEN #{amCooperate} IS NULL OR #{amCooperate} = 0 THEN 0 ELSE #{amCooperate} * 10000 END)
+			,(CASE WHEN #{amApp} IS NULL OR #{amApp} = 0 THEN 0 ELSE #{amApp} * 10000 END)						          
+			,NVL(#{cdUse}, ' ')                 
+			,NVL(#{cdReject}, ' ')                
+			,NVL(#{cdEchanel}, ' ')                 
+			,NVL(#{cdEportal}, ' ')                 
+			,NVL(#{nmEkeyword}, ' ')                
+			,NVL(#{cdEpath}, ' ')                
+			,NVL(#{idReg}, ' ')         
+			,(CASE WHEN (SELECT COUNT(*) FROM ST_USER WHERE ID_USER = #{idScreen} AND YN_SCREEN = 'Y') > 0 THEN #{idScreen} ELSE ' ' END)	   
+			<!-- ,NVL(#{idScreen}, ' ') -->            
+			,NVL(#{idAuth}, ' ')                 
+			,NVL(#{dsReceive}, ' ')                
+			,NVL(#{dsScreen}, ' ')                
+			,SYSDATE             
+			,SYSDATE             
+			,NVL(#{idReg}, ' ')
+		)
+    </insert>
+    
+    <insert id="insertBrcCustom" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+        INSERT INTO BRC_CUSTOM ( 
+			 NO
+			,NO_REQ        
+			,NM_CUSTOM     
+			,NO_CUSTOM     
+			,CD_BANK       
+			,NO_BANK_ACT   
+			,DS_EMAIL      
+			,CD_MARRY      
+			,CD_KND_MOBILE 
+			,NO_TEL1_MOBILE
+			,NO_TEL2_MOBILE
+			,NO_TEL3_MOBILE
+			,YN_AUTH_MOBILE
+			,CD_KND_ETC    
+			,NO_TEL1_ETC1  
+			,NO_TEL2_ETC1  
+			,NO_TEL3_ETC1  
+			,YN_AUTH_ETC   
+			,NO_FAX1       
+			,NO_FAX2       
+			,NO_FAX3       
+            ,DT_CB_AGREE             		
+			,DM_REG        
+			,ID_REG
+        ) VALUES (
+			 BRC_CUSTOM_SEQ.NEXTVAL    
+			,#{noReq}                  
+			,NVL(#{nmCustom}, ' ')
+			,NVL(#{noCustom1}, ' ')||NVL(#{noCustom2}, ' ')
+			,NVL(#{cdBank}, ' ')                    
+			,NVL(#{noBankAct}, ' ')                       
+			,NVL(#{dsEmail}, ' ')
+			,NVL(#{cdMarry}, ' ')               
+			,NVL(#{cdKndMobile}, ' ')                     
+			,NVL(#{noTel1Mobile}, ' ')           
+			,NVL(#{noTel2Mobile}, ' ')           
+			,NVL(#{noTel3Mobile}, ' ')           
+			,NVL(#{ynAuthMobile}, 'N')                       
+			,NVL(#{cdKndEtc}, ' ')                         
+			,NVL(#{noTel1Etc1}, ' ')                        
+			,NVL(#{noTel2Etc1}, ' ')                         
+			,NVL(#{noTel3Etc1}, ' ')                      
+			,NVL(#{ynAuthEtc}, 'N')                      
+			,NVL(#{noFax1}, ' ')                       
+			,NVL(#{noFax2}, ' ')                      
+			,NVL(#{noFax3}, ' ')         
+			,NVL(#{dtCbAgree}, ' ')     			       			         
+			,SYSDATE                   
+			,NVL(#{idReg}, ' ')
+        )
+    </insert>
+    
+    <insert id="insertBrcCustomCompany" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+        INSERT INTO BRC_CUSTOM_COMPANY (
+             NO              
+			,NO_REQ          
+			,CD_JOB_KIND     
+			,CD_RANK         
+			,CD_JOB_ACT      
+			,CD_JOB_STATUS   
+			,NM_COMP         
+			,NM_DEPT         
+			,DT_REG_JOIN     
+			,DD_PAY          
+			,AM_PAY_MONTH    
+			,NO_POST_COMP    
+			,DS_STRT_COMP    
+			,DS_ADDR_COMP    
+			,NO_TEL1_COMP    
+			,NO_TEL2_COMP    
+			,NO_TEL3_COMP    
+			,NO_EXT_COMP     
+			,NO_MAINTEL1_COMP
+			,NO_MAINTEL2_COMP
+			,NO_MAINTEL3_COMP
+			,DM_REG          
+			,ID_REG
+        ) VALUES (
+			 BRC_CUSTOM_COMPANY_SEQ.NEXTVAL 
+			,#{noReq}                       
+			,NVL(#{cdJobKind}, ' ')         
+			,NVL(#{cdRank}, ' ')                            
+			,NVL(#{cdJobAct}, ' ')                            
+			,NVL(#{cdJobStatus}, ' ')                           
+			,NVL(#{nmComp}, ' ')                           
+			,NVL(#{nmDept}, ' ')                           
+			,NVL(#{dtRegJoin}, ' ')                          
+			,NVL(#{ddPay}, ' ')                          
+			,NVL(#{amPayMonth}, '0')                         
+			,NVL(#{noPostComp}, ' ')                             
+			,NVL(#{dsStrtComp}, ' ')                            
+			,NVL(#{dsAddrComp}, ' ')                           
+			,NVL(#{noTel1Comp}, ' ')                          
+			,NVL(#{noTel2Comp}, ' ')                          
+			,NVL(#{noTel3Comp}, ' ')                          
+			,NVL(#{noExtComp}, ' ')                         
+			,NVL(#{noMaintel1Comp}, ' ')                        
+			,NVL(#{noMaintel2Comp}, ' ')                          
+			,NVL(#{noMaintel3Comp}, ' ')                           
+			,SYSDATE                        
+			,NVL(#{idReg}, ' ')
+        )
+    </insert>
+    
+    <insert id="insertBrcCustomHome" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+		INSERT INTO BRC_CUSTOM_HOME
+		(
+		    NO             ,
+		    NO_REQ         ,
+		    DT_REG_HOME    ,
+		    AM_DEPOSIT_HOME,
+		    AM_RENT_HOME   ,
+		    NO_POST_HOME   ,
+		    DS_STRT_HOME   ,
+		    DS_ADDR_HOME   ,
+		    NO_TEL1_HOME   ,
+		    NO_TEL2_HOME   ,
+		    NO_TEL3_HOME   ,
+		    NO_POST_CERT   ,
+		    DS_STRT_CERT   ,
+		    DS_ADDR_CERT   ,
+		    NO_POST_REAL   ,
+		    DS_STRT_REAL   ,
+		    DS_ADDR_REAL   ,
+		    DM_REG         ,
+		    ID_REG            
+		)
+		VALUES
+		(
+			 BRC_CUSTOM_HOME_SEQ.NEXTVAL , 
+			#{noReq} ,  
+		    ' ' ,    
+		    0	,
+		    0   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+		    ' '   ,
+			SYSDATE ,                        
+			NVL(#{idReg}, ' ')    
+		)
+    </insert>        
+    
+    <insert id="insertBrcCustomHash" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+        INSERT INTO BRC_CUSTOM_HASH ( 
+		    NO                ,
+		    NO_REQ            ,
+		    NO_CUSTOM_HASH    ,
+		    NO_TEL_MOBILE_HASH,
+		    DM_REG,            
+		    ID_REG
+        ) VALUES (
+			BRC_CUSTOM_HASH_SEQ.NEXTVAL,    
+			#{noReq},
+			NVL(SHA512_HASH(#{noCustom1}||#{noCustom2}), ' '),
+			NVL(SHA512_HASH(#{noTel1Mobile}||#{noTel2Mobile}||#{noTel3Mobile}), ' '),	       			         
+			SYSDATE,                   
+			NVL(#{idReg}, ' ')
+        )
+    </insert>    
+    
+     <update id="updateCdStatus" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcLoanRequestVO">
+       UPDATE BRC_LOAN SET 
+            CD_STATUS = #{cdStatus}
+       WHERE NO_REQ = #{noReq}
+    </update>   
+    
+</mapper>
+
+
+

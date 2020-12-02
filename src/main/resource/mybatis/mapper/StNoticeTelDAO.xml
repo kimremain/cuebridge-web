@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.st.dao.StNoticeTelDAO">
+
+	<insert id="insertStNoticeTel" parameterType="com.jcuesoft.cuebridge.st.vo.StNoticeTelRequestVO">
+		INSERT INTO ST_NOTICE_TEL
+		(
+		    NO     ,
+		    NO_TEL ,
+		    DS_REMK,
+		    DM_REG ,
+		    ID_REG 
+		)
+		VALUES
+		(
+		    ST_NOTICE_TEL_SEQ.NEXTVAL     ,
+		    #{noTel}  ,
+		    NVL(#{dsRemk}, ' ') ,
+		    SYSDATE ,
+		    #{idReg} 
+		)		
+	</insert>
+
+</mapper>
+    

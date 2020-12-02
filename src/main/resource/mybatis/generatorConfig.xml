@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry location="C:\spring\development\ojdbc6\ojdbc6.jar" />
+	<context id="context1">
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.1.1.28:1521:BRG" userId="bridge_star"
+			password="jcu2soft1115" />
+		<javaModelGenerator targetPackage="com.jcuesoft.cuebridge.basebridgedomain"
+			targetProject="cuebridge" />
+		<sqlMapGenerator targetPackage="com.jcuesoft.cuebridge.basebridgedomain"
+			targetProject="cuebridge" />
+		<javaClientGenerator targetPackage="com.jcuesoft.cuebridge.basebridgedomain"
+			targetProject="cuebridge" type="XMLMAPPER" />
+		<table tableName="BEX_CONTACT" />
+		<table tableName="BEX_MASTER" />
+		<table tableName="BGU_CAR" />
+		<table tableName="BGU_ESTIMATE" />
+		<table tableName="BGU_MASTER" />
+		<table tableName="BRC_CONTACT" />
+		<table tableName="BRC_CUSTOM" />
+		<table tableName="BRC_CUSTOM_COMPANY" />
+		<table tableName="BRC_CUSTOM_HOME" />
+		<table tableName="BRC_FILE" />
+		<table tableName="BRC_LOAN" />
+		<table tableName="BRC_SURETY" />
+		<table tableName="BRC_SURETY_COMPANY" />
+		<table tableName="BRC_SURETY_HOME" />
+		<table tableName="ST_CODE" />
+		<table tableName="ST_COMP" />
+		<table tableName="ST_CUSTOMER" />
+		<table tableName="ST_GROUP_CODE" />
+		<table tableName="ST_PDT" />
+		<table tableName="ST_PGM" />
+		<table tableName="ST_POST" />
+		<table tableName="ST_SETUP" />
+		<table tableName="ST_TEAM" />
+		<table tableName="ST_USER" />
+		<table tableName="ST_USER_AUTH" />
+		<table tableName="ST_USER_LOG" />
+	</context>
+</generatorConfiguration>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.auth.dao">
+
+	<resultMap id="userInfoResult" type="com.jcuesoft.cuebridge.auth.vo.AuthResponseVO">
+		<result property="no" column="NO" />
+		<result property="idUser" column="ID_USER" />
+		<result property="nmUser" column="NM_USER" />
+		<result property="dsPwd" column="DS_PWD" />
+		<result property="cdTeam" column="CD_TEAM" />
+		<result property="cdPart" column="CD_PART" />
+		<result property="cdRank" column="CD_RANK" />
+		<result property="ynResign" column="YN_RESIGN" />
+		<result property="noHp" column="NO_HP" />
+		<result property="dsEmail" column="DS_EMAIL" />
+		<result property="dsIp" column="DS_IP" />
+		<result property="ynAdmin" column="YN_ADMIN" />
+		<result property="ynScreen" column="YN_SCREEN" />
+		<result property="ynConfirm" column="YN_CONFIRM" />
+		<result property="ynBatch" column="YN_BATCH" />
+		<result property="ynReceiver" column="YN_RECEIVER" />
+		<result property="ynPrint" column="YN_PRINT" />
+		<result property="faxNumber" column="FAX_NUMBER" />
+		<result property="cdRoleApply" column="CD_ROLE_APPLY" />
+		<result property="noFaxCompany" column="NO_FAX_COMPANY" />		
+	</resultMap>
+	
+	<select id="getUserInfoByIdUser" parameterType="com.jcuesoft.cuebridge.auth.vo.AuthRequestVO" resultMap="userInfoResult">
+		SELECT 
+		    NO,
+		    ID_USER,
+		    NM_USER,
+		    DS_PWD,
+		    CD_TEAM,
+		    CD_PART,
+		    CD_RANK,
+		    YN_RESIGN, 
+		    NO_HP,
+		    DS_EMAIL,
+		    DS_IP,
+		    YN_ADMIN,
+		    YN_SCREEN,
+		    YN_CONFIRM,
+		    YN_BATCH,
+		    YN_RECEIVER,
+		    YN_PRINT,
+		    (SELECT NO_TEL1_FAX || NO_TEL2_FAX || NO_TEL3_FAX FROM ST_COMP) AS NO_FAX_COMPANY,
+		    (
+			    SELECT 
+			        (CASE 
+			                WHEN (SELECT COUNT(*) FROM FAX_CONFIG@ERP  
+		                                WHERE USE_TYPE = 'P' 
+		                                AND SAVE_STATUS = 'Y' 
+		                                AND USER_CODE = A.ID_USER) > 0  THEN  
+		                        (SELECT FAX_NUMBER FROM FAX_CONFIG@ERP 
+		                        WHERE USE_TYPE = 'P' 
+		                        AND USER_CODE = A.ID_USER 
+		                        AND ROWNUM <![CDATA[<= ]]> 1)            
+			                WHEN (SELECT COUNT(*) FROM FAX_CONFIG@ERP  
+			                            WHERE USE_TYPE = 'G' 
+		                                AND SAVE_STATUS = 'Y' 
+		                                AND BRANCH_TEAM = (SELECT BRANCH_TEAM FROM MEMBER@ERP 
+		                                                                    WHERE ID = A.ID_USER 
+		                                                                    AND SAVE_STATUS = 'Y' 
+		                                                                    AND ROWNUM <![CDATA[<= ]]>  1    )) > 0 THEN 
+			                     (SELECT FAX_NUMBER FROM FAX_CONFIG@ERP  
+			                     WHERE USE_TYPE = 'G' 
+		                         AND SAVE_STATUS = 'Y' 
+		                         AND BRANCH_TEAM = (SELECT BRANCH_TEAM FROM MEMBER@ERP  
+		                                                            WHERE ID = A.ID_USER 
+		                                                            AND SAVE_STATUS = 'Y' 
+		                                                            AND ROWNUM <![CDATA[<= ]]>  1) 
+		                         AND ROWNUM <![CDATA[<= ]]>  1)          
+			                ELSE '' 
+			        END)                                                                                                                                                                                                     
+			     FROM 
+			        DUAL 
+			) AS FAX_NUMBER ,
+			CD_ROLE_APPLY
+		FROM 
+		  ST_USER A
+		WHERE 
+		  A.ID_USER = #{idUser}
+	</select>	
+
+	<select id="getUserInfoByDsPwd" parameterType="com.jcuesoft.cuebridge.auth.vo.AuthRequestVO" resultMap="userInfoResult">
+		SELECT 
+		    ID_USER,
+		    NM_USER,
+		    DS_PWD,
+			CD_ROLE_APPLY
+		FROM 
+		  ST_USER A
+		WHERE 
+		  A.ID_USER = #{idUser}
+		  AND
+		  A.DS_PWD = #{dsPwd}
+	</select>
+
+	<select id="getLoginDecrypt" parameterType="String" resultType="String">
+        SELECT
+            SECURITY_PKG.DECRYPT(#{encryptStr}) as loginCookieDecrypt
+        FROM
+            DUAL
+    </select>
+    
+	<select id="getCorrectCookieId" parameterType="String" resultType="String">
+        SELECT
+            ID_USER as loginCookieDecrypt
+        FROM
+            ST_USER
+        WHERE
+            ID_USER = REPLACE(SECURITY_PKG.DECRYPT('39050230ee174ca7c315cab864d04155'), '#', '')   
+    </select>    
+
+</mapper>

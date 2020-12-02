@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.brc.dao.BrcExcelReportDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.brc.vo.BrcExcelReportResponseVO" id="brcExcelReportResult">
+        <result property="noCooperate"    column="NO_COOPERATE"    />
+        <result property="noCustomHash"    column="NO_CUSTOM_HASH"    />
+        <result property="noReq" column="NO_REQ" />
+        <result property="noCustom" column="NO_CUSTOM" />
+        <result property="nmPdt" column="NM_PDT" />
+        <result property="cdPath" column="CD_PATH" />
+        <result property="cdEportal" column="CD_EPORTAL" />
+        <result property="nmEkeyword" column="NM_EKEYWORD" />
+        <result property="cdEpath" column="CD_EPATH" />
+        <result property="amCustom" column="AM_CUSTOM" />
+        <result property="cdStatus" column="CD_STATUS" />
+        <result property="nmCustom" column="NM_CUSTOM" />
+        <result property="idReceive" column="ID_RECEIVE" />
+        <result property="idScreen" column="ID_SCREEN" />
+        <result property="ynNiceSafekey" column="YN_NICE_SAFEKEY" />
+        <result property="dsNiceSafekey" column="DS_NICE_SAFEKEY" />
+        <result property="bexCount" column="BEX_COUNT" />
+        <result property="dmReceive" column="DM_RECEIVE" />
+        <result property="dmScreen" column="DM_SCREEN" />
+        <result property="dmContact" column="DM_CONTACT" />
+        <result property="dmProcess" column="DM_PROCESS" />
+        <result property="dmCbSsn" column="DM_CB_SSN" />
+        <result property="dmCfsSsn" column="DM_CFS_SSN" />
+        <result property="dmCfs2Ssn" column="DM_CFS2_SSN" />
+		<result property="ds1stRank" column="DS_1ST_RANK" />
+		<result property="ds2ndRank" column="DS_2ND_RANK" />
+		<result property="dsAssRank" column="DS_ASS_RANK" />
+		<result property="cdTactic" column="CD_TACTIC" />
+		<result property="cdTacticLimit" column="CD_TACTIC_LIMIT" />
+		<result property="dsAssId" column="DS_ASS_ID" />
+		<result property="noTelMobile" column="NO_TEL_MOBILE" />
+		<result property="ynSurety" column="YN_SURETY" />
+		<result property="ynReapp" column="YN_REAPP" />
+		<result property="nmReject" column="NM_REJECT" />
+		<result property="nmCancel" column="NM_CANCEL" />		
+		<result property="dsCntCb" column="DS_CNT_CB" />
+    </resultMap>
+    
+
+    <select id="getBrcExcelReportList" parameterType="com.jcuesoft.cuebridge.brc.vo.BrcExcelReportRequestVO" resultMap="brcExcelReportResult">
+        SELECT 
+		    BL.NO_COOPERATE
+		    , BCH.NO_CUSTOM_HASH
+		    , BL.NO_REQ
+		    , CASE 
+                WHEN LENGTH(TRIM(BC.NO_CUSTOM)) > 6 THEN
+                        CASE 
+                          WHEN SUBSTRB(TRIM(BC.NO_CUSTOM),7,1) = '1' THEN  '남' 
+                          WHEN SUBSTRB(TRIM(BC.NO_CUSTOM),7,1) = '3' THEN  '남' 
+                          ELSE '여'
+                        END
+                 WHEN LENGTH(TRIM(BC.NO_CUSTOM)) = 1 THEN       
+                       CASE 
+                          WHEN TRIM(BC.NO_CUSTOM) = '1' THEN  '남' 
+                          WHEN TRIM(BC.NO_CUSTOM) = '2' THEN  '여'
+                        END
+                 WHEN LENGTH(TRIM(BC.NO_CUSTOM)) = 3 THEN       
+                       CASE 
+                         WHEN SUBSTRB(TRIM(BC.NO_CUSTOM),3,1) = '1' THEN  '남' 
+                          WHEN SUBSTRB(TRIM(BC.NO_CUSTOM),3,1) = '3' THEN  '남' 
+                        END
+                 ELSE '' 
+              END  NO_CUSTOM
+		    , (SELECT NM_PDT FROM ST_PDT WHERE CD_PDT = BL.CD_PDT AND CD_COOPERATE = (SELECT CD_COOPERATE_GROUP FROM ST_COMP)) NM_PDT
+		    , (SELECT GET_NM_CD(BL.CD_PATH) FROM DUAL)  CD_PATH
+		    , (SELECT GET_NM_CD(BL.CD_EPORTAL) FROM DUAL)  CD_EPORTAL
+		    , BL.NM_EKEYWORD
+		    , (SELECT GET_NM_CD(BL.CD_EPATH) FROM DUAL)  CD_EPATH
+		    , BL.AM_CUSTOM / 10000 AS AM_CUSTOM
+		    , (SELECT GET_NM_CD(BL.CD_STATUS) FROM DUAL)  CD_STATUS
+		    , (SELECT GET_NM_USER(BL.ID_RECEIVE) FROM DUAL)  ID_RECEIVE
+		    , (SELECT GET_NM_USER(BL.ID_SCREEN) FROM DUAL)  ID_SCREEN
+		    , to_char(BL.DM_RECEIVE,'YYYY-MM-DD HH24:MI:SS')  as DM_RECEIVE
+		    , BL.DM_SCREEN
+		    , CASE 
+                WHEN LENGTH(BC.DS_NICE_SAFEKEY) > 5 THEN   'Y' 
+                 ELSE 'N' 
+              END  YN_NICE_SAFEKEY
+			, BC.DS_NICE_SAFEKEY              
+            , (SELECT COUNT(NO) FROM BEX_MASTER WHERE NO_REQ = BL.NO_REQ) AS BEX_COUNT
+		    , BL.DM_CONTACT
+		    , CASE
+                WHEN CD_STATUS = '71004'   THEN BL.DM_SCREEN
+                WHEN CD_STATUS = '71005'   THEN BL.DM_AUTH
+                WHEN CD_STATUS = '71007' OR CD_STATUS = '71008'  OR CD_STATUS = '71011' THEN BL.DM_REJECT
+                WHEN BL.DM_UPT IS  NULL  THEN  BL.DM_REG
+                ELSE BL.DM_UPT
+                END AS DM_PROCESS 
+            , (
+               SELECT <![CDATA[ /*+ INDEX_DESC(T IDX_HSJ_PERSON_INFO_IDX003)  */ ]]> TRUNC(TO_DATE(SAVE_DATE,'YYYY-MM-DD HH24:MI:SS')) 
+               FROM  
+                    HSJ_PERSON_INFO@HSJ T 
+               WHERE 
+                    SSN11 = SUBSTRB(BC.NO_CUSTOM,1,6) 
+                    AND SSN12 = SUBSTRB(BC.NO_CUSTOM,7,7) 
+                    AND ROWNUM <![CDATA[<= ]]>1
+              ) AS DM_CB_SSN
+			, (
+			   SELECT <![CDATA[ /*+ INDEX_DESC(T HSJ_TR123_IDX001)  */ ]]> TRUNC(TO_DATE(APP_DATE ,'YYYY-MM-DD') ) 
+			   FROM 
+			     HSJ_TR123@HSJ T 
+			  WHERE 
+			     SSN = BC.NO_CUSTOM 
+			     AND ROWNUM <![CDATA[<= ]]> 1
+			  ) AS DM_CFS_SSN
+			, (
+			  SELECT <![CDATA[ /*+ INDEX_DESC(T HSJ_TR800_IDX001)  */ ]]> TRUNC(TO_DATE(SAVE_DATE,'YYYY-MM-DD') )
+			  FROM 
+			     HSJ_TR800@HSJ T 
+			  WHERE 
+				  SSN11 = SUBSTRB(BC.NO_CUSTOM,1,6) 
+				  AND SSN12 = SUBSTRB(BC.NO_CUSTOM,7,7) 
+				  AND ROWNUM <![CDATA[<= ]]> 1
+			  ) AS DM_CFS2_SSN
+			, CSS.DS_1ST_RANK
+			, CSS.DS_2ND_RANK
+			, CSS.DS_ASS_RANK
+			, CASE 
+				WHEN CSS.CD_TACTIC = '1' THEN '승인가능'
+				WHEN CSS.CD_TACTIC = '9' THEN '승인불가'
+				ELSE ' '
+			END AS CD_TACTIC		
+			, CASE 
+				WHEN CSS.CD_TACTIC_LIMIT = '0' THEN '한도없음'
+				WHEN CSS.CD_TACTIC_LIMIT = '1' THEN '한도하향'
+				WHEN CSS.CD_TACTIC_LIMIT = '2' THEN '한도평준'
+				WHEN CSS.CD_TACTIC_LIMIT = '3' THEN '한도상향'
+				ELSE ' '
+			END AS CD_TACTIC_LIMIT			
+			, CASE 
+				WHEN CSS.DS_ASS_ID = '1101' THEN 'SEG1'
+				WHEN CSS.DS_ASS_ID = '1102' THEN 'SEG2'
+				ELSE ' '
+			END AS DS_ASS_ID
+			, BC.NO_TEL1_MOBILE || '-' || BC.NO_TEL2_MOBILE || '-' || BC.NO_TEL3_MOBILE AS NO_TEL_MOBILE
+			, BL.YN_SURETY
+			, BL.YN_REAPP			 
+		    , (SELECT GET_NM_CD(BL.CD_REJECT) FROM DUAL)  NM_REJECT
+		    , (SELECT GET_NM_CD(BL.CD_CANCEL) FROM DUAL)  NM_CANCEL		    
+			, CSS.DS_CNT_CB AS DS_CNT_CB	
+		FROM 
+		BRC_LOAN BL , BRC_CUSTOM BC , BRC_CUSTOM_HASH BCH, FR_HSJCSS_MASTER@HSJ CSS
+		WHERE
+		    BL.NO_REQ = BC.NO_REQ
+		    AND
+		    BC.NO_REQ = BCH.NO_REQ(+)
+            AND
+            BL.NO_REQ = CSS.NO_UNIQUE(+)
+			AND
+            CSS.CD_BIZ_KIND (+)=  'BRG'
+            AND 
+            CSS.NO_SURETY (+) = ' '
+		    <if test="cdStatus != null and cdStatus != ''">
+            AND BL.CD_STATUS = #{cdStatus}
+		    </if>
+		    <if test="cdStatus == null or cdStatus == ''">
+            AND BL.CD_STATUS != '71012'
+            </if>
+		    <if test="idScreen != null and idScreen != ''">
+		            AND BL.ID_SCREEN = #{idScreen}
+		    </if>
+		    <if test="cdPdt != null and cdPdt != ''">
+		            AND BL.CD_PDT = #{cdPdt}
+		    </if>   
+		    <if test="cdPath != null and cdPath != ''">
+		            AND BL.CD_PATH = #{cdPath}
+		    </if>   
+		    <if test=" dmReceiveStart != null and dmReceiveStart != '' and dmReceiveEnd != null and dmReceiveEnd != '' ">
+		            AND BL.DM_RECEIVE <![CDATA[ >= ]]> #{dmReceiveStart} AND BL.DM_RECEIVE <![CDATA[ < ]]>TO_DATE(#{dmReceiveEnd},'YYYY-MM-DD')+1
+		    </if>
+		    <if test=" dmContactStart != null and dmContactStart != '' and dmContactEnd != null and dmContactEnd != '' ">
+                    AND BL.DM_CONTACT <![CDATA[ >= ]]> #{dmContactStart} AND BL.DM_CONTACT <![CDATA[ < ]]>TO_DATE(#{dmContactEnd},'YYYY-MM-DD')+1
+            </if>
+		    <if test=" dmScreenStart != null and dmScreenStart != '' and dmScreenEnd != null and dmScreenEnd != '' ">
+		            AND BL.DM_SCREEN <![CDATA[ >= ]]> #{dmScreenStart} AND BL.DM_SCREEN <![CDATA[ < ]]>TO_DATE(#{dmScreenEnd},'YYYY-MM-DD')+1
+		    </if>
+		   ORDER BY BL.NO DESC
+    </select>
+
+</mapper>
+    

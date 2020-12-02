@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexToUpsDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" id="bexToUpsResult">
+        <result property="noReq"    column="NO_REQ"    />
+        <result property="fileSrc" column="FILE_SRC" />
+        <result property="fileDest" column="FILE_DEST" />
+    </resultMap>
+    
+	<resultMap id="BrcFileResultMap"
+		type="com.jcuesoft.cuebridge.brc.vo.BrcFileResponseVO">
+		<id column="NO" property="no" jdbcType="DECIMAL" />
+		<result column="NO_REQ" property="noReq" jdbcType="VARCHAR" />
+		<result column="NO_IMG" property="noImg" jdbcType="VARCHAR" />
+		<result column="CD_FILE" property="cdFile" jdbcType="VARCHAR" />
+		<result column="NM_FILE" property="nmFile" jdbcType="VARCHAR" />
+		<result column="NM_FILE_USER" property="nmFileUser" jdbcType="VARCHAR" />
+		<result column="DS_PATH" property="dsPath" jdbcType="VARCHAR" />
+		<result column="DS_URL" property="dsUrl" jdbcType="VARCHAR" />
+		<result column="DS_REMK" property="dsRemk" jdbcType="VARCHAR" />
+		<result column="DM_REG" property="dmReg" jdbcType="TIMESTAMP" />
+		<result column="DM_REG_CHAR" property="dmRegChar" jdbcType="VARCHAR" />
+		<result column="ID_REG" property="idReg" jdbcType="VARCHAR" />
+		<result column="DM_UPT" property="dmUpt" jdbcType="TIMESTAMP" />
+		<result column="ID_UPT" property="idUpt" jdbcType="VARCHAR" />
+	</resultMap>  
+	
+	<resultMap id="BrcSuretyResultMap" type="com.jcuesoft.cuebridge.brc.vo.BrcSuretyResponseVO">
+		<id column="NO" jdbcType="DECIMAL" property="no" />
+		<result column="NO_REQ" jdbcType="VARCHAR" property="noReq" />
+		<result column="NO_SURETY" jdbcType="VARCHAR" property="noSurety" />	
+	</resultMap>	
+	
+	<select id="getStPdtIdPdtUid" resultType="String" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		SELECT
+		    ID_PDT_UID
+		FROM 
+		    ST_PDT
+		WHERE
+		    CD_PDT = (SELECT CD_PDT FROM BRC_LOAN WHERE NO_REQ = #{noReq})
+		<!--스타로 임시조건 : 멀티도메인 구성후 법인코드 세션저장후 바인딩으로 변경할것  --> 
+		<!-- AND CD_COOPERATE = '70302' -->
+		AND ROWNUM <![CDATA[<= ]]>  1 
+	</select>    	
+	
+    <select id="getSuretyList" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" resultMap="BrcSuretyResultMap">
+    	SELECT
+    		NO,
+    		NO_REQ,
+    		NO_SURETY
+    	FROM
+    		BRC_SURETY
+		WHERE
+			NO_REQ = #{noReq}
+		ORDER BY
+			NO ASC			    		
+    </select>	  
+
+    <select id="getBrcFileList" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" resultMap="BrcFileResultMap">
+    	SELECT
+    		NO,
+    		NO_REQ,
+    		TO_CHAR(DM_REG, 'YYYYMMDDHH24MISS') AS DM_REG_CHAR,
+    		DS_PATH,
+    		NM_FILE
+    	FROM
+    		BRC_FILE
+		WHERE
+			NO_REQ = #{noReq}
+		ORDER BY
+			NO ASC			    		
+    </select>
+    
+    <select id="getCopyFileList" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" resultMap="bexToUpsResult">
+    	SELECT
+    		NO_REQ
+    	FROM
+    		BRC_FILE
+		WHERE
+			NO_REQ = #{noReq}    		
+    </select>
+
+    <select id="getMemberListNoSeq" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO"  resultType="String">
+    	SELECT MEMBER_LIST_NO_SEQ.NEXTVAL${upsDbLink} AS SEQ FROM DUAL
+    </select>
+    
+    <select id="getAddloanNoSeq" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO"  resultType="String">
+    	SELECT ADDLOAN_NO_SEQ.NEXTVAL${erpDbLink} AS SEQ FROM DUAL
+    </select>    
+    
+    <select id="getGuarantorNoSeq" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" resultType="String">
+    	SELECT GUARANTOR_NO_SEQ.NEXTVAL${upsDbLink} FROM DUAL
+    </select>
+    
+    <select id="getDataImgNoSeq" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" resultType="String">
+    	SELECT DATA_IMG_NO_SEQ.NEXTVAL${upsDbLink} FROM DUAL
+    </select>
+    
+    <select id="getAgentLevelNoSeq" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO"  resultType="String">
+    	SELECT AGENT_LEVEL_NO_SEQ.NEXTVAL${upsDbLink} AS SEQ FROM DUAL
+    </select>    
+    
+    <select id="getYnSurety" parameterType="String" resultType="String">
+    	SELECT YN_SURETY FROM BRC_LOAN WHERE NO_REQ = #{noReq}
+    </select>
+    
+    <select id="selectErpMemberListNo" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO" resultType="String">
+		SELECT 
+		    (CASE WHEN COUNT(*) > 0 THEN MAX(MEMBER_LIST_NO) ELSE 0 END) AS MEMBER_LIST_NO 
+		FROM 
+			MEMBER_LIST_HASH${erpDbLink}
+		WHERE
+			CD_KIND = 'ERP'
+            AND
+		    SSN_HASH = (SELECT SHA512_HASH(NO_CUSTOM) 
+		                    FROM BRC_CUSTOM 
+		                    WHERE NO_REQ = #{noReq})
+    </select>
+
+	<insert id="insertMemberList" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO  MEMBER_LIST${upsDbLink}
+		(
+		    NO,
+		    NAME,
+		    SSN11,
+		    SSN12,
+		    PATH_CODE,
+		    COM_CODE,
+		    SUB_COM_CODE,
+		    COOPERATE_CODE,
+		    MARKETING_CODE,
+		    MARKETING_SUB_CODE,
+		    APP_MONEY,
+		    APP_DATE,
+		    WORKER_ID,
+		    SAVE_TIME,
+		    SAVE_STATUS,
+		    STATUS,
+		    A_ID,
+		    A_TIME,
+		    LOAN_ITEM,
+		    REG_DT,
+		    DT_AGREE_INFO,
+		    CFS_FIRST_LEVEL,
+		    CFS_FIRST_SCORE,
+		    CFS_SECOND_LEVEL,
+		    CFS_SECOND_SCORE,
+		    CFS_FAIL_SCORE,
+		    CFS_BAD_CD1,
+		    CFS_SVBANK_CNT,
+		    LIA_GRADE,
+		    CFS_CLUE20,
+		    CFS_CLUE21,
+		    CFS_CLUE40,
+		    CFS_CLUE41,
+		    FUSION_GRADE,
+		    INCOME_GRADE,
+		    REJECT_CODE,
+		    NPAC_AGREE,
+		    SAFE_KEY,
+		    CB_CNT,
+		    CB_MONEY,
+		    TR_SP_GRADE,
+		    TR_SP_SCORE,
+		    TR_ASS_GRADE,
+		    TR_ASS_SCORE,
+		    TR_PI_GRADE,
+		    TR_PI_SCORE,
+		    TR_TACTIC_RES,
+		    TR_TACTIC_LIMIT,
+		    TR_ASS_SCORE_ID,
+		    CFS_DATE,
+		    X_TIME,
+		    APP_IP,
+		    SAFE_KEY_OPER_CODE,
+		    SAFE_KEY_REQSEQ
+		)    
+		SELECT
+		    #{memberListNo},
+		    B.NM_CUSTOM,
+		    NVL(SUBSTRB(REPLACE(B.NO_CUSTOM, '-', ''), 1, 6), ' '),
+		    NVL(SUBSTRB(REPLACE(B.NO_CUSTOM, '-', ''), 7, 7), ' '),
+		    (CASE WHEN A.CD_PATH IN ('70401', '70402') THEN '21502' 
+		    		 WHEN A.CD_PATH = '70405' THEN '21503'
+		    		 ELSE '21510' END) AS PATH_CODE,
+		    #{idPdtUid},
+		    A.NO_COOPERATE,
+		    C.NO_COOPERATE,
+			'12206',
+		    #{idPdtUid} AS MARKETING_SUB_CODE,
+		    A.AM_CUSTOM / 10000,
+		    TRUNC(SYSDATE),
+		    'SYSTEM',
+		    #{unixTime},
+		    'Y',
+		    #{status},
+		    A.ID_SCREEN,
+		    #{unixTime},
+		    A.CD_PDT,
+		    TO_CHAR(SYSDATE, 'YYYYMMDD'),
+		    TO_DATE(REPLACE(TRIM(B.DT_CB_AGREE), '-', ''), 'YYYYMMDD'),
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+		    #{rejectCode},
+		    B.YN_NICE_SAFEKEY,
+		    B.DS_NICE_SAFEKEY,
+		    TRIM(E.DS_CNT_CB),
+			TRIM(E.DS_AMT_CB),
+			TRIM(E.DS_2ND_RANK),
+			TRIM(E.DS_2ND_SCORE),
+			TRIM(E.DS_ASS_RANK),
+			TRIM(E.DS_ASS_SCORE),
+			TO_NUMBER(TRIM(E.DS_PI_RANK)),
+			TO_NUMBER(TRIM(E.DS_PI_SCORE)),
+			TRIM(E.CD_TACTIC),
+			TRIM(E.CD_TACTIC_LIMIT),
+			TRIM(E.DS_ASS_ID),
+			TRUNC(E.DM_REG),
+			(CASE WHEN #{status} = 'X' THEN #{unixTime} ELSE NULL END) AS X_TIME,
+			A.DS_ACCESS_IP,
+			TRIM(#{safeKeyOperCode}),
+			TRIM(#{safeKeyReqseq})
+		FROM
+		    BRC_LOAN A,
+		    BRC_CUSTOM B,
+		    BEX_MASTER C,
+		    FR_HSJCSS_MASTER@HSJ E
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = C.NO_REQ
+		    AND
+		    C.NO_REQ = #{noReq}   
+		    AND
+		    C.NO_EX = #{noEx}
+		    AND
+            A.NO_REQ = E.NO_UNIQUE(+)
+			AND
+            E.CD_BIZ_KIND (+)=  'BRG'
+            AND 
+            E.NO_SURETY (+) = ' ' 		    
+	</insert>
+	
+	<insert id="insertAddloan" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO ADDLOAN${erpDbLink}
+		( 
+		    STATUS, 
+		    NO, 
+		    MEMBER_LIST_NO, 
+		    CONTRACT_INFO_NO, 
+		    PATH_CODE, 
+		    LOAN_ITEM, 
+		    MARKETING_CODE, 
+		    MARKETING_SUB_CODE, 
+		    COM_CODE, 
+		    A_ID, 
+		    A_TIME, 
+		    APP_MONEY, 
+		    COOPERATE_CODE
+		)
+		SELECT
+		    '50100' AS STATUS,
+		    #{addloanNoSeq},
+		    #{erpMemberListNo},
+		    (SELECT MAX(NO) 
+		    FROM CONTRACT_INFO${erpDbLink}
+		    WHERE SAVE_STATUS = 'Y' AND MEMBER_LIST_NO = #{erpMemberListNo}) AS CONTRACT_INFO_NO,
+		    (CASE WHEN A.CD_PATH IN ('70401', '70402') THEN '21502' ELSE '21510' END) AS PATH_CODE,
+		    A.CD_PDT AS LOAN_ITEM,
+		    '12206' AS MARKETING_CODE,
+		    NVL(#{idPdtUid}, ' '),
+		    NVL(#{idPdtUid}, ' '),
+		    A.ID_SCREEN AS A_ID,
+		    SYSDATE AS A_TIME,
+		    A.AM_CUSTOM AS APP_MONEY,
+		    C.NO_COOPERATE AS COOPERATE_CODE
+		FROM
+		    BRC_LOAN A,
+		    BRC_CUSTOM B,
+		    BEX_MASTER C
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = C.NO_REQ
+		    AND
+		    C.NO_REQ = #{noReq}
+		    AND
+		    C.NO_EX = #{noEx}
+	</insert>	
+	
+	<insert id="insertMemberListExtra" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO MEMBER_LIST_EXTRA${upsDbLink}
+		(
+		    MEMBER_LIST_NO,
+		    MARRY,
+		    PH21,
+		    PH22,
+		    PH23,
+		    PH2_COM,
+		    EMAIL,
+		    JOB_CLASS,
+			COM_NAME,
+			COM_PART,
+			COM_GRADE,
+			PH61,
+			PH62,
+			PH63,
+			COM_GOYONG,
+			COM_JIKMU,
+			COM_YEAR,
+			COM_MONTH,
+			COM_PAY		    
+		)
+		SELECT    
+		    #{memberListNo},
+		    (CASE WHEN A.CD_MARRY = '70701' THEN 'A'
+		               WHEN A.CD_MARRY = '70702' THEN 'B'
+		               WHEN A.CD_MARRY = '70703' THEN 'C'
+		               WHEN A.CD_MARRY = '70704' THEN 'D'
+		               WHEN A.CD_MARRY = '70705' THEN 'E'
+		               WHEN A.CD_MARRY = '70706' THEN 'F'
+		               WHEN A.CD_MARRY = '70707' THEN 'G'
+		               WHEN A.CD_MARRY = '70708' THEN 'Z'
+		               ELSE NULL
+		    END) AS MARRY,
+		    A.NO_TEL1_MOBILE,
+		    A.NO_TEL2_MOBILE,
+		    A.NO_TEL3_MOBILE,
+		    (CASE WHEN A.CD_KND_MOBILE = '70801' THEN 'S'
+		               WHEN A.CD_KND_MOBILE = '70802' THEN 'K'
+		               WHEN A.CD_KND_MOBILE = '70803' THEN 'L'
+		               ELSE NULL
+		    END) AS PH2_COM,
+		    A.DS_EMAIL AS EMAIL,
+		    (CASE WHEN B.CD_JOB_KIND = '70901' THEN 'A'
+		               WHEN B.CD_JOB_KIND = '70902' THEN 'B'
+		               WHEN B.CD_JOB_KIND = '70903' THEN 'C'
+		               WHEN B.CD_JOB_KIND = '70904' THEN 'D'
+		               WHEN B.CD_JOB_KIND = '70905' THEN 'E'
+		               WHEN B.CD_JOB_KIND = '70906' THEN 'F'
+		               WHEN B.CD_JOB_KIND = '70907' THEN 'X'
+		               WHEN B.CD_JOB_KIND = '70908' THEN 'E'
+		               ELSE NULL
+		    END) AS JOB_CLASS,
+			NM_COMP,
+			NM_DEPT,
+			CD_RANK,
+			NO_MAINTEL1_COMP,
+			NO_MAINTEL2_COMP,
+			NO_MAINTEL3_COMP,
+			CD_JOB_STATUS,
+			CD_JOB_ACT,
+			SUBSTRB(DT_REG_JOIN, 1, 4),
+			SUBSTRB(DT_REG_JOIN, 5, 2),
+			AM_PAY_MONTH / 10000		    
+		FROM
+		    BRC_CUSTOM A,
+		    BRC_CUSTOM_COMPANY B
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = #{noReq} 
+	</insert>
+	
+	<insert id="insertGuarantor" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO GUARANTOR${upsDbLink}
+		(
+		    NO,
+		    MEMBER_LIST_NO,
+		    NAME,
+		    SSN11,
+		    SSN12,
+		    WORKER_ID,
+		    SAVE_TIME,
+		    SAVE_STATUS,
+		    NPAC_AGREE,
+		    SAFE_KEY		    
+		)     
+		SELECT
+		    #{guarantorNo} ,
+		    #{memberListNo},
+		    A.NM_CUSTOM,
+		    SUBSTRB(REPLACE(A.NO_CUSTOM, '-', ''), 1, 6) AS SSN11,
+		    SUBSTRB(REPLACE(A.NO_CUSTOM, '-', ''), 7, 7) AS SSN12,
+		    'SYSTEM',
+		    #{unixTime},
+		    'Y',
+		    A.YN_NICE_SAFEKEY,
+		    A.DS_NICE_SAFEKEY
+		FROM
+		    BRC_SURETY A,
+		    BRC_SURETY_COMPANY B
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_SURETY = B.NO_SURETY     
+		    AND
+		    A.NO_REQ = #{noReq}    
+		    AND
+		    A.NO_SURETY= #{noSurety}	
+	</insert>	
+
+	<insert id="insertGuarantorExtra" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO GUARANTOR_EXTRA${upsDbLink}
+		(
+		    GUARANTOR_NO,
+		    MARRY,
+		    PH21,
+		    PH22,
+		    PH23,
+		    PH2_COM,
+		    EMAIL,
+		    JOB_CLASS
+		)     
+		SELECT
+		    #{guarantorNo},
+		    (CASE WHEN A.CD_MARRY = '70701' THEN 'A'
+		               WHEN A.CD_MARRY = '70702' THEN 'B'
+		               WHEN A.CD_MARRY = '70703' THEN 'C'
+		               WHEN A.CD_MARRY = '70704' THEN 'D'
+		               WHEN A.CD_MARRY = '70705' THEN 'E'
+		               WHEN A.CD_MARRY = '70706' THEN 'F'
+		               WHEN A.CD_MARRY = '70707' THEN 'G'
+		               WHEN A.CD_MARRY = '70708' THEN 'Z'
+		               ELSE NULL
+		    END) AS MARRY,
+		    A.NO_TEL1_MOBILE,
+		    A.NO_TEL2_MOBILE,
+		    A.NO_TEL3_MOBILE,
+		    (CASE WHEN A.CD_KND_MOBILE = '70801' THEN 'S'
+		               WHEN A.CD_KND_MOBILE = '70802' THEN 'K'
+		               WHEN A.CD_KND_MOBILE = '70803' THEN 'L'
+		               ELSE NULL
+		    END) AS PH2_COM,
+		    A.DS_EMAIL,
+		    (CASE WHEN B.CD_JOB_KIND = '70901' THEN 'A'
+		               WHEN B.CD_JOB_KIND = '70902' THEN 'B'
+		               WHEN B.CD_JOB_KIND = '70903' THEN 'C'
+		               WHEN B.CD_JOB_KIND = '70904' THEN 'D'
+		               WHEN B.CD_JOB_KIND = '70905' THEN 'E'
+		               WHEN B.CD_JOB_KIND = '70906' THEN 'F'
+		               WHEN B.CD_JOB_KIND = '70907' THEN 'X'
+		               WHEN B.CD_JOB_KIND = '70908' THEN 'E'
+		               ELSE NULL
+		    END)
+		FROM
+		    BRC_SURETY A,
+		    BRC_SURETY_COMPANY B
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_SURETY = B.NO_SURETY     
+		    AND
+		    A.NO_REQ = #{noReq}     
+		    AND
+		    A.NO_SURETY = #{noSurety}	
+	</insert>
+	
+	<insert id="insertCommunication" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO ${communicationNm}${upsDbLink}
+		(
+		    NO,
+		    MEMBER_LIST_NO,
+		    WORKER_ID,
+		    SAVE_TIME,
+		    COMMUNICATION_CODE,
+		    PROMISE_DATE,
+		    PROMISE_HOUR,
+		    PROMISE_MINUTE,
+		    MEMO,
+		    SAVE_STATUS
+		)
+		SELECT
+		    ${communicationNm}_NO_SEQ.NEXTVAL${upsDbLink},
+		    #{memberListNo},
+		    ID_REG,
+		    (DM_REG-TO_DATE('19700101090000','YYYYMMDDHH24MISS'))*86400 AS SAVE_TIME,
+		    '19016' AS COMMUNICATION_CODE,
+		    TO_CHAR(DM_PROMISE, 'YYYY-MM-DD') AS PROMISE_DATE,
+		    TO_CHAR(DM_PROMISE, 'HH24') AS PROMISE_HOUR,
+		    TO_CHAR(DM_PROMISE, 'MI') AS PROMISE_MINUTE,
+		    DS_MEMO,
+		    'Y' AS SAVE_STATUS
+		FROM
+		    BRC_CONTACT
+		WHERE
+		    NO_REQ = #{noReq}
+		    AND NOT CD_CONTACT = '71202'
+	</insert>
+	
+	<insert id="insertLoanCertify" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO LOAN_CERTIFY${upsDbLink}    
+		(
+		    NO,
+		    MEMBER_LIST_NO,
+		    SAVE_STATUS,
+		    SAVE_TIME,
+		    CERTIFY_TYPE,
+		    CERTIFY_DATE,
+		    CERTIFY_RESULT,
+		    CERTIFY_PH,
+		    LOAN_AGREE1,
+		    LOAN_AGREE2,
+		    LOAN_AGREE3,
+		    LOAN_AGREE4,
+		    LOAN_AGREE5,
+		    LOAN_AGREE6,
+		    LOAN_AGREE7,
+		    LOAN_AGREE8,
+		    LOAN_AGREE9,
+		    LOAN_AGREE10,
+		    LOAN_AGREE11,
+		    LOAN_AGREE12
+		)
+		SELECT
+		    LOAN_CERTIFY_NO_SEQ.NEXTVAL${upsDbLink},
+		    #{memberListNo},
+		    'Y',
+		    #{unixTime},
+		    (CASE WHEN CD_AUTH = '71101' THEN 'S'
+		           WHEN CD_AUTH = '71102' THEN 'C'
+		           WHEN CD_AUTH = '71103' THEN 'H'
+		           ELSE ' '
+		    END) AS CERTIFY_TYPE,
+		    TO_CHAR(DM_AUTH, 'YYYYMMDDHH24MISS'),
+		    YN_AUTH,
+		    NO_HP,
+		    YN_INFO_SEARCH,
+		    YN_INFO_COLLECT,
+		    YN_UID_USE,
+		    YN_INFO_OPT_USE,
+		    YN_INFO_UID_USE,
+		    YN_INFO_SUPPLY,
+		    YN_UID_SUPPLY,
+		    YN_INFO_OPT_SUPPLY,
+		    YN_UID_SUPPLY,
+		    YN_BIZ_TEL,
+		    YN_BIZ_SMS,
+		    YN_BIZ_EMAIL
+		FROM
+		    BRC_AUTH_HIST
+		WHERE
+		    NO_REQ = #{noReq}
+		    AND
+		    NO_AUTH = (SELECT MAX(NO_AUTH) FROM BRC_AUTH_HIST WHERE NO_REQ = #{noReq})	
+	</insert>
+
+	<insert id="insertDataImg" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO DATA_IMG${upsDbLink} 
+		(
+		    NO,
+		    MEMBER_LIST_NO,
+		    WORKER_ID,
+		    SAVE_TIME,
+		    IMG_DIV,
+		    ORIGIN_FILENAME,
+		    FILENAME,
+		    EXTENSION,
+		    MEMO,
+		    PATH
+		)
+		SELECT
+		    #{dataImgNo},
+		    #{memberListNo},
+		    ID_REG,
+		    #{unixTime},
+		    CD_FILE,
+		    NM_FILE_USER,
+		    #{dataImgFileName},
+		    (CASE WHEN NM_FILE LIKE '%.%' THEN REPLACE(SUBSTR(NM_FILE,INSTR(NM_FILE,'.',-1,1),LENGTH(NM_FILE)), '.', '') ELSE NULL END),
+		    DS_REMK,
+		    #{dataImgPath}
+		FROM
+		    BRC_FILE    
+		WHERE
+		    NO_REQ = #{noReq}	
+		    AND
+		    NO = #{brcFileNo}	
+	</insert>
+	
+	<insert id="insertAgentLevel" parameterType="com.jcuesoft.cuebridge.bex.vo.BexToUpsVO">
+		INSERT INTO AGENT_LEVEL${upsDbLink} 
+		(
+		    NO,
+		    MEMBER_LIST_NO,
+		    COOPERATE_CODE,
+		    NAME,
+		    SSN11,
+		    SSN12,		    
+		    <!--정보적법수집  -->
+		    AGENT_CALL,
+		    CUST_CALL_ROUTE,  
+		    LEGAL_DATE,
+		    AGENT1_CEO_NAME,
+		    AGENT1_FAO_NAME,
+			<!--중개경로-->
+			AGENT1_LEVEL,
+			AGENT2_LEVEL,
+			AGENT3_LEVEL,
+			AGENT4_LEVEL,
+			AGENT5_LEVEL,
+			AGENT6_LEVEL,
+			AGENT7_LEVEL,
+			AGENT8_LEVEL,
+			AGENT9_LEVEL,
+			AGENT1_APP_DATE,
+			AGENT2_APP_DATE,
+			AGENT3_APP_DATE,
+			AGENT4_APP_DATE,
+			AGENT5_APP_DATE,
+			AGENT6_APP_DATE,
+			AGENT7_APP_DATE,
+			AGENT8_APP_DATE,
+			AGENT9_APP_DATE,
+			AGENT1_NAME,
+			AGENT2_NAME,
+			AGENT3_NAME,
+			AGENT4_NAME,
+			AGENT5_NAME,
+			AGENT6_NAME,
+			AGENT7_NAME,
+			AGENT8_NAME,
+			AGENT9_NAME,
+			AGENT1_SSN,
+			AGENT2_SSN,
+			AGENT3_SSN,
+			AGENT4_SSN,
+			AGENT5_SSN,
+			AGENT6_SSN,
+			AGENT7_SSN,
+			AGENT8_SSN,
+			AGENT9_SSN,
+			AGENT1_ASSN,
+			AGENT2_ASSN,
+			AGENT3_ASSN,
+			AGENT4_ASSN,
+			AGENT5_ASSN,
+			AGENT6_ASSN,
+			AGENT7_ASSN,
+			AGENT8_ASSN,
+			AGENT9_ASSN,
+			AGENT1_PH11,
+			AGENT2_PH11,
+			AGENT3_PH11,
+			AGENT4_PH11,
+			AGENT5_PH11,
+			AGENT6_PH11,
+			AGENT7_PH11,
+			AGENT8_PH11,
+			AGENT9_PH11,
+			AGENT1_PH12,
+			AGENT2_PH12,
+			AGENT3_PH12,
+			AGENT4_PH12,
+			AGENT5_PH12,
+			AGENT6_PH12,
+			AGENT7_PH12,
+			AGENT8_PH12,
+			AGENT9_PH12,
+			AGENT1_PH13,
+			AGENT2_PH13,
+			AGENT3_PH13,
+			AGENT4_PH13,
+			AGENT5_PH13,
+			AGENT6_PH13,
+			AGENT7_PH13,
+			AGENT8_PH13,
+			AGENT9_PH13,
+		    SAVE_STATUS
+		)
+		SELECT
+		    #{agentLevelNo},
+		    #{memberListNo},
+		    C.NO_COOPERATE,
+		    B.NM_CUSTOM,		    
+		    SUBSTRB(B.NO_CUSTOM, 1, 6) AS SSN11,
+		    SUBSTRB(B.NO_CUSTOM, 7, 7) AS SSN12,		
+		    <!--정보적법수집--> 
+            '31001' AS AGENT_CALL,
+            (CASE WHEN D.CD_CONTACT_CUST = '71401' THEN '31101'
+                       WHEN D.CD_CONTACT_CUST = '71402' THEN '31102'
+                       WHEN D.CD_CONTACT_CUST IS NULL AND A.CD_PATH IN ('70403', '70404') THEN '31101'
+                       WHEN D.CD_CONTACT_CUST IS NULL THEN '31102'
+            END) AS CUST_CALL_ROUTE,
+		    NVL(TRUNC(TO_DATE(D.DT_AGENT, 'YYYYMMDD')), TRUNC(A.DM_REG)) AS  LEGAL_DATE,
+            NVL(D.NM_AGENT_CEO, SC.NM_CEO) AS AGENT1_CEO_NAME,
+            NVL(D.NM_AGENT_MANAGER, (SELECT NM_USER FROM ST_USER WHERE ID_USER = A.ID_SCREEN)) AS AGENT1_FAO_NAME,		    
+		    <!--중개경로 1~9-->
+            H.AGENT1_LEVEL,
+            H.AGENT2_LEVEL,            
+            H.AGENT3_LEVEL,            
+            H.AGENT4_LEVEL,            
+            H.AGENT5_LEVEL,            
+            H.AGENT6_LEVEL,            
+            H.AGENT7_LEVEL,            
+            H.AGENT8_LEVEL,            
+            H.AGENT9_LEVEL,
+            H.AGENT1_APP_DATE,            
+            H.AGENT2_APP_DATE,            
+            H.AGENT3_APP_DATE,            
+            H.AGENT4_APP_DATE,            
+            H.AGENT5_APP_DATE,            
+            H.AGENT6_APP_DATE,            
+            H.AGENT7_APP_DATE,            
+            H.AGENT8_APP_DATE,            
+            H.AGENT9_APP_DATE,            
+            H.AGENT1_NAME,            
+            H.AGENT2_NAME,           
+            H.AGENT3_NAME,          
+            H.AGENT4_NAME,         
+            H.AGENT5_NAME,        
+            H.AGENT6_NAME,       
+            H.AGENT7_NAME,      
+            H.AGENT8_NAME,     
+            H.AGENT9_NAME,
+            H.AGENT1_SSN,            
+            H.AGENT2_SSN,            
+            H.AGENT3_SSN,            
+            H.AGENT4_SSN,            
+            H.AGENT5_SSN,            
+            H.AGENT6_SSN,            
+            H.AGENT7_SSN,            
+            H.AGENT8_SSN,            
+            H.AGENT9_SSN,            
+            H.AGENT1_ASSN,            
+            H.AGENT2_ASSN,            
+            H.AGENT3_ASSN,            
+            H.AGENT4_ASSN,            
+            H.AGENT5_ASSN,            
+            H.AGENT6_ASSN,            
+            H.AGENT7_ASSN,            
+            H.AGENT8_ASSN,            
+            H.AGENT9_ASSN,            
+            H.AGENT1_PH11,            
+            H.AGENT2_PH11,           
+            H.AGENT3_PH11,          
+            H.AGENT4_PH11,         
+            H.AGENT5_PH11,        
+            H.AGENT6_PH11,       
+            H.AGENT7_PH11,      
+            H.AGENT8_PH11,     
+            H.AGENT9_PH11,    
+            H.AGENT1_PH12,   
+            H.AGENT2_PH12,  
+            H.AGENT3_PH12, 
+            H.AGENT4_PH12,
+            H.AGENT5_PH12,
+            H.AGENT6_PH12,
+            H.AGENT7_PH12,
+            H.AGENT8_PH12,
+            H.AGENT9_PH12,
+            H.AGENT1_PH13,
+            H.AGENT2_PH13,
+            H.AGENT3_PH13,
+            H.AGENT4_PH13,
+            H.AGENT5_PH13,
+            H.AGENT6_PH13,
+            H.AGENT7_PH13,
+            H.AGENT8_PH13,
+            H.AGENT9_PH13,                        
+		    'Y' AS SAVE_STATUS
+		FROM
+		    BRC_LOAN A,
+		    BRC_CUSTOM B,
+		    BEX_MASTER C,
+            BRC_INFO_LEGAL D,
+            ST_COMP SC,		    
+		    (SELECT
+		        NO_REQ,
+		        MAX(AGENT1_LEVEL) AS AGENT1_LEVEL,
+                MAX(AGENT2_LEVEL) AS AGENT2_LEVEL,
+                MAX(AGENT3_LEVEL) AS AGENT3_LEVEL,
+                MAX(AGENT4_LEVEL) AS AGENT4_LEVEL,
+                MAX(AGENT5_LEVEL) AS AGENT5_LEVEL,
+                MAX(AGENT6_LEVEL) AS AGENT6_LEVEL,
+                MAX(AGENT7_LEVEL) AS AGENT7_LEVEL,
+                MAX(AGENT8_LEVEL) AS AGENT8_LEVEL,
+                MAX(AGENT9_LEVEL) AS AGENT9_LEVEL,
+		        MAX(AGENT1_APP_DATE) AS AGENT1_APP_DATE,
+                MAX(AGENT2_APP_DATE) AS AGENT2_APP_DATE,
+                MAX(AGENT3_APP_DATE) AS AGENT3_APP_DATE,
+                MAX(AGENT4_APP_DATE) AS AGENT4_APP_DATE,
+                MAX(AGENT5_APP_DATE) AS AGENT5_APP_DATE,
+                MAX(AGENT6_APP_DATE) AS AGENT6_APP_DATE,
+                MAX(AGENT7_APP_DATE) AS AGENT7_APP_DATE,
+                MAX(AGENT8_APP_DATE) AS AGENT8_APP_DATE,
+                MAX(AGENT9_APP_DATE) AS AGENT9_APP_DATE,
+                MAX(AGENT1_NAME) AS AGENT1_NAME,
+                MAX(AGENT2_NAME) AS AGENT2_NAME,
+                MAX(AGENT3_NAME) AS AGENT3_NAME,
+                MAX(AGENT4_NAME) AS AGENT4_NAME,
+                MAX(AGENT5_NAME) AS AGENT5_NAME,
+                MAX(AGENT6_NAME) AS AGENT6_NAME,
+                MAX(AGENT7_NAME) AS AGENT7_NAME,
+                MAX(AGENT8_NAME) AS AGENT8_NAME,
+                MAX(AGENT9_NAME) AS AGENT9_NAME,
+                MAX(AGENT1_SSN) AS AGENT1_SSN,
+                MAX(AGENT2_SSN) AS AGENT2_SSN,
+                MAX(AGENT3_SSN) AS AGENT3_SSN,
+                MAX(AGENT4_SSN) AS AGENT4_SSN,
+                MAX(AGENT5_SSN) AS AGENT5_SSN,
+                MAX(AGENT6_SSN) AS AGENT6_SSN,
+                MAX(AGENT7_SSN) AS AGENT7_SSN,
+                MAX(AGENT8_SSN) AS AGENT8_SSN,
+                MAX(AGENT9_SSN) AS AGENT9_SSN,
+                MAX(AGENT1_ASSN) AS AGENT1_ASSN,
+                MAX(AGENT2_ASSN) AS AGENT2_ASSN,
+                MAX(AGENT3_ASSN) AS AGENT3_ASSN,
+                MAX(AGENT4_ASSN) AS AGENT4_ASSN,
+                MAX(AGENT5_ASSN) AS AGENT5_ASSN,
+                MAX(AGENT6_ASSN) AS AGENT6_ASSN,
+                MAX(AGENT7_ASSN) AS AGENT7_ASSN,
+                MAX(AGENT8_ASSN) AS AGENT8_ASSN,
+                MAX(AGENT9_ASSN) AS AGENT9_ASSN,                
+                MAX(AGENT1_PH11) AS AGENT1_PH11,
+                MAX(AGENT2_PH11) AS AGENT2_PH11,
+                MAX(AGENT3_PH11) AS AGENT3_PH11,
+                MAX(AGENT4_PH11) AS AGENT4_PH11,
+                MAX(AGENT5_PH11) AS AGENT5_PH11,
+                MAX(AGENT6_PH11) AS AGENT6_PH11,
+                MAX(AGENT7_PH11) AS AGENT7_PH11,
+                MAX(AGENT8_PH11) AS AGENT8_PH11,
+                MAX(AGENT9_PH11) AS AGENT9_PH11,
+                MAX(AGENT1_PH12) AS AGENT1_PH12,
+                MAX(AGENT2_PH12) AS AGENT2_PH12,
+                MAX(AGENT3_PH12) AS AGENT3_PH12,
+                MAX(AGENT4_PH12) AS AGENT4_PH12,
+                MAX(AGENT5_PH12) AS AGENT5_PH12,
+                MAX(AGENT6_PH12) AS AGENT6_PH12,
+                MAX(AGENT7_PH12) AS AGENT7_PH12,
+                MAX(AGENT8_PH12) AS AGENT8_PH12,
+                MAX(AGENT9_PH12) AS AGENT9_PH12,
+                MAX(AGENT1_PH13) AS AGENT1_PH13,
+                MAX(AGENT2_PH13) AS AGENT2_PH13,
+                MAX(AGENT3_PH13) AS AGENT3_PH13,
+                MAX(AGENT4_PH13) AS AGENT4_PH13,
+                MAX(AGENT5_PH13) AS AGENT5_PH13,
+                MAX(AGENT6_PH13) AS AGENT6_PH13,
+                MAX(AGENT7_PH13) AS AGENT7_PH13,
+                MAX(AGENT8_PH13) AS AGENT8_PH13,
+                MAX(AGENT9_PH13) AS AGENT9_PH13
+		    FROM
+		    (
+		        SELECT
+		            NO_REQ,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT1_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT2_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT3_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT4_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT5_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT6_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT7_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT8_LEVEL,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) ELSE NULL END AS AGENT9_LEVEL,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN DT_SUPPLY ELSE NULL END AS AGENT1_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN DT_SUPPLY ELSE NULL END AS AGENT2_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN DT_SUPPLY ELSE NULL END AS AGENT3_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN DT_SUPPLY ELSE NULL END AS AGENT4_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN DT_SUPPLY ELSE NULL END AS AGENT5_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN DT_SUPPLY ELSE NULL END AS AGENT6_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN DT_SUPPLY ELSE NULL END AS AGENT7_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN DT_SUPPLY ELSE NULL END AS AGENT8_APP_DATE,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN DT_SUPPLY ELSE NULL END AS AGENT9_APP_DATE,
+		            CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN NM_SUPPLY ELSE NULL END AS AGENT1_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN NM_SUPPLY ELSE NULL END AS AGENT2_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN NM_SUPPLY ELSE NULL END AS AGENT3_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN NM_SUPPLY ELSE NULL END AS AGENT4_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN NM_SUPPLY ELSE NULL END AS AGENT5_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN NM_SUPPLY ELSE NULL END AS AGENT6_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN NM_SUPPLY ELSE NULL END AS AGENT7_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN NM_SUPPLY ELSE NULL END AS AGENT8_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN NM_SUPPLY ELSE NULL END AS AGENT9_NAME,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT1_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT2_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT3_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT4_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT5_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT6_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT7_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT8_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN NO_SUPPLY_LOAN ELSE NULL END AS AGENT9_SSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT1_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT2_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT3_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT4_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT5_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT6_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT7_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT8_ASSN,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN NO_SUPPLY_SOCIETY ELSE NULL END AS AGENT9_ASSN,                    
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN AGENT_PH11 ELSE NULL END AS AGENT1_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN AGENT_PH11 ELSE NULL END AS AGENT2_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN AGENT_PH11 ELSE NULL END AS AGENT3_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN AGENT_PH11 ELSE NULL END AS AGENT4_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN AGENT_PH11 ELSE NULL END AS AGENT5_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN AGENT_PH11 ELSE NULL END AS AGENT6_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN AGENT_PH11 ELSE NULL END AS AGENT7_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN AGENT_PH11 ELSE NULL END AS AGENT8_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN AGENT_PH11 ELSE NULL END AS AGENT9_PH11,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN AGENT_PH12 ELSE NULL END AS AGENT1_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN AGENT_PH12 ELSE NULL END AS AGENT2_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN AGENT_PH12 ELSE NULL END AS AGENT3_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN AGENT_PH12 ELSE NULL END AS AGENT4_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN AGENT_PH12 ELSE NULL END AS AGENT5_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN AGENT_PH12 ELSE NULL END AS AGENT6_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN AGENT_PH12 ELSE NULL END AS AGENT7_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN AGENT_PH12 ELSE NULL END AS AGENT8_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN AGENT_PH12 ELSE NULL END AS AGENT9_PH12,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 1 THEN AGENT_PH13 ELSE NULL END AS AGENT1_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 2 THEN AGENT_PH13 ELSE NULL END AS AGENT2_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 3 THEN AGENT_PH13 ELSE NULL END AS AGENT3_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 4 THEN AGENT_PH13 ELSE NULL END AS AGENT4_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 5 THEN AGENT_PH13 ELSE NULL END AS AGENT5_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 6 THEN AGENT_PH13 ELSE NULL END AS AGENT6_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 7 THEN AGENT_PH13 ELSE NULL END AS AGENT7_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 8 THEN AGENT_PH13 ELSE NULL END AS AGENT8_PH13,
+                    CASE WHEN RANK() OVER (ORDER BY NO_REQ,NO_SUPPLY) = 9 THEN AGENT_PH13 ELSE NULL END AS AGENT9_PH13         
+		        FROM
+		            (
+                    SELECT 
+                        NO_REQ,NO_SUPPLY,TRUNC(TO_DATE(DT_SUPPLY, 'YYYY-MM-DD')) AS DT_SUPPLY,NM_SUPPLY,NO_SUPPLY_LOAN,NO_SUPPLY_SOCIETY,
+                        CASE WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN '02'
+                                  WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,1,2)
+                                  ELSE SUBSTRB(NO_SUPPLY_TEL,1,3)
+                        END AS AGENT_PH11,
+                        CASE WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN SUBSTRB(NO_SUPPLY_TEL,1,4)
+                                  WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,3,4)
+                                  ELSE SUBSTRB(NO_SUPPLY_TEL,4,4)
+                        END AS AGENT_PH12,
+                        CASE WHEN LENGTHB(NO_SUPPLY_TEL) = 8 THEN SUBSTRB(NO_SUPPLY_TEL,5,4)
+                                  WHEN NO_SUPPLY_TEL LIKE '02%' THEN SUBSTRB(NO_SUPPLY_TEL,7,4)
+                                  ELSE SUBSTRB(NO_SUPPLY_TEL,8,4)
+                        END AS AGENT_PH13
+                        FROM  BRC_SUPPLY    
+                        WHERE NO_REQ = #{noReq}
+                        UNION ALL
+                        SELECT
+                            T1.NO_REQ AS NO_REQ, '099' AS NO_SUPPLY, TRUNC(T1.DM_REG) AS DT_SUPPLY, T2.NM_COMP AS NM_SUPPLY, T2.NO_LOAN AS NO_SUPPLY_LOAN,T2.NO_SOCIETY AS NO_SUPPLY_SOCIETY,
+                            '02' AS AGENT_PH11,
+                            SUBSTRB(T2.NO_TEL_ARS,1,4) AS AGENT_PH12,
+                            SUBSTRB(T2.NO_TEL_ARS,5,4) AS AGENT_PH13
+                        FROM BRC_LOAN T1, ST_COMP T2
+                        WHERE NO_REQ = #{noReq}
+                        )
+		    )        
+		    GROUP BY
+		        NO_REQ) H            
+		WHERE
+		    A.NO_REQ = B.NO_REQ
+		    AND
+		    A.NO_REQ = C.NO_REQ
+		    AND
+            A.NO_REQ = D.NO_REQ(+)
+		    AND
+		    A.NO_REQ = #{noReq}
+		    AND
+		    C.NO_EX = #{noEx}
+	</insert>
+
+</mapper>
+

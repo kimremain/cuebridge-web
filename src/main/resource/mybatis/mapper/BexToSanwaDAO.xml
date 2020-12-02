@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jcuesoft.cuebridge.bex.dao.BexToSanwaDAO">
+
+    <resultMap type="com.jcuesoft.cuebridge.bex.vo.BexToSanwaVO" id="bexToSanwaResult">
+    	<result property="ds_url" column="ds_url" />
+		<result property="agency_id" column="agency_id" />
+		<result property="app_id" column="app_id" />
+		<result property="cd_goods" column="cd_goods" />
+		<result property="pnm" column="pnm" />
+		<result property="ssn1" column="ssn1" />
+		<result property="ssn2" column="ssn2" />
+		<result property="zip_real_live1" column="zip_real_live1" />
+		<result property="zip_real_live2" column="zip_real_live2" />
+		<result property="addr_real_live1" column="addr_real_live1" />
+		<result property="addr_real_live2" column="addr_real_live2" />
+		<result property="zip_registry1" column="zip_registry1" />
+		<result property="zip_registry2" column="zip_registry2" />
+		<result property="addr_registry1" column="addr_registry1" />
+		<result property="addr_registry2" column="addr_registry2" />
+		<result property="cd_house_form" column="cd_house_form" />
+		<result property="cd_house_own1" column="cd_house_own1" />
+		<result property="cd_house_own2" column="cd_house_own2" />
+		<result property="email" column="email" />
+		<result property="yy_house_live" column="yy_house_live" />
+		<result property="mm_house_live" column="mm_house_live" />
+		<result property="amt_house_security" column="amt_house_security" />
+		<result property="amt_house_month" column="amt_house_month" />
+		<result property="cd_army" column="cd_army" />
+		<result property="cd_insurance" column="cd_insurance" />
+		<result property="cd_marry" column="cd_marry" />
+		<result property="yn_dualwork" column="yn_dualwork" />
+		<result property="ph1" column="ph1" />
+		<result property="ph2" column="ph2" />
+		<result property="ph3" column="ph3" />
+		<result property="cd_relation_ph" column="cd_relation_ph" />
+		<result property="pnm_ph" column="pnm_ph" />
+		<result property="hp1" column="hp1" />
+		<result property="hp2" column="hp2" />
+		<result property="hp3" column="hp3" />
+		<result property="cd_relation_hp" column="cd_relation_hp" />
+		<result property="pnm_hp" column="pnm_hp" />
+		<result property="car_type" column="car_type" />
+		<result property="car_number" column="car_number" />
+		<result property="amt_apply" column="amt_apply" />
+		<result property="dd_interest_payment" column="dd_interest_payment" />
+		<result property="interest_payment_etc" column="interest_payment_etc" />
+		<result property="cd_use_type" column="cd_use_type" />
+		<result property="comm_position" column="comm_position" />
+		<result property="hh_comm_start" column="hh_comm_start" />
+		<result property="hh_comm_end" column="hh_comm_end" />
+		<result property="cd_bank" column="cd_bank" />
+		<result property="account" column="account" />
+		<result property="loan_finance1" column="loan_finance1" />
+		<result property="loan_first_amt1" column="loan_first_amt1" />
+		<result property="loan_balance_amt1" column="loan_balance_amt1" />
+		<result property="loan_due_amt1" column="loan_due_amt1" />
+		<result property="loan_due_date1" column="loan_due_date1" />
+		<result property="loan_finance2" column="loan_finance2" />
+		<result property="loan_first_amt2" column="loan_first_amt2" />
+		<result property="loan_balance_amt2" column="loan_balance_amt2" />
+		<result property="loan_due_amt2" column="loan_due_amt2" />
+		<result property="loan_due_date2" column="loan_due_date2" />
+		<result property="loan_finance3" column="loan_finance3" />
+		<result property="loan_first_amt3" column="loan_first_amt3" />
+		<result property="loan_balance_amt3" column="loan_balance_amt3" />
+		<result property="loan_due_amt3" column="loan_due_amt3" />
+		<result property="loan_due_date3" column="loan_due_date3" />
+		<result property="loan_finance4" column="loan_finance4" />
+		<result property="loan_first_amt4" column="loan_first_amt4" />
+		<result property="loan_balance_amt4" column="loan_balance_amt4" />
+		<result property="loan_due_amt4" column="loan_due_amt4" />
+		<result property="loan_due_date4" column="loan_due_date4" />
+		<result property="loan_finance5" column="loan_finance5" />
+		<result property="loan_first_amt5" column="loan_first_amt5" />
+		<result property="loan_balance_amt5" column="loan_balance_amt5" />
+		<result property="loan_due_amt5" column="loan_due_amt5" />
+		<result property="loan_due_date5" column="loan_due_date5" />
+		<result property="loan_finance6" column="loan_finance6" />
+		<result property="loan_first_amt6" column="loan_first_amt6" />
+		<result property="loan_balance_amt6" column="loan_balance_amt6" />
+		<result property="loan_due_amt6" column="loan_due_amt6" />
+		<result property="loan_due_date6" column="loan_due_date6" />
+		<result property="cd_job" column="cd_job" />
+		<result property="company_zip1" column="company_zip1" />
+		<result property="company_zip2" column="company_zip2" />
+		<result property="company_addr1" column="company_addr1" />
+		<result property="company_addr2" column="company_addr2" />
+		<result property="cnm" column="cnm" />
+		<result property="company_ph1" column="company_ph1" />
+		<result property="company_ph2" column="company_ph2" />
+		<result property="company_ph3" column="company_ph3" />
+		<result property="cd_duty" column="cd_duty" />
+		<result property="cd_business" column="cd_business" />
+		<result property="amt_salary_year" column="amt_salary_year" />
+		<result property="dd_pay" column="dd_pay" />
+		<result property="company_join" column="company_join" />
+		<result property="cnt_employee" column="cnt_employee" />
+		<result property="cd_worker" column="cd_worker" />
+		<result property="comment" column="comment_" />
+		<result property="fnm_master" column="fnm_master" />
+		<result property="fnm_document" column="fnm_document" />
+		<result property="fnm_image" column="fnm_image" />
+		<result property="branch_code" column="branch_code" />
+		<result property="special_customer" column="special_customer" />
+		<result property="agency_homeurl" column="agency_homeurl" />
+		<result property="route_type" column="route_type" />
+		<result property="route_agency" column="route_agency" />
+		<result property="route_agency_doc" column="route_agency_doc" />
+		<result property="conn_type" column="conn_type" />
+		<result property="conn_doc" column="conn_doc" />
+		<result property="route_customer" column="route_customer" />
+		<result property="route_customer_doc1" column="route_customer_doc1" />
+		<result property="route_customer_doc2" column="route_customer_doc2" />
+		<result property="legal_confirm_date" column="legal_confirm_date" />
+		<result property="agency_representative" column="agency_representative" />
+		<result property="agency_staff" column="agency_staff" />
+    </resultMap>
+    
+    <select id="getBexToSanwa" parameterType="com.jcuesoft.cuebridge.bex.vo.BexMasterRequestVO" resultMap="bexToSanwaResult">
+        SELECT
+<!--             CASE
+                WHEN BL.CD_USE = '20601' THEN '04' 
+                WHEN BL.CD_USE = '20602' THEN '03' 
+                WHEN BL.CD_USE = '20606' THEN '11' 
+                WHEN BL.CD_USE = '20612' THEN '08' 
+                WHEN BL.CD_USE = '20613' THEN '08' 
+                WHEN BL.CD_USE = '20614' THEN '02' 
+                WHEN BL.CD_USE = '20615' THEN '05' 
+                WHEN BL.CD_USE = '20616' THEN '07' 
+                WHEN BL.CD_USE = '20617' THEN '05' 
+                WHEN BL.CD_USE = '20699' THEN '99'
+                ELSE '99'
+            END AS cd_use_type,        
+            BC.DS_EMAIL AS email,            
+            CASE
+                WHEN BC.CD_MARRY = '70701' THEN '01'
+                WHEN BC.CD_MARRY = '70702' THEN '02'
+                WHEN BC.CD_MARRY = '70703' THEN '05'
+                WHEN BC.CD_MARRY = '70704' THEN '04'
+                WHEN BC.CD_MARRY = '70705' THEN '03'
+                WHEN BC.CD_MARRY = '70706' THEN '02'
+                WHEN BC.CD_MARRY = '70707' THEN '06'
+                ELSE ' '
+            END AS cd_marry,            
+            CASE
+                WHEN BCC.CD_JOB_KIND = '70901' AND BCC.CD_JOB_STATUS = '18511' THEN '02'
+                WHEN BCC.CD_JOB_KIND = '70901' AND BCC.CD_JOB_STATUS = '18512' THEN '02'
+                WHEN BCC.CD_JOB_KIND = '70901' THEN '01'
+                WHEN BCC.CD_JOB_KIND = '70902' THEN '05'
+                WHEN BCC.CD_JOB_KIND = '70903' THEN '08'
+                WHEN BCC.CD_JOB_KIND = '70904' THEN '07'
+                WHEN BCC.CD_JOB_KIND = '70905' THEN '04'
+                WHEN BCC.CD_JOB_KIND = '70906' THEN ' '	
+                WHEN BCC.CD_JOB_KIND = '70907' THEN '10'
+                WHEN BCC.CD_JOB_KIND = '70908' THEN ' '	
+                ELSE ' '
+            END AS cd_job ,            
+            BCC.NM_COMP AS CNM,
+            BCC.NO_MAINTEL1_COMP AS company_ph1,
+            BCC.NO_MAINTEL2_COMP AS company_ph2,
+            BCC.NO_MAINTEL3_COMP AS company_ph3,
+            CASE
+                WHEN BCC.CD_RANK = '13302' THEN '02'
+                WHEN BCC.CD_RANK = '13303' THEN '03'
+                WHEN BCC.CD_RANK = '13304' THEN '04'
+                WHEN BCC.CD_RANK = '13305' THEN '05'
+                WHEN BCC.CD_RANK = '13306' THEN '07'
+                WHEN BCC.CD_RANK = '13307' THEN '08'
+                WHEN BCC.CD_RANK = '13308' THEN '09'
+                WHEN BCC.CD_RANK = '13309' THEN '10'
+                WHEN BCC.CD_RANK = '13312' THEN '99'
+                WHEN BCC.CD_RANK = '13313' THEN '02'
+                WHEN BCC.CD_RANK = '13314' THEN '01'
+                WHEN BCC.CD_RANK = '13315' THEN '02'
+                WHEN BCC.CD_RANK = '13316' THEN '05'
+                WHEN BCC.CD_RANK = '13317' THEN '06'
+                WHEN BCC.CD_RANK = '13318' THEN '08'
+                WHEN BCC.CD_RANK = '13319' THEN '99'
+                WHEN BCC.CD_RANK = '13320' THEN '10'
+                ELSE '99'
+            END AS cd_duty,               
+			BCC.AM_PAY_MONTH * 12 / 10000 AS amt_salary_year,
+            CASE 
+                WHEN LENGTHB(BCC.DT_REG_JOIN) = 8 THEN SUBSTRB(BCC.DT_REG_JOIN, 1, 4) || '-' || SUBSTRB(BCC.DT_REG_JOIN, 5, 2) || '-' || SUBSTRB(BCC.DT_REG_JOIN, 7, 2) 
+                ELSE NULL 
+            END  AS company_join,     -->           
+            (SELECT DS_URL FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS ds_url,        
+            (SELECT DS_ID FROM ST_CUSTOMER WHERE CD_COOPERATE = #{cdCooperate}) AS agency_id,         
+            BM.NO_COOPERATE AS app_id,
+            '01' AS cd_goods,      
+            NVL(TRIM(BL.DS_COOPERATE), TO_CHAR(BL.AM_CUSTOM / 10000))  AS comment_,
+            ' ' AS fnm_master,
+            ' ' AS fnm_document,
+            ' ' AS fnm_image,
+            ' ' AS branch_code,
+            ' ' AS special_customer,
+            BC.NM_CUSTOM AS pnm,            
+            SUBSTRB(BC.NO_CUSTOM, 1, 7) AS ssn1,
+            SUBSTRB(BC.NO_CUSTOM, 7, 1) AS ssn2,            
+            ' ' AS dd_interest_payment,
+            ' ' AS interest_payment_etc,
+            BL.AM_CUSTOM / 10000 AS amt_apply,
+            ' ' AS cd_use_type,
+            ' ' AS comm_position,
+            '00' AS hh_comm_start,
+            '00' AS hh_comm_end,
+            ' ' AS cd_bank,
+            ' ' AS account,
+            SUBSTRB(NO_POST_REAL, 1, 3) AS zip_real_live1,
+            SUBSTRB(NO_POST_REAL, 4, 3) AS zip_real_live2,
+            DS_STRT_REAL AS addr_real_live1,
+            DS_ADDR_REAL AS addr_real_live2,
+            ' ' AS zip_registry1,
+            ' ' AS zip_registry2,
+            ' ' AS addr_registry1,
+            ' ' AS addr_registry2,
+            ' ' AS cd_house_form,
+            ' ' AS cd_house_own1,
+            ' ' AS cd_house_own2,
+            ' ' AS email,
+            ' ' AS yy_house_live ,
+            ' ' AS mm_house_live,
+            NULL AS amt_house_security,
+            NULL AS amt_house_month,
+            ' ' AS cd_army,
+            ' ' AS cd_insurance,
+            ' ' AS cd_marry,
+            ' ' AS yn_dualwork,
+            ' ' AS ph1,
+            ' ' AS ph2,
+            ' ' AS ph3,
+            ' ' AS cd_relation_ph,
+            ' ' AS pnm_ph,
+            BC.NO_TEL1_MOBILE AS hp1,
+            BC.NO_TEL2_MOBILE AS hp2,
+            BC.NO_TEL3_MOBILE AS hp3,
+            ' ' AS cd_relation_hp,
+            ' ' AS pnm_hp,
+            ' ' AS cd_job ,           
+            ' ' AS company_zip1,
+            ' ' AS company_zip2,
+            ' ' AS company_addr1,
+            ' ' AS company_addr2,
+            ' ' AS CNM,      
+            ' ' AS company_ph1,
+            ' ' AS cd_business,
+            ' ' AS company_ph2,
+            ' ' AS company_ph3,
+            ' ' AS cd_duty, 
+            NULL AS amt_salary_year,
+            NULL AS dd_pay,
+            NULL AS company_join,
+            NULL AS cnt_employee,
+            ' ' AS cd_worker,
+            ' ' AS car_type,
+            ' ' AS car_number,
+            ' ' AS loan_finance1,
+            NULL AS loan_first_amt1,
+            NULL AS loan_balance_amt1,
+            NULL AS loan_due_amt1,
+            NULL AS loan_due_date1,
+            ' ' AS loan_finance2,
+            NULL AS loan_first_amt2,
+            NULL AS loan_balance_amt2,
+            NULL AS loan_due_amt2,
+            NULL AS loan_due_date2,
+            ' ' AS loan_finance3,
+            NULL AS loan_first_amt3,
+            NULL AS loan_balance_amt3,
+            NULL AS loan_due_amt3,
+            NULL AS loan_due_date3,
+            ' ' AS loan_finance4,
+            NULL AS loan_first_amt4,
+            NULL AS loan_balance_amt4,
+            NULL AS loan_due_amt4,
+            NULL AS loan_due_date4,
+            ' ' AS loan_finance5,
+            NULL AS loan_first_amt5,
+            NULL AS loan_balance_amt5,
+            NULL AS loan_due_amt5,
+            NULL AS loan_due_date5,
+            NULL AS loan_finance6,
+            NULL AS loan_first_amt6,
+            NULL AS loan_balance_amt6,
+            NULL AS loan_due_amt6,
+            NULL AS loan_due_date6       
+        FROM
+            BRC_LOAN BL,
+            BRC_CUSTOM BC,
+            BRC_CUSTOM_HOME BCH,
+            BRC_CUSTOM_COMPANY BCC,
+            BEX_MASTER BM,
+            BRC_SURETY BS,
+            BRC_SURETY_COMPANY BSC,
+            ST_COMP SC      
+		WHERE
+		    BL.NO_REQ = BC.NO_REQ
+		    AND
+		    BL.NO_REQ = BCC.NO_REQ
+            AND
+		    BL.NO_REQ = BCH.NO_REQ
+		    AND
+		    BL.NO_REQ = BM.NO_REQ
+		    AND
+		    BL.NO_REQ = BS.NO_REQ(+)
+		    AND
+		    BS.NO_SURETY (+) = '001'
+		    AND
+		    BL.NO_REQ = BSC.NO_REQ(+)
+		    AND
+		    BSC.NO_SURETY (+) = '001'
+		    AND
+		    BM.NO_REQ = #{noReq}
+		    AND
+		    BM.NO_EX = #{noEx}
+    </select>	  
+
+</mapper>
+
